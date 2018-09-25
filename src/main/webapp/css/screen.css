@@ -1,0 +1,53 @@
+.input-buttons {
+  margin: 1em 0; }
+  @media all and (min-width: 46em) {
+    .input-buttons {
+      margin: 1em 0; } }
+
+.tt-row-container {
+  margin: 1rem -1rem; }
+  .tt-row-container:after {
+    clear: both;
+    content: '';
+    display: table; }
+
+@media screen and (min-width: 70em) {
+  .tt-split-container {
+    box-sizing: border-box;
+    float: left;
+    padding: 0 1em;
+    width: 45%; }
+    .tt-split-container textarea {
+      width: 90%; } }
+
+@media print {
+  .tt-split-container {
+    box-sizing: border-box;
+    float: left;
+    padding: 0 1em;
+    width: 40%; }
+    .tt-split-container textarea {
+      width: 90%; }
+		table.stat th, table.stat td {
+				font-size:small;}
+}
+
+
+.tt-update {
+  background-color: #fafafa;
+  margin: 0.5rem 0;
+  padding: 0.5rem; }
+  .tt-update-canonicalLink {
+    display: block;
+    margin: 0 0 1rem 0; }
+  .tt-update-date {
+    font-size: 0.875rem;
+    margin: 0 0 0 .5em; }
+  .tt-update-notes {
+    margin: 1em 0; }
+  .tt-update-user {
+    color: #3a3a3a;
+    font-size: 1.125rem;
+    font-weight: normal; }
+
+/*# sourceMappingURL=screen.css.map */

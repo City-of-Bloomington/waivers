@@ -1,0 +1,246 @@
+package annex;
+/**
+ * @copyright Copyright (C) 2014-2016 City of Bloomington, Indiana. All rights reserved.
+ * @license http://www.gnu.org/copyleft/gpl.html GNU/GPL, see LICENSE.txt
+ * @author W. Sibo <sibow@bloomington.in.gov>
+ */
+import java.util.*;
+import java.sql.*;
+import java.io.*;
+import javax.sql.*;
+import org.apache.log4j.Logger;
+
+public class TaskList extends CommonInc{
+
+		static Logger logger = Logger.getLogger(TaskList.class);
+		static final long serialVersionUID = 230L;
+		String field_name = "", id="", name="", limit="limit 30";
+		String group_id = "";
+		List<Task> tasks = null;
+		public TaskList(){
+				super();
+		}
+		public TaskList(boolean deb){
+				super(deb);
+		}		
+		public TaskList(boolean deb, String val){
+				super(deb);
+				setName(val);
+		}
+		public List<Task> getTasks(){
+				return tasks;
+		}
+		public void setName(String val){
+				if(val != null)
+						name = val;
+		}
+		public void setField_name(String val){
+				if(val != null)
+						field_name = val;
+		}		
+		public void setId(String val){
+				if(val != null)
+						id = val;
+		}
+		public void setGroup_id(String val){
+				if(val != null)
+						group_id = val;
+		}		
+		public String getId(){
+				return id;
+		}
+		public String getGroup_id(){
+				return group_id;
+		}		
+		public String getName(){
+				return name;
+		}
+		public String getField_name(){
+				return field_name;
+		}		
+
+		public void setNoLimit(){
+				limit = "";
+		}
+		public String find(){
+		
+				String back = "";
+				PreparedStatement pstmt = null;
+				ResultSet rs = null;
+				Connection con = Helper.getConnection();
+				String qq = "select u.id,u.name,u.inactive,u.field_name,u.field2_name,u.field3_name from tasks u ", qw ="";
+				if(con == null){
+						back = "Could not connect to DB";
+						addError(back);
+						return back;
+				}
+				if(!id.equals("")){
+						qw += " u.id = ? ";
+				}
+				else{
+						if(!name.equals("")){
+								qw += " u.name = ? ";
+						}
+						if(!field_name.equals("")){
+								if(!qw.equals("")) qw += " and ";
+								qw += " u.field_name = ? ";
+						}						
+						if(!group_id.equals("")){
+								qq += ", group_tasks gt ";
+								if(!qw.equals("")) qw += " and ";
+								qw += " u.id=gt.task_id and gt.group_id=? ";								
+						}
+				}
+				if(!qw.equals("")){
+						qq += " where "+qw;
+				}
+				qq += " order by u.id ";
+				if(!limit.equals("")){
+						qq += limit;
+				}
+				try{
+						if(debug){
+								logger.debug(qq);
+						}
+						pstmt = con.prepareStatement(qq);
+						if(!id.equals("")){
+								pstmt.setString(1, id);
+						}
+						else {
+								int jj=1;
+								if(!name.equals("")){
+										pstmt.setString(jj++,name);
+								}
+								if(!field_name.equals("")){
+										pstmt.setString(jj++,field_name);		
+								}
+								if(!group_id.equals("")){
+										pstmt.setString(jj++, group_id);
+								}								
+						}
+						rs = pstmt.executeQuery();
+						while(rs.next()){
+								if(tasks == null)
+										tasks = new ArrayList<Task>();
+								Task one =
+										new Task(debug,
+														 rs.getString(1),
+														 rs.getString(2),
+														 rs.getString(3) != null,														 
+														 rs.getString(4),
+														 rs.getString(5),
+														 rs.getString(6));
+
+								tasks.add(one);
+						}
+				}
+				catch(Exception ex){
+						back += ex+" : "+qq;
+						logger.error(back);
+						addError(back);
+				}
+				finally{
+						Helper.databaseDisconnect(con, pstmt, rs);
+				}
+				return back;
+		}
+		/**
+		 * find startTask which is the first in the list and is active
+		 */
+		Task findStartTask(){
+		
+				String back = "";
+				PreparedStatement pstmt = null;
+				ResultSet rs = null;
+				Task task = null;
+				Connection con = Helper.getConnection();
+				String qq = "select u.id,u.name,u.inactive,u.field_name,u.field2_name,u.field3_name from tasks u  where u.inactive is null order by u.id asc ";
+				if(con == null){
+						back = "Could not connect to DB";
+						addError(back);
+						return null;
+				}
+				try{
+						if(debug){
+								logger.debug(qq);
+						}
+						pstmt = con.prepareStatement(qq);
+						rs = pstmt.executeQuery();
+						if(rs.next()){
+								Task one =
+										new Task(debug,
+														 rs.getString(1),
+														 rs.getString(2),
+														 rs.getString(3) != null,														 
+														 rs.getString(4),
+														 rs.getString(5),
+														 rs.getString(6));
+
+								task = one;
+						}
+				}
+				catch(Exception ex){
+						back += ex+" : "+qq;
+						logger.error(back);
+						addError(back);
+				}
+				finally{
+						Helper.databaseDisconnect(con, pstmt, rs);
+				}
+				return task;
+		}		
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
