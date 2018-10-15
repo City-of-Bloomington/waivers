@@ -25,10 +25,11 @@ $("#entity_name").autocomplete({
     }
 		})
 
-//
 // accept digits only
-//
-$("#tax_id_one").keypress(function(event) {
+// all fields with pin_nubmer class must be numbers
+// since some browsers may not honor input type=number
+// this is an extra step
+$(".pin_number").keypress(function(event) {
 		var key = event.charCode || event.keyCode || 0;
 		if( !(key == 8                                // backspace
 					|| key == 46                              // delete
@@ -39,53 +40,64 @@ $("#tax_id_one").keypress(function(event) {
         event.preventDefault();     // Prevent character input
     }
 });
-$("#tax_id_one").keyup(function(){		
-		var xx = $(this).val();
-		var len = xx.length;
-		if(len == 24){
-				var xx2 = $("#tax_id_multiple").val();
-				if(xx2.length > 0){
-						xx2 += " ";
-				}
-				xx2 += xx;
-				$("#tax_id_multiple").val(xx2);
-				$(this).val("");// start all over
-		}
-		else if(len == 2 || len == 5 || len == 8 || len == 12 || len == 20){
-				$(this).val(xx+"-");
-		}
-		else if(len == 16){
-				$(this).val(xx+".");
-		}
-});
-//
-// accept digits only
-//
-$("#pin_id_one").keypress(function(event) {
-		var key = event.charCode || event.keyCode || 0;
-		if( !(key == 8                                // backspace
-					|| key == 46                              // delete
-					|| (key >= 35 && key <= 40)     // arrow keys/home/end
-					|| (key >= 48 && key <= 57)     // numbers on keyboard
-					)   
-      ){
-        event.preventDefault();     // Prevent character input
+// go to next field
+$(".pin_number").keyup(function () {
+    if (this.value.length == this.maxLength) {
+        $(this).next('.pin_number').focus();
     }
 });
-$("#pin_id_one").keyup(function(){		
-		var xx = $(this).val();
-		var len = xx.length;
-		if(len == 12){
+
+$("#pin_id_7").keyup(function(){		
+		if(($("#pin_id_1").val().length == 2)
+			 && ($("#pin_id_2").val().length == 2)
+			 && ($("#pin_id_3").val().length == 2)
+			 && ($("#pin_id_4").val().length == 3)
+			 && ($("#pin_id_5").val().length == 3)
+			 && ($("#pin_id_6").val().length == 3)
+			 && ($("#pin_id_7").val().length == 3)
+			){
+				var xx = $("#pin_id_1").val()+"-"+$("#pin_id_2").val()+"-"+$("#pin_id_3").val()+"-"+$("#pin_id_4").val()+"-"+$("#pin_id_5").val()+"."+$("#pin_id_6").val()+"-"+$(this).val();
 				var xx2 = $("#pin_id_multiple").val();
 				if(xx2.length > 0){
 						xx2 += " ";
 				}
 				xx2 += xx;
 				$("#pin_id_multiple").val(xx2);
-				$(this).val("");// start all over
+				$(".pin_number").val(""); // reset to empty
 		}
-		else if(len == 3 || len == 8){
-				$(this).val(xx+"-");
+});
+//
+// accept digits only
+//
+$(".tax_number").keypress(function(event) {
+		var key = event.charCode || event.keyCode || 0;
+		if( !(key == 8                                // backspace
+					|| key == 46                              // delete
+					|| (key >= 35 && key <= 40)     // arrow keys/home/end
+					|| (key >= 48 && key <= 57)     // numbers on keyboard
+					)   
+      ){
+        event.preventDefault();     // Prevent character input
+    }
+});
+// go to next field
+$(".tax_number").keyup(function () {
+    if (this.value.length == this.maxLength) {
+        $(this).next('.tax_number').focus();
+    }
+});
+$("#tax_id_3").keyup(function(){		
+		if(($("#tax_id_1").val().length == 3)
+			 && ($("#tax_id_2").val().length == 5)
+			 && ($("#tax_id_3").val().length == 2)){
+				var xx = $("#tax_id_1").val()+"-"+$("#tax_id_2").val()+"-"+$("#tax_id_3").val();
+				var xx2 = $("#tax_id_multiple").val();
+				if(xx2.length > 0){
+						xx2 += " ";
+				}
+				xx2 += xx;
+				$("#tax_id_multiple").val(xx2);
+				$(".tax_number").val("");
 		}
 });
 

@@ -34,9 +34,14 @@
 	</details>
 	<div class="tt-row-container">
 		<dl class="fn1-output-field">
+			To add a new entity click on 'New Entity' or to add an existing entity use 'Search Entity' 
+			<dt>Add Entity</dt>
+			<dd><button onclick="windowOpener('<s:property value='#application.url' />entity.action?type=popup','_blank', 'menubar=no,toolbar=no,location=no,toolbar=no,scrollbars=no,resizable=yes,top=500,left=500,width=500,height=500');return false;">New Entity</button></dd>
+		</dl>
+		<dl class="fn1-output-field">		
 		 To add an existing entity to this waiver, start typing the name to pick from the list. To add a new entity click on 'New Entity' <br /> 			
 			<dt>Search Entity </dt>
-			<dd>Entity Name:<s:textfield name="waiver.entityName" value="%{waiver.entityName}" size="20" maxlength="80" id="entity_name" title="start typing entity name" /> Entity ID: <s:textfield name="waiver.addEntityId" value="%{waiver.addEntityId}" size="10" maxlength="10" id="entity_id" /> <button onclick="windowOpener('<s:property value='#application.url' />entity.action?type=popup','_blank', 'menubar=no,toolbar=no,location=no,toolbar=no,scrollbars=no,resizable=yes,top=500,left=500,width=500,height=500');return false;">New Entity</button></dd>
+			<dd>Entity Name:<s:textfield name="waiver.entityName" value="%{waiver.entityName}" size="20" maxlength="80" id="entity_name" title="start typing entity name" /> Entity ID: <s:textfield name="waiver.addEntityId" value="%{waiver.addEntityId}" size="10" maxlength="10" id="entity_id" /></dd>
 			<dd id="entity_names">&nbsp;</dd>
 		</dl>
 		<dl class="fn1-output-field">
@@ -60,20 +65,29 @@
 			</dl>
 			<dl class="fn1-output-field">
 				<dt>Parcel PIN</dt>
-				<dd><s:textfield name="waiver.parcelPin2" value="" size="25" maxlength="25" id="tax_id_one" title="Enter PIN numbers and it will be formated for you" placeHolder="xx-xx-xx-xxx-xxx.xxx-xxx" /> (enter one at a time)
-				</dd>
+				<dd><input type="text" name="waiver.parcelPin2" value="" size="2" maxlength="2" id="pin_id_1" placeHolder="xx" class="pin_number"/>-
+					<input type="text" name="waiver.parcelPin2" value="" size="2" maxlength="2" id="pin_id_2" placeHolder="xx" class="pin_number"/>-
+					<input type="text" name="waiver.parcelPin2" value="" size="2" maxlength="2" id="pin_id_3" placeHolder="xx" class="pin_number"/>-
+					<input type="text" name="waiver.parcelPin2" value="" size="3" maxlength="3" id="pin_id_4" placeHolder="xxx" class="pin_number"/>-
+					<input type="text" name="waiver.parcelPin2" value="" size="3" maxlength="3" id="pin_id_5" placeHolder="xxx" class="pin_number"/>.
+					<input type="text" name="waiver.parcelPin2" value="" size="3" maxlength="3" id="pin_id_6" placeHolder="xxx" class="pin_number"/>-
+					<input type="text" name="waiver.parcelPin2" value="" size="3" maxlength="3" id="pin_id_7" placeHolder="xxx" class="pin_number"/></dd>
 			</dl>
 			<dl class="fn1-output-field">
 				<dt>Parcel PIN </dt>
-				<dd><s:textarea name="waiver.parcelPin" value="%{waiver.parcelPin}" rows="3" cols="25" id="tax_id_multiple" title="For parcel state pin use space to separate" /> </dd>
+				<dd><s:textarea name="waiver.parcelPin" value="%{waiver.parcelPin}" rows="3" cols="25" id="pin_id_multiple" title="For parcel state pin use space to separate" /> </dd>
 			</dl>
 			<dl class="fn1-output-field">
 				<dt>Parcel Tax ID</dt>
-				<dd><s:textfield name="waiver.parcelTaxId2" value="" size="25" maxlength="25" id="pin_id_one" title="Enter tax id numbers and it will be formatted for you" placeHolder="xxx-xxxxx-xx"/> (enter one at a time) </dd>
+				<dd>
+					<input type="text" name="waiver.parcelTaxId2" value="" size="3" maxlength="3" id="tax_id_1" class="tax_number" placeHolder="xxx"/> -
+					<input type="text" name="waiver.parcelTaxId2" value="" size="5" maxlength="5" id="tax_id_2" class="tax_number" placeHolder="xxxxx" /> -
+					<input type="text" name="waiver.parcelTaxId2" value="" size="2" maxlength="2" id="tax_id_3" class="tax_number" placeHolder="xx"/>
+					(enter one at a time) </dd>
 			</dl>			
 			<dl class="fn1-output-field">
 				<dt>Parcel Tax ID </dt>
-				<dd><s:textarea name="waiver.parcelTaxId" value="%{waiver.parcelTaxId}" rows="3" cols="25" id="pin_id_multiple" title="For multiple tax ids use space to separate" />(old records) </dd>
+				<dd><s:textarea name="waiver.parcelTaxId" value="%{waiver.parcelTaxId}" rows="3" cols="25" id="tax_id_multiple" title="For multiple tax ids use space to separate" />(old records) </dd>
 			</dl>
 		</div>
 		<div class="tt-split-container">
@@ -87,7 +101,11 @@
 			</dl>
 			<dl class="fn1-output-field">
 				<dt>Lot </dt>
-				<dd><s:textfield name="waiver.lot" size="15" maxlength="30" value="%{waiver.lot}" /> Acreage <s:textfield name="waiver.acrage" size="10" maxlength="10" value="%{waiver.acrage}" />	</dd>
+				<dd><s:textfield name="waiver.lot" size="15" maxlength="30" value="%{waiver.lot}" /></dd>
+			</dl>
+			<dl class="fn1-output-field">
+				<dt>Acreage </dt>
+				<dd><s:textfield name="waiver.acrage" size="10" maxlength="10" value="%{waiver.acrage}" />	</dd>
 			</dl>			
 			<dl class="fn1-output-field">
 				<dt>Develop./Subdiv. </dt>

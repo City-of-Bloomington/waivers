@@ -41,11 +41,11 @@
 	<div class="tt-row-container">
 		<dl class="fn1-output-field">
 			<dt>Name </dt>
-			<dd><s:textfield name="entity.name" value="%{entity.name}" size="30" maxlength="70" required="true" /> *</dd>
+			<dd><s:textfield name="entity.name" value="%{entity.name}" size="30" maxlength="70" required="true" placeholder="last name, first name or business name"/> *</dd>
 		</dl>
 		<dl class="fn1-output-field">
 			<dt>Title </dt>
-			<dd><s:textfield name="entity.title" value="%{entity.title}" size="30" maxlength="30" /> </dd>
+			<dd><s:textfield name="entity.title" value="%{entity.title}" size="30" maxlength="30" placeholder="Owner, Agent, Manager, etc" /> </dd>
 		</dl>		
 		<dl class="fn1-output-field">
 			<dt>Is Business? </dt>

@@ -929,6 +929,10 @@ public class Waiver extends CommonInc implements java.io.Serializable{
 				}
 				return back;
 		}
+		/**
+		 * using concat('',waiver_num*1)=waiver_num to get numeric values only
+		 * and ignore appended numbers with alaphabets such as 2012A
+		 */
 		public String findNextWaiverNum(){
 				String back = "";
 				Connection con = null;
@@ -950,7 +954,7 @@ public class Waiver extends CommonInc implements java.io.Serializable{
 						pstmt = con.prepareStatement(qq);
 						rs = pstmt.executeQuery();
 						if(rs.next()){
-								waiver_num = rs.getString(1);
+								waiver_num = ""+rs.getInt(1);
 						}
 				}
 				catch(Exception ex){
@@ -1083,7 +1087,6 @@ public class Waiver extends CommonInc implements java.io.Serializable{
 				if(date.equals("")){
 						date = Helper.getToday();
 				}
-				// expire_date = Helper.getDateFrom(date,"year", 15);
 				status = "Open";
 				String qq = "insert into waivers "+
 						"(id,"+

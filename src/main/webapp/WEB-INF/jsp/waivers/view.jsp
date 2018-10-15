@@ -95,8 +95,12 @@
 			<dd><s:property value="%{waiver.developmentSubdivision}" /> </dd>
 		</dl>
 		<dl class="fn1-output-field">
-			<dt>Lot/Acreage </dt>
-			<dd><s:property value="%{waiver.lotAcrage}"  /></dd>
+			<dt>Lot </dt>
+			<dd><s:property value="%{waiver.lot}"  /></dd>
+		</dl>
+		<dl class="fn1-output-field">
+			<dt>Acreage </dt>
+			<dd><s:property value="%{waiver.acrage}"  /></dd>
 		</dl>
 		<dl class="fn1-output-field">
 			<dt>IN/OUT City? </dt>
