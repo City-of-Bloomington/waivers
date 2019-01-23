@@ -64,11 +64,10 @@ public class WaiverRtf extends HttpServlet {
 				}
 				url    = getServletContext().getInitParameter("url");
 				String str = getServletContext().getInitParameter("debug");
-				if(str.equals("true")) debug = true;
+				if(str != null && str.equals("true")) debug = true;
 				str = getServletContext().getInitParameter("attorneyFullName");
 				if(str != null)
 						attorneyFullName = str;
-
 				User user = null;
 				HttpSession session = req.getSession(false);
 				if(session != null){
