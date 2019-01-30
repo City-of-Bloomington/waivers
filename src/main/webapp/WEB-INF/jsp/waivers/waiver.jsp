@@ -9,16 +9,16 @@
 	<s:hidden name="waiver.addAddrIds" id="add_addr_ids" value="" />
 	<s:hidden name="waiver.addEntityIds" id="entity_ids" value="" />	
 	<h1>New Waiver</h1>
-  <s:if test="hasActionErrors()">
+	<s:if test="hasActionErrors()">
 		<div class="errors">
-      <s:actionerror/>
-	</div>
-  </s:if>
-  <s:elseif test="hasActionMessages()">
-		<div class="welcome">
-      <s:actionmessage/>
+			<s:actionerror/>
 		</div>
-  </s:elseif>
+	</s:if>
+	<s:elseif test="hasActionMessages()">
+		<div class="welcome">
+			<s:actionmessage/>
+		</div>
+	</s:elseif>
 	<details>
 		<summary>Instructions</summary>
 		<ul>
