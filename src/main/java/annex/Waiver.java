@@ -574,8 +574,7 @@ public class Waiver extends CommonInc implements java.io.Serializable{
 		}
 		// not needed just for interface
 		public void setParcelTaxId2(String val){
-				if(val != null && !val.equals(""))
-						parcel_tax_id = val;
+
 		}		
 		public void setHookupAddress(String val){
 				if(val != null)
