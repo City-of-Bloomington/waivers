@@ -22,6 +22,7 @@ public class TaskAction extends TopAction{
 		List<EmailLog> emailLogs = null;
 		String task_id = "", waiver_id="";
 		String tasksTitle = " Most recent tasks";
+		List<Group> toBeNotifiedGroups = null;
 		public String execute(){
 				String ret = SUCCESS;
 				String back = doPrepare();
@@ -98,25 +99,22 @@ public class TaskAction extends TopAction{
 										//
 										// check if we need to email
 										//
-										if(task.getAlias().startsWith("Customer Sign")){
-												//
-												// send email from legal to utilities
-												// notify utility to record waiver and
-												// let  service connection to proceed 
-												//
-												back = sendEmailToUtility();
+										if(task.isNotificationRequired()){
+												List<GroupNotification> groupNotifications =
+														task.getGroupNotifications();
+												if(groupNotifications != null && groupNotifications.size() > 0){
+														for(GroupNotification one:groupNotifications){
+																Group gg = one.getGroup();
+																System.err.println(" group "+gg);
+																if(gg != null){
+																		if(toBeNotifiedGroups == null)
+																				toBeNotifiedGroups = new ArrayList<>();
+																		toBeNotifiedGroups.add(gg);
+																}
+														}
+												}
+												back = processEmails();
 										}
-										else if(task.getAlias().equals("Record Waiver")){
-												//
-												// send email from legal to GIS to add waiver to GIS
-												// 
-												back = sendEmailToGis();
-										}
-										/**
-										 * when a task is completed, we check if the waiver has more
-										 * tasks, if not then the waiver status should be changed to
-										 * 'Completed'
-										 */
 								}
 						}
 						ret = "view";
@@ -233,78 +231,92 @@ public class TaskAction extends TopAction{
 		}
 		public List<EmailLog> getEmailLogs(){
 				return emailLogs;
-		}
-		/**
-		 * we need to inform utilities that the waiver is ready to be
-		 * recorded and service connection to proceed
-		 */
-		String  sendEmailToUtility(){
+		}		
+		private String processEmails(){
 				String back = "";
-				if(utility_username == null || utility_username.equals("")){
-						back = "Utility department user to receive email not set ";
-						return back;
-				}
-				if(waiver == null){
-						back = "no waiver is specified to get info from ";
-						return back;
-				}
-				String to = utility_username+city_email;
+				String subject = "", msg = "";
 				String from = user.getUsername()+city_email;
-				String cc = null;
-				String subject = " Waiver ready to be recorded ";
-				String msg = " Hi \n\n";
-				msg = " We would like to inform you that the following waiver is\n "+
-						" ready to be recorded and service connection for \n"+
-						" address below to proceed \n\n"+
-						" Waiver ID = "+waiver.getId()+"\n"+
-						" Address(s): "+waiver.getBasicInfo()+"\n"+
-						" Owner(s): "+waiver.getBasicInfo2()+"\n"+
-						" Other Waiver Info: "+waiver.getBasicInfo3()+"\n\n"+
-						" Thanks\n\n";
-				
+				String to = null, cc = null;
+				if(waiver == null){
+						back = "No waiver available";
+						return back;
+				}
+				if(toBeNotifiedGroups != null){
+						for(Group gg:toBeNotifiedGroups){
+								List<User> users = gg.getUsers();
+								for(User one:users){
+										if(one.hasActiveMail() && one.isActive()){
+												if(to == null){
+														to = one.getUsername()+city_email;
+												}
+												else{
+														if(cc == null){
+																cc = one.getUsername()+city_email;
+														}
+														else{
+																if(!cc.equals("")) cc +=",";
+																cc += one.getUsername()+city_email;
+														}
+												}
+										}
+								}
+								if(gg.getName().equals("Legal")){
+										subject = " Waiver application and deed received ";
+										msg = " Hi \n\n";
+										msg += " We would like to inform you that the following waiver is\n "+
+												" ready to be prepared and signed \n"+
+												" Waiver ID = "+waiver.getId()+"\n"+
+												" Address(s): "+waiver.getBasicInfo()+"\n"+
+												" Owner(s): "+waiver.getBasicInfo2()+"\n"+
+												" Other Waiver Info: "+waiver.getBasicInfo3()+"\n\n"+
+												" Thanks\n\n";
+										back = sendEmails(to, from, cc, subject, msg);
+								}
+								else if(gg.getName().equals("Utilities")){
+										subject = " Waiver ready to be recorded and service connection to proceed ";
+										msg = " Hi \n\n";
+										msg += " We would like to inform you that the following waiver is\n "+
+												" ready to be recorded and service connection for \n"+
+												" address below to proceed \n\n"+
+												" Waiver ID = "+waiver.getId()+"\n"+
+												" Address(s): "+waiver.getBasicInfo()+"\n"+
+												" Owner(s): "+waiver.getBasicInfo2()+"\n"+
+												" Other Waiver Info: "+waiver.getBasicInfo3()+"\n\n"+
+												" Thanks\n\n";
+										back = sendEmails(to, from, cc, subject, msg);
+								}
+								else if(gg.getName().equals("GIS")){
+										subject = " Waiver ready to be added to GIS map ";
+										msg = " Hi \n\n";
+										msg += " We would like to inform you that the following waiver is\n "+
+												" ready to be added to GIS map. \n"+
+												" See waiver info below \n\n"+
+												" waiver ID = "+waiver.getId()+"\n"+
+												" Address(s): "+waiver.getBasicInfo()+"\n"+
+												" Owner(s):"+waiver.getBasicInfo2()+"\n"+
+												"Other waiver info: "+waiver.getBasicInfo3()+"\n\n"+
+												" Thanks\n\n";
+										back = sendEmails(to, from, cc, subject, msg);
+								}
+						}
+				}
+				return back;
+		}
+		String sendEmails(String to, String from,
+											String cc, String subject,
+											String msg){
+				String back = "";
+				if(to.equals("")) return msg;
 				EmailHandle mail = new EmailHandle(to, from, cc, subject, msg, debug);
 				if(activeMail){
-						System.err.println("Util email will be sent ");
-						// back = mail.send();
+						// System.err.println("Email will be sent ");
+						back = mail.send();
 						EmailLog elog = new EmailLog(debug, task.getWaiver_id(), task.getTask_id(), to, from, subject, msg, back);
 						back += elog.doSave();
 				}
 				return back;
 		}
-		String  sendEmailToGis(){
-				String back = "";
-				if(gis_username == null || gis_username.equals("")){
-						back = "ITS/GIS user to receive email not set ";
-						return back;
-				}
-				if(waiver == null){
-						back = "no waiver is specified to get info from ";
-						return back;
-				}
-				String to = gis_username+city_email;
-				String from = user.getUsername()+city_email;
-				String cc = null;
-				String subject = " Waiver ready to be added to GIS map ";
-				String msg = " Hi \n\n";
-				msg = " We would like to inform you that the following waiver is\n "+
-						" ready to be added to GIS map. \n"+
-						" See waiver info below \n\n"+
-						" waiver ID = "+waiver.getId()+"\n"+
-						" Address(s): "+waiver.getBasicInfo()+"\n"+
-						" Owner(s):"+waiver.getBasicInfo2()+"\n"+
-						"Other waiver info: "+waiver.getBasicInfo3()+"\n\n"+
-						" Thanks\n\n";
-				System.err.println(" GIS email to: "+to);
-				System.err.println(" msg: "+msg);
-				EmailHandle mail = new EmailHandle(to, from, cc, subject, msg, debug);
-				if(!activeMail){
-						System.err.println("GIS email will be sent ");
-						// back = mail.send();
-						EmailLog elog = new EmailLog(debug, task.getWaiver_id(), task.getTask_id(), to, from, subject, msg, back);
-						back += elog.doSave();						
-				}
-				return back;
-		}		
+
 }
 
 

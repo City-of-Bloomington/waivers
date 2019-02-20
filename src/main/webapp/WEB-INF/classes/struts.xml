@@ -101,6 +101,14 @@
 			<result name="error">/WEB-INF/jsp/users/groupUser.jsp</result>
 			<result name="success">/WEB-INF/jsp/users/groupUser.jsp</result>
 		</action>
+		<action name="groupNotification" 
+						class="annex.GroupNotificationAction" 
+						method="execute">
+			<result name="input">/WEB-INF/jsp/users/groupNotification.jsp</result>		
+			<result name="error">/WEB-INF/jsp/users/groupNotification.jsp</result>
+			<result name="success">/WEB-INF/jsp/users/groupNotification.jsp</result>
+		</action>		
+		
 		<action name="group" 
 						class="annex.GroupAction" 
 						method="execute">
@@ -108,6 +116,7 @@
 			<result name="error">/WEB-INF/jsp/types/group.jsp</result>
 			<result name="success">/WEB-INF/jsp/types/group.jsp</result>
 		</action>
+		
 		<action name="step" 
 						class="annex.StepAction" 
 						method="execute">

@@ -18,7 +18,6 @@ public class FilesImportAction extends TopAction{
 		//
 		// old file
 		String file_name = "c:\\webapps\\waivers\\docs\\pdf_list.txt";
-		// String file_name = "c:\\webapps\\waivers\\docs\\pdf_short.txt";		
 		
 		FilesImport fimport = null;
 		public String execute(){

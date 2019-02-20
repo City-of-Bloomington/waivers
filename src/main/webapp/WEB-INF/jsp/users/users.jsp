@@ -13,6 +13,8 @@
 			<th align="center"><b>Full Name</b></th>
 			<th align="center"><b>Role</b></th>
 			<th align="center"><b>Dept</b></th>
+			<th align="center"><b>Active Email</b></th>
+			<th align="center"><b>Active</b></th>			
 		</tr>
 	</thead>
 	<tbody>
@@ -23,6 +25,8 @@
 				<td><s:property value="fullName" /></td>
 				<td><s:property value="roleInfo" /></td>
 				<td><s:property value="dept" /></td>
+				<td><s:if test="activeMail">Yes</s:if><s:else>No</s:else></td>
+				<td><s:if test="inactive">No</s:if><s:else>Yes</s:else></td>				
 			</tr>
 		</s:iterator>
 	</tbody>

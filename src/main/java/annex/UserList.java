@@ -17,6 +17,7 @@ public class UserList extends CommonInc{
 		static final long serialVersionUID = 300L;
 		String name = "", id="", username="", role="", limit="limit 30";
 		String group_id = "", exclude_group_id="", dept="";
+		boolean active_only = false, active_mail = false;
 		List<User> users = null;
 		public UserList(){
 				super();
@@ -60,6 +61,12 @@ public class UserList extends CommonInc{
 						role = val;
 				}
 		}
+		public void setActiveOnly(){
+				active_only = true;
+		}
+		public void hasActiveMail(){
+				active_mail = true;
+		}
 		public String getId(){
 				return id;
 		}
@@ -90,7 +97,7 @@ public class UserList extends CommonInc{
 				PreparedStatement pstmt = null;
 				ResultSet rs = null;
 				Connection con = Helper.getConnection();
-				String qq = "select u.id,u.username,u.full_name,u.dept,u.role,u.inactive from users u ", qw ="";
+				String qq = "select u.id,u.username,u.full_name,u.dept,u.role,u.activeMail,u.inactive from users u ", qw ="";
 				if(con == null){
 						back = "Could not connect to DB";
 						addError(back);
@@ -106,7 +113,15 @@ public class UserList extends CommonInc{
 						if(!username.equals("")){
 								if(!qw.equals("")) qw += " and ";
 								qw += " u.username like ? ";
-						}						
+						}
+						if(active_only){
+								if(!qw.equals("")) qw += " and ";
+								qw += " u.inactive is null ";
+						}
+						if(active_mail){
+								if(!qw.equals("")) qw += " and ";
+								qw += " u.active_mail is not null ";
+						}
 						if(!role.equals("")){
 								if(!qw.equals("")) qw += " and ";
 								qw += " u.role=? ";
@@ -175,7 +190,8 @@ public class UserList extends CommonInc{
 														 rs.getString(3),
 														 rs.getString(4),
 														 rs.getString(5),
-														 rs.getString(6) != null);
+														 rs.getString(6) != null,
+														 rs.getString(7) != null);
 								users.add(one);
 						}
 				}

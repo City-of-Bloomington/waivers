@@ -7,7 +7,8 @@
 				username     varchar(20),
 				full_name varchar(128),
 				dept     enum('ITS','Legal','Utilities'),
-				role     enum('user','admin'),
+				role     enum('View','Edit','Edit:Delete','Edit:Delete:Admin'),
+				activeMail char(1),
 				inactive char(1),
 				primary key(id)
 			 )engine=InnoDB;
@@ -124,8 +125,26 @@
 				create table attachments(                                                         id int unsigned not null auto_increment,                                        waiver_id           int unsigned,                                               task_id             int unsigned,                                               file_name           varchar(128),                                               old_file_name       varchar(255),                                               hardcopy_location   varchar(255),                                               type                enum('Application','Deed','Recorded Waiver','Map','Other'),                                                                                 date                date,                                                       notes               varchar(510),                                               user_id             tinyint unsigned,                                           primary key(id),                                                                foreign key(user_id) references users(id),                                      foreign key(waiver_id) references waivers(id)                                  )engine=InnoDB;
 				
 					create table email_logs(                                                        id int unsigned auto_increment primary key,                                     waiver_id        int unsigned,                                                  task_id          int unsigned,                                                  date             date,                                                          to_user          varchar(80),                                                   from_user        varchar(80),                                                   subject          varchar(80),                                                   msg              varchar(512),                                                  email_errors     varchar(1024),                                                 foreign key(waiver_id) references waivers(id),                                  foreign key(task_id) references tasks(task_id)                                 )engine=InnoDB;
-				
 
-					
+;;
+;; 02/19/2019
+;; combine step 2 and 3 into one
+;; update steps set name='Obtain Application and Deed' where id=20;
+;; update steps set suggested_upload_type='Application' where id=20;
+;; update steps set alias='Application and Deed' where id=20;
+;; delete from group_steps where id=2;
+;; delete from tasks where step_id=15;
+;; update work_flows set next_step_id=20 where id=10;
+;; delete from work_flows where id=20;
+;; delete from steps where id=15;
+
+;;
+ create table group_notifications(                                                 id int unsigned auto_increment primary key,                                     group_id        tinyint unsigned,                                               completed_step_id    tinyint unsigned,                                          inactive       char(1),                                                         foreign key(group_id) references groups(id),                                    foreign key(completed_step_id) references steps(id)                            )engine=InnoDB;
+
+ insert into group_notifications values(0,2,20,null),(0,3,60,null),(0,1,60,null);
+alter table users add activeMail char(1) after role;
+update users set activeMail='y';
+update users set activeMail=null where id in (2,6,8,12);
+ 
 
 	

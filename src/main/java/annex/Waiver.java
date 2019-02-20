@@ -164,32 +164,32 @@ public class Waiver extends CommonInc implements java.io.Serializable{
 									String val23
 									){
 				/*
-						" (id,"+
-						" waiver_num,"+
-						" waiver_instrument_num,"+
-						" deed_book,"+
-						" deed_page,"+ // 5
+					" (id,"+
+					" waiver_num,"+
+					" waiver_instrument_num,"+
+					" deed_book,"+
+					" deed_page,"+ // 5
 						
-						" parcel_pin,"+
-						" legal_description,"+
-						" sec_twp_range_dir,"+
-						" development_subdivision,"+
-						" notes,"+ // 10
+					" parcel_pin,"+
+					" legal_description,"+
+					" sec_twp_range_dir,"+
+					" development_subdivision,"+
+					" notes,"+ // 10
 						
-						" in_out_city,"+
-						" gis_notes,"+
-						" signed_date,"+ 
-						" recorder_date,"+
-						" acrage,"+
+					" in_out_city,"+
+					" gis_notes,"+
+					" signed_date,"+ 
+					" recorder_date,"+
+					" acrage,"+
 						
-						" lot,"+ 
-						" deed_instrument_num,"+ // 20
-						" date, "+
-						" waiver_book,"+
-						" waiver_page,"+
+					" lot,"+ 
+					" deed_instrument_num,"+ // 20
+					" date, "+
+					" waiver_book,"+
+					" waiver_page,"+
 						
-						" expire_date,"+
-						" parcel_tax_id// 24
+					" expire_date,"+
+					" parcel_tax_id// 24
 				*/
 				setId(val);
 				setWaiverNum(val2);
@@ -379,8 +379,8 @@ public class Waiver extends CommonInc implements java.io.Serializable{
 		}
 		
 		public String getMappedDate(){
-						return
-								mapped_date ;
+				return
+						mapped_date ;
 		}
 		public String getGisNotes(){
 				return
@@ -594,7 +594,7 @@ public class Waiver extends CommonInc implements java.io.Serializable{
 		}
 		public void setScannedDate(String val){
 				if(val != null)
-					 scanned_date = val;
+						scanned_date = val;
 		}		
 		public void setInOutCity(String val){
 				if(val != null)
@@ -658,10 +658,10 @@ public class Waiver extends CommonInc implements java.io.Serializable{
 						del_entity = val;
 		}
 		public void setAddAddrIds(String val){
-						add_addr_ids = val;
+				add_addr_ids = val;
 		}
 		public void setAddEntityIds(String val){
-						add_entity_ids = val;
+				add_entity_ids = val;
 		}		
 		public boolean hasAddedBy(){
 				return !added_by.equals("");
@@ -1208,37 +1208,37 @@ public class Waiver extends CommonInc implements java.io.Serializable{
 
 		}
 		/*
-		public String modifyBusinessFlag(){
-				String back = "";
-				Connection con = null;
-				PreparedStatement pstmt = null;
-				ResultSet rs = null;
-				String qq = "update waivers set is_business='y' where id= ? ";
-				con = Helper.getConnection();
-				if(con == null){
-						back = "Could not connect to DB";
-						addError(back);
-						return back;
-				}
-				try{
-						if(debug){
-								logger.debug(qq);
-						}						
-						pstmt = con.prepareStatement(qq);
-						pstmt.setString(1, id);
-						pstmt.executeUpdate();
-						//
-				}
-				catch(Exception ex){
-						back += ex;
-						logger.error(back);
-						addError(back);
-				}
-				finally{
-						Helper.databaseDisconnect(con, pstmt, rs);
-				}
-				return back;
-		}
+			public String modifyBusinessFlag(){
+			String back = "";
+			Connection con = null;
+			PreparedStatement pstmt = null;
+			ResultSet rs = null;
+			String qq = "update waivers set is_business='y' where id= ? ";
+			con = Helper.getConnection();
+			if(con == null){
+			back = "Could not connect to DB";
+			addError(back);
+			return back;
+			}
+			try{
+			if(debug){
+			logger.debug(qq);
+			}						
+			pstmt = con.prepareStatement(qq);
+			pstmt.setString(1, id);
+			pstmt.executeUpdate();
+			//
+			}
+			catch(Exception ex){
+			back += ex;
+			logger.error(back);
+			addError(back);
+			}
+			finally{
+			Helper.databaseDisconnect(con, pstmt, rs);
+			}
+			return back;
+			}
 		*/
 		//
 		// needed for data import
@@ -1355,41 +1355,41 @@ public class Waiver extends CommonInc implements java.io.Serializable{
 				scanned_date = "12/01/2017"; // scanned last year the default
 				// this the sql in DataImport file
 				/*
-				String qq = "insert into waivers "+
-						" (id,"+
-						" waiver_num,"+
-						" waiver_instrument_num,"+
-						" deed_book,'+
-						" deed_page,"+
+					String qq = "insert into waivers "+
+					" (id,"+
+					" waiver_num,"+
+					" waiver_instrument_num,"+
+					" deed_book,'+
+					" deed_page,"+
 						
-						" parcel_tax_id,"+
-						" legal_description,"+
-						" sec_twp_range_dir,"+
-						" development_subdivision,'+
-						" notes,"+
+					" parcel_tax_id,"+
+					" legal_description,"+
+					" sec_twp_range_dir,"+
+					" development_subdivision,'+
+					" notes,"+
 						
-						" in_out_city,"+
-						" gis_notes,"+
-						" signed_date,"+
-						" recorder_date,"+
-						" acrage,'+
+					" in_out_city,"+
+					" gis_notes,"+
+					" signed_date,"+
+					" recorder_date,"+
+					" acrage,'+
 						
-						" lot,"+
-						" deed_instrument_num,"+
-						" date,
-						" waiver_book,
-						" waiver_page,"+
+					" lot,"+
+					" deed_instrument_num,"+
+					" date,
+					" waiver_book,
+					" waiver_page,"+
 
-						" scanned_date,
-						" expire_date,
-						" imported,'+
-						" status) "+
+					" scanned_date,
+					" expire_date,
+					" imported,'+
+					" status) "+
 						
-						" values(?,?,?,?,?, ?,?,?,?,? ,?,?,?,?,?, ?,?,?,?,?,"+
-						"?,?,'y','Completed')";
+					" values(?,?,?,?,?, ?,?,?,?,? ,?,?,?,?,?, ?,?,?,?,?,"+
+					"?,?,'y','Completed')";
 						
 
-				String qq2 = "insert into entity_waivers values(?,?)";
+					String qq2 = "insert into entity_waivers values(?,?)";
 				*/
 				int jj=1;
 				try{
@@ -2073,12 +2073,6 @@ public class Waiver extends CommonInc implements java.io.Serializable{
 						addError(back);
 						return back;
 				}
-				if(waiver_instrument_num.equals("")){
-						back = " waiver instrument # not set ";
-						logger.error(back);
-						addError(back);
-						return back;
-				}
 				if(recorder_date.equals("")){
 						back = " waiver recorded date is required ";
 						logger.error(back);
@@ -2106,9 +2100,14 @@ public class Waiver extends CommonInc implements java.io.Serializable{
 								logger.debug(qq);
 						}
 						pstmt = con.prepareStatement(qq);
-						pstmt.setString(1, waiver_instrument_num);
-						java.util.Date  dateTmp = df.parse(recorder_date);						
+						if(waiver_instrument_num.equals(""))
+								pstmt.setNull(3, Types.VARCHAR);
+						else
+								pstmt.setString(1, waiver_instrument_num);
+						//
+						java.util.Date  dateTmp = df.parse(recorder_date);
 						pstmt.setDate(2, new java.sql.Date(dateTmp.getTime()));
+						//
 						if(waiver_book.equals(""))
 								pstmt.setNull(3, Types.VARCHAR);
 						else

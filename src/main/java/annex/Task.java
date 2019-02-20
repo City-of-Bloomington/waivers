@@ -28,6 +28,7 @@ public class Task extends Step{
 		SimpleDateFormat df = new SimpleDateFormat("MM/dd/yyyy");
 		boolean completed = false, hasNextTask=false;
 		Waiver waiver = null;
+		List<GroupNotification> groupNotifications = null; 
 		User claimed_user = null;
 		//
 		public Task(){
@@ -114,7 +115,25 @@ public class Task extends Step{
 		}
 		public boolean isClaimed(){
 				return !claimed_by.equals("");
-		}		
+		}
+		public boolean isNotificationRequired(){
+				getGroupNotifications();
+				return groupNotifications != null && groupNotifications.size() > 0;
+		}
+		public List<GroupNotification> getGroupNotifications(){
+				if(groupNotifications == null && isCompleted()){
+						GroupNotificationList gnl = new GroupNotificationList(debug, id);
+						String back = gnl.find();
+						if(back.equals("")){
+								List<GroupNotification> ones = gnl.getGroupNotifications();
+								if(ones != null && ones.size() > 0){
+										groupNotifications = ones;
+								}
+						}
+				}
+				return groupNotifications;
+		}
+				
     //
     // setters
     //
