@@ -86,7 +86,10 @@ public abstract class TopAction extends ActionSupport implements SessionAware, S
 										utility_username = val;
 								val = ctx.getInitParameter("gis_username");
 								if(val != null)
-										gis_username = val;								
+										gis_username = val;
+								val = ctx.getInitParameter("activeMail");
+								if(val != null && val.equals("true"))
+										activeMail = true;								
 						}
 				}catch(Exception ex){
 						System.out.println(ex);

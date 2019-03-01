@@ -309,7 +309,7 @@ public class TaskAction extends TopAction{
 				if(to.equals("")) return msg;
 				EmailHandle mail = new EmailHandle(to, from, cc, subject, msg, debug);
 				if(activeMail){
-						// System.err.println("Email will be sent ");
+						System.err.println("Email will be sent ");
 						back = mail.send();
 						EmailLog elog = new EmailLog(debug, task.getWaiver_id(), task.getTask_id(), to, from, subject, msg, back);
 						back += elog.doSave();
