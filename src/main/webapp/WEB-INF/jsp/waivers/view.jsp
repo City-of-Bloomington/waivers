@@ -199,9 +199,9 @@
 	<%@  include file="../attachments/fileUploads.jsp" %>			
 </s:if>
 <s:if test="hasEmailLogs()">
-	<s:set var="logsTitle" value="'Email Logs'" />
+	<s:set var="logsTitle" value="'Notification Logs'" />
 	<s:set var="emailLogs" value="%{emailLogs}" />
-	<%@  include file="../logs/emailLogs.jsp" %>	
+	<%@  include file="../logs/emailLogsShort.jsp" %>	
 </s:if>
 <%@  include file="../gui/footer.jsp" %>
 

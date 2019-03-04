@@ -180,12 +180,19 @@ public class EmailHandle{
 								msg.setRecipients(Message.RecipientType.TO, address);
 						}
 						if(cc != null && !cc.equals("")){
-								InternetAddress[] address2 = {new InternetAddress(cc)};
-								msg.setRecipients(Message.RecipientType.CC, address2);
+								System.err.println(" cc "+cc);
+								if(cc.indexOf(",") == -1){
+										InternetAddress[] address = {new InternetAddress(cc)};
+										msg.setRecipients(Message.RecipientType.CC, address);
+								}
+								else{
+										InternetAddress[] addresses = javax.mail.internet.InternetAddress.parse(cc);
+										msg.setRecipients(Message.RecipientType.CC, addresses);
+								}
 						}
 						if(bcc != null && !bcc.equals("")){
-								InternetAddress[] address3 = javax.mail.internet.InternetAddress.parse(bcc);
-								msg.setRecipients(Message.RecipientType.BCC, address3);
+								InternetAddress[] address = javax.mail.internet.InternetAddress.parse(bcc);
+								msg.setRecipients(Message.RecipientType.BCC, address);
 						}
 						msg.setSubject(subject);
 						msg.setSentDate(new Date());
@@ -236,7 +243,7 @@ public class EmailHandle{
 										ex = null;
 								}
 						} while (ex != null);
-						logger.error(message);
+						logger.error(" "+ex);
 				}
 				return message;
     }

@@ -74,6 +74,7 @@
 				<a href="<s:property value='#application.url'/>waiver.action">New Waiver</a>
 				<a href="<s:property value='#application.url'/>entity.action">New Entity/Owner</a>				
 				<a href="<s:property value='#application.url'/>search.action">Search</a>
+				<a href="<s:property value='#application.url'/>emailLog.action">Notification Logs</a>				
       </nav>
     </div>
   </header>

@@ -14,6 +14,7 @@ public class EmailLog extends CommonInc implements java.io.Serializable{
     String id="",
 				waiver_id="", date="",
 				task_id="",
+				cc_users="",
 				to_user="",
 				from_user="",
 				subject="",
@@ -25,26 +26,45 @@ public class EmailLog extends CommonInc implements java.io.Serializable{
 		public EmailLog(){
 
 		}	
-		public EmailLog(boolean deb, String val, String val2, String val3, String val4, String val5, String val6, String val7, String val8, String val9){
+		public EmailLog(boolean deb,
+										String val,
+										String val2,
+										String val3,
+										String val4,
+										String val5,
+										String val6,
+										String val7,
+										String val8,
+										String val9,
+										String val10){
 				super(deb);				
-				setValues(val, val2, val3, val4, val5, val6, val7, val8, val9);
+				setValues(val, val2, val3, val4, val5, val6, val7, val8, val9, val10);
 
     }
 		// for new records
-		public EmailLog(boolean deb, String val, String val2, String val3, String val4, String val5, String val6, String val7){
+		public EmailLog(boolean deb,
+										String val,
+										String val2,
+										String val3,
+										String val4,
+										String val5,
+										String val6,
+										String val7,
+										String val8){
 				super(deb);				
-				setValues(null, val, val2, null, val3, val4, val5, val6, val7);
+				setValues(null, val, val2, null, val3, val4, val5, val6, val7, val8);
     }		
-		void setValues(String val, String val2, String val3, String val4, String val5, String val6, String val7, String val8, String val9){
+		void setValues(String val, String val2, String val3, String val4, String val5, String val6, String val7, String val8, String val9, String val10){
 				setId(val);
 				setWaiver_id(val2);
 				setTask_id(val3);
 				setDate(val4);
 				setToUser(val5);
 				setFromUser(val6);
-				setSubject(val7);
-				setMsg(val8);
-				setEmailErrors(val9);
+				setCcUsers(val7);
+				setSubject(val8);
+				setMsg(val9);
+				setEmailErrors(val10);
 		}
 		
 		public EmailLog(String val){
@@ -85,6 +105,9 @@ public class EmailLog extends CommonInc implements java.io.Serializable{
     public String getToUser(){
 				return to_user;
     }
+    public String getCcUsers(){
+				return cc_users;
+    }		
     public String getFromUser(){
 				return from_user;
     }
@@ -123,6 +146,10 @@ public class EmailLog extends CommonInc implements java.io.Serializable{
 				if(val != null)
 						to_user = val;
     }
+    public void setCcUsers(String val){
+				if(val != null)
+						cc_users = val;
+    }		
     public void setFromUser(String val){
 				if(val != null)
 						from_user = val;
@@ -148,7 +175,7 @@ public class EmailLog extends CommonInc implements java.io.Serializable{
 				Connection con = null;
 				PreparedStatement pstmt = null;
 				ResultSet rs = null;
-				String qq = "select id,waiver_id,task_id,date_format(t.date,'%m/%d/%Y'),to_user,from_user,subject, msg, email_errors "+
+				String qq = "select id,waiver_id,task_id,date_format(t.date,'%m/%d/%Y'),to_user,from_user,cc_users,subject, msg, email_errors "+
 						"from email_logs where id=?";
 				con = Helper.getConnection();
 				if(con == null){
@@ -172,7 +199,8 @@ public class EmailLog extends CommonInc implements java.io.Serializable{
 													rs.getString(6),
 													rs.getString(7),
 													rs.getString(8),
-													rs.getString(9));
+													rs.getString(9),
+													rs.getString(10));
 						}
 						else{
 								back ="Record "+id+" Not found";
@@ -197,7 +225,7 @@ public class EmailLog extends CommonInc implements java.io.Serializable{
 				Connection con = null;
 				PreparedStatement pstmt = null;
 				ResultSet rs = null;
-				String qq = "insert into email_logs values(0,?,?,now(),?, ?,?,?,?)";
+				String qq = "insert into email_logs values(0,?,?,now(),?, ?,?,?,?,?)";
 				con = Helper.getConnection();
 				if(con == null){
 						back = "Could not connect to DB";
@@ -223,18 +251,22 @@ public class EmailLog extends CommonInc implements java.io.Serializable{
 								pstmt.setNull(4, Types.VARCHAR);
 						else
 								pstmt.setString(4, from_user);
-						if(subject.equals(""))
+						if(cc_users.equals(""))
 								pstmt.setNull(5, Types.VARCHAR);
 						else
-								pstmt.setString(5, subject);
-						if(msg.equals(""))
+								pstmt.setString(5, from_user);						
+						if(subject.equals(""))
 								pstmt.setNull(6, Types.VARCHAR);
 						else
-								pstmt.setString(6, msg);
-						if(email_errors.equals(""))
+								pstmt.setString(6, subject);
+						if(msg.equals(""))
 								pstmt.setNull(7, Types.VARCHAR);
 						else
-								pstmt.setString(7, email_errors);						
+								pstmt.setString(7, msg);
+						if(email_errors.equals(""))
+								pstmt.setNull(8, Types.VARCHAR);
+						else
+								pstmt.setString(8, email_errors);						
 						pstmt.executeUpdate();
 						//
 						// get the id of the new record

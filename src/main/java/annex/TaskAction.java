@@ -87,7 +87,7 @@ public class TaskAction extends TopAction{
 										addActionError(back);
 								}
 								else{
-										getWaiver();								
+										waiver = task.getWaiver();								
 										if(task.hasPartName()){
 												handleWaiverUpdate();
 										}
@@ -236,21 +236,22 @@ public class TaskAction extends TopAction{
 				String back = "";
 				String subject = "", msg = "";
 				String from = user.getUsername()+city_email;
-				String to = null, cc = null;
+				String to = "", cc = null;
 				if(waiver == null){
 						back = "No waiver available";
 						return back;
 				}
 				if(toBeNotifiedGroups != null){
 						for(Group gg:toBeNotifiedGroups){
+								to="";cc=null;								
 								List<User> users = gg.getUsers();
 								for(User one:users){
 										if(one.hasActiveMail() && one.isActive()){
-												if(to == null){
+												if(to.equals("")){
 														to = one.getUsername()+city_email;
 												}
 												else{
-														if(cc == null){
+														if(cc == null || cc.equals("")){
 																cc = one.getUsername()+city_email;
 														}
 														else{
@@ -262,7 +263,7 @@ public class TaskAction extends TopAction{
 								}
 								if(gg.getName().equals("Legal")){
 										subject = " Waiver application and deed received ";
-										msg = " Hi \n\n";
+										msg = " Hi test please ignore\n\n";
 										msg += " We would like to inform you that the following waiver is\n "+
 												" ready to be prepared and signed \n"+
 												" Waiver ID = "+waiver.getId()+"\n"+
@@ -274,7 +275,7 @@ public class TaskAction extends TopAction{
 								}
 								else if(gg.getName().equals("Utilities")){
 										subject = " Waiver ready to be recorded and service connection to proceed ";
-										msg = " Hi \n\n";
+										msg = " Hi test please ignore\n\n";
 										msg += " We would like to inform you that the following waiver is\n "+
 												" ready to be recorded and service connection for \n"+
 												" address below to proceed \n\n"+
@@ -287,7 +288,7 @@ public class TaskAction extends TopAction{
 								}
 								else if(gg.getName().equals("GIS")){
 										subject = " Waiver ready to be added to GIS map ";
-										msg = " Hi \n\n";
+										msg = " Hi test pleas ignore\n\n";
 										msg += " We would like to inform you that the following waiver is\n "+
 												" ready to be added to GIS map. \n"+
 												" See waiver info below \n\n"+
@@ -298,12 +299,18 @@ public class TaskAction extends TopAction{
 												" Thanks\n\n";
 										back = sendEmails(to, from, cc, subject, msg);
 								}
+								if(!back.equals("")){
+										logger.error(back);
+										System.err.println(back);
+								}
 						}
 				}
 				return back;
 		}
-		String sendEmails(String to, String from,
-											String cc, String subject,
+		String sendEmails(String to,
+											String from,
+											String cc,
+											String subject,
 											String msg){
 				String back = "";
 				if(to.equals("")) return msg;
@@ -311,7 +318,7 @@ public class TaskAction extends TopAction{
 				if(activeMail){
 						System.err.println("Email will be sent ");
 						back = mail.send();
-						EmailLog elog = new EmailLog(debug, task.getWaiver_id(), task.getTask_id(), to, from, subject, msg, back);
+						EmailLog elog = new EmailLog(debug, task.getWaiver_id(), task.getTask_id(), to, from, cc, subject, msg, back);
 						back += elog.doSave();
 				}
 				return back;

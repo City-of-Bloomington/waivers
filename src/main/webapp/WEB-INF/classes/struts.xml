@@ -131,6 +131,13 @@
 			<result name="error">/WEB-INF/jsp/types/workflow.jsp</result>
 			<result name="success">/WEB-INF/jsp/types/workflow.jsp</result>
 		</action>
+		<action name="emailLog" 
+						class="annex.NotificationLogsAction" 
+						method="execute">
+			<result name="input">/WEB-INF/jsp/logs/emailLog.jsp</result>		
+			<result name="error">/WEB-INF/jsp/logs/emailLog.jsp</result>
+			<result name="success">/WEB-INF/jsp/logs/emailLog.jsp</result>
+		</action>		
 		<action name="entity" 
 						class="annex.EntityAction" 
 						method="execute">

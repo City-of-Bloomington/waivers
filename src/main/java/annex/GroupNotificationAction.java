@@ -21,7 +21,7 @@ public class GroupNotificationAction extends TopAction{
 		List<Type> groups = null;
 		List<Step> steps = null;		
 		List<GroupNotification> groupNotifications = null;
-		String groupNotificationsTitle = "Current group nofication settings";
+		String groupNotificationsTitle = "Current group notfication settings";
 		public String execute(){
 				String ret = SUCCESS;
 				String back = doPrepare();

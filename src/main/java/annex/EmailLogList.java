@@ -15,7 +15,7 @@ public class EmailLogList extends CommonInc{
 
 		static Logger logger = Logger.getLogger(EmailLogList.class);
 		static final long serialVersionUID = 260L;
-		String waiver_id = "", task_id=""; 
+		String waiver_id = "", waiver_num="", task_id="", limit="limit 12"; 
 		List<EmailLog> emailLogs = null;
 	
 		public EmailLogList(){
@@ -37,12 +37,21 @@ public class EmailLogList extends CommonInc{
 		}
 		
 		public void setWaiver_id(String val){
-				if(val != null)
+				if(val != null && !val.equals(""))
 						waiver_id = val;
 		}
+		public void setWaiver_num(String val){
+				if(val != null && !val.equals(""))
+						waiver_num = val;
+		}		
 		public void setTask_id(String val){
-				if(val != null)
+				if(val != null && !val.equals(""))
 						task_id = val;
+		}
+		public void setLimit(String val){
+				if(val != null && !val.equals("")){
+						limit = val;
+				}
 		}
 		public String find(){
 		
@@ -50,7 +59,7 @@ public class EmailLogList extends CommonInc{
 				PreparedStatement pstmt = null;
 				ResultSet rs = null;
 				Connection con = Helper.getConnection();
-				String qq = "select t.id,t.waiver_id,t.task_id,date_format(t.date,'%m/%d/%Y'),t.to_user,t.from_user,t.subject,t.msg,t.email_errors from email_logs t ";
+				String qq = "select t.id,t.waiver_id,t.task_id,date_format(t.date,'%m/%d/%Y'),t.to_user,t.from_user,t.cc_users,t.subject,t.msg,t.email_errors from email_logs t ";
 				if(con == null){
 						back = "Could not connect to DB";
 						addError(back);
@@ -62,6 +71,11 @@ public class EmailLogList extends CommonInc{
 								if(!qw.equals("")) qw += " and ";
 								qw += " t.waiver_id = ? ";
 						}
+						if(!waiver_num.equals("")){
+								qq += " join waivers w on w.id=t.waiver_id ";
+								if(!qw.equals("")) qw += " and ";
+								qw += " w.waiver_num = ? ";
+						}						
 						if(!task_id.equals("")){
 								if(!qw.equals("")) qw += " and ";
 								qw += " t.task_id = ? ";
@@ -70,15 +84,20 @@ public class EmailLogList extends CommonInc{
 								qq += " where "+qw;
 						}
 						qq += " order by t.id desc ";
+						qq += " "+limit;
 						if(debug){
 								logger.debug(qq);
 						}
 						pstmt = con.prepareStatement(qq);
+						int jj=1;
 						if(!waiver_id.equals("")){
-								pstmt.setString(1,waiver_id);
+								pstmt.setString(jj++,waiver_id);
 						}
+						if(!waiver_num.equals("")){
+								pstmt.setString(jj++,waiver_num);
+						}						
 						if(!task_id.equals("")){
-								pstmt.setString(2,task_id);
+								pstmt.setString(jj++,task_id);
 						}						
 						rs = pstmt.executeQuery();
 						if(emailLogs == null)
@@ -94,7 +113,8 @@ public class EmailLogList extends CommonInc{
 																 rs.getString(6),
 																 rs.getString(7),
 																 rs.getString(8),
-																 rs.getString(9));
+																 rs.getString(9),
+																 rs.getString(10));
 								if(!emailLogs.contains(one))
 										emailLogs.add(one);
 						}

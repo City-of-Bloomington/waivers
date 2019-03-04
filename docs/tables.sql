@@ -124,7 +124,7 @@
 
 				create table attachments(                                                         id int unsigned not null auto_increment,                                        waiver_id           int unsigned,                                               task_id             int unsigned,                                               file_name           varchar(128),                                               old_file_name       varchar(255),                                               hardcopy_location   varchar(255),                                               type                enum('Application','Deed','Recorded Waiver','Map','Other'),                                                                                 date                date,                                                       notes               varchar(510),                                               user_id             tinyint unsigned,                                           primary key(id),                                                                foreign key(user_id) references users(id),                                      foreign key(waiver_id) references waivers(id)                                  )engine=InnoDB;
 				
-					create table email_logs(                                                        id int unsigned auto_increment primary key,                                     waiver_id        int unsigned,                                                  task_id          int unsigned,                                                  date             date,                                                          to_user          varchar(80),                                                   from_user        varchar(80),                                                   subject          varchar(80),                                                   msg              varchar(512),                                                  email_errors     varchar(1024),                                                 foreign key(waiver_id) references waivers(id),                                  foreign key(task_id) references tasks(task_id)                                 )engine=InnoDB;
+					create table email_logs(                                                        id int unsigned auto_increment primary key,                                     waiver_id        int unsigned,                                                  task_id          int unsigned,                                                  date             date,                                                          to_user          varchar(80),                                                   from_user        varchar(80),                                                   cc_users         varchar(1024),                                                 subject          varchar(80),                                                   msg              varchar(512),                                                  email_errors     varchar(1024),                                                 foreign key(waiver_id) references waivers(id),                                  foreign key(task_id) references tasks(task_id)                                 )engine=InnoDB;
 
 ;;
 ;; 02/19/2019
@@ -146,5 +146,7 @@ alter table users add activeMail char(1) after role;
 update users set activeMail='y';
 update users set activeMail=null where id in (2,6,8,12);
  
-
+;;
+;; 3/4/2019
+alter table email_logs add cc_users varchar(1024) after from_user;
 	
