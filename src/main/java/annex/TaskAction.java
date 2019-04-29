@@ -263,10 +263,10 @@ public class TaskAction extends TopAction{
 								}
 								if(gg.getName().equals("Legal")){
 										subject = " Waiver application and deed received ";
-										msg = " Hi test please ignore\n\n";
+										msg = " Hi \n\n";
 										msg += " We would like to inform you that the following waiver is\n "+
 												" ready to be prepared and signed \n"+
-												" Waiver ID = "+waiver.getId()+"\n"+
+												" Waiver # = "+waiver.getWaiverNum()+"\n"+
 												" Address(s): "+waiver.getBasicInfo()+"\n"+
 												" Owner(s): "+waiver.getBasicInfo2()+"\n"+
 												" Other Waiver Info: "+waiver.getBasicInfo3()+"\n\n"+
@@ -275,11 +275,11 @@ public class TaskAction extends TopAction{
 								}
 								else if(gg.getName().equals("Utilities")){
 										subject = " Waiver ready to be recorded and service connection to proceed ";
-										msg = " Hi test please ignore\n\n";
+										msg = " Hi \n\n";
 										msg += " We would like to inform you that the following waiver is\n "+
 												" ready to be recorded and service connection for \n"+
 												" address below to proceed \n\n"+
-												" Waiver ID = "+waiver.getId()+"\n"+
+												" Waiver # = "+waiver.getWaiverNum()+"\n"+
 												" Address(s): "+waiver.getBasicInfo()+"\n"+
 												" Owner(s): "+waiver.getBasicInfo2()+"\n"+
 												" Other Waiver Info: "+waiver.getBasicInfo3()+"\n\n"+
@@ -288,11 +288,11 @@ public class TaskAction extends TopAction{
 								}
 								else if(gg.getName().equals("GIS")){
 										subject = " Waiver ready to be added to GIS map ";
-										msg = " Hi test pleas ignore\n\n";
+										msg = " Hi \n\n";
 										msg += " We would like to inform you that the following waiver is\n "+
 												" ready to be added to GIS map. \n"+
 												" See waiver info below \n\n"+
-												" waiver ID = "+waiver.getId()+"\n"+
+												" waiver # = "+waiver.getWaiverNum()+"\n"+
 												" Address(s): "+waiver.getBasicInfo()+"\n"+
 												" Owner(s):"+waiver.getBasicInfo2()+"\n"+
 												"Other waiver info: "+waiver.getBasicInfo3()+"\n\n"+
