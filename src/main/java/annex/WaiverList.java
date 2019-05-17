@@ -261,11 +261,11 @@ public class WaiverList extends CommonInc{
 						}						
 						if(!date_from.equals("")){
 								if(!qw.equals("")) qw += " and ";
-								qw += which_date +" = ? ";
+								qw += which_date +" >= ? ";
 						}
 						if(!date_to.equals("")){
 								if(!qw.equals("")) qw += " and ";
-								qw += which_date +" = ? ";
+								qw += which_date +" <= ? ";
 						}
 						if(entityTbl){
 								qq += ", entities e, entity_waivers ew ";
