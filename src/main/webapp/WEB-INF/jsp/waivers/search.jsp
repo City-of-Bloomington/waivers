@@ -67,6 +67,10 @@
 				<dt>Status </dt>
 				<dd><s:radio name="waiverList.status" value="%{waiverList.status}" list="#{'-1':'All','Open':'Open','Closed':'Closed','Completed':'Completed'}" /> </dd>
 			</dl>
+			<dl class="fn1-output-field">
+				<dt>Show All </dt>
+				<dd><s:checkbox name="waiverList.showAll" value="%{waiverList.showAll}" /> Yes</dd>
+			</dl>			
 		</div>
 	</div>
 	<dl class="fn1-output-field">

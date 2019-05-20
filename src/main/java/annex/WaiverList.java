@@ -22,6 +22,7 @@ public class WaiverList extends CommonInc{
 				imported="",type="", development_subdivision="",
 				legal_description="", waiver_num="",
 				which_date="w.date", limit = " limit 30";
+		boolean showAll = false;
 		List<Waiver> waivers = null;
 	
 		public WaiverList(){
@@ -92,6 +93,12 @@ public class WaiverList extends CommonInc{
 				if(val != null && !val.equals("-1"))
 						type = val; // business, trust, individual
 		}
+		public void setShowAll(boolean val){
+				if(val){
+						showAll = true;
+						setNoLimit();
+				}
+		}
 
 		public void setNoLimit(){
 				limit = "";
@@ -116,6 +123,9 @@ public class WaiverList extends CommonInc{
 		}
 		public String getWhichDate(){
 				return which_date;
+		}
+		public boolean getShowAll(){
+				return showAll;
 		}
 		public String getStatus(){
 				if(status.equals(""))
