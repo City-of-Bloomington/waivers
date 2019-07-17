@@ -7,14 +7,16 @@ package annex;
 import java.sql.*;
 import java.util.List;
 import java.text.SimpleDateFormat;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 
 public class Waiver extends CommonInc implements java.io.Serializable{
 
 		SimpleDateFormat df = new SimpleDateFormat("MM/dd/yyyy");
 		SimpleDateFormat df2 = new SimpleDateFormat("MM/dd/yy"); // paper_verified_date in mm/dd/yy format from excel		
 		static final long serialVersionUID = 310L;	
-		static Logger logger = Logger.getLogger(Waiver.class);		
+		static Logger logger = LogManager.getLogger(Waiver.class);		
     String id="",
 				waiver_num="",
 				deed_book="", deed_page="",parcel_pin="",
@@ -163,34 +165,6 @@ public class Waiver extends CommonInc implements java.io.Serializable{
 									String val22,
 									String val23
 									){
-				/*
-					" (id,"+
-					" waiver_num,"+
-					" waiver_instrument_num,"+
-					" deed_book,"+
-					" deed_page,"+ // 5
-						
-					" parcel_pin,"+
-					" legal_description,"+
-					" sec_twp_range_dir,"+
-					" development_subdivision,"+
-					" notes,"+ // 10
-						
-					" in_out_city,"+
-					" gis_notes,"+
-					" signed_date,"+ 
-					" recorder_date,"+
-					" acrage,"+
-						
-					" lot,"+ 
-					" deed_instrument_num,"+ // 20
-					" date, "+
-					" waiver_book,"+
-					" waiver_page,"+
-						
-					" expire_date,"+
-					" parcel_tax_id// 24
-				*/
 				setId(val);
 				setWaiverNum(val2);
 				setWaiverInstrumentNum(val3);
@@ -465,8 +439,8 @@ public class Waiver extends CommonInc implements java.io.Serializable{
 				return ret;
 		}
 		public String getWaiverBookPage(){
-				String ret = waiver_book;
-				if(!waiver_page.equals("")){
+				String ret = waiver_book.trim();
+				if(!waiver_page.trim().equals("")){
 						if(!ret.equals("")){
 								ret += "/";
 						}
@@ -475,8 +449,8 @@ public class Waiver extends CommonInc implements java.io.Serializable{
 				return ret;
 		}
 		public String getDeedBookPage(){
-				String ret = deed_book;
-				if(!deed_page.equals("")){
+				String ret = deed_book.trim();
+				if(!deed_page.trim().equals("")){
 						if(!ret.equals("")){
 								ret += "/";
 						}
@@ -485,8 +459,8 @@ public class Waiver extends CommonInc implements java.io.Serializable{
 				return ret;
 		}
 		public String getLotAcrage(){
-				String ret = lot;
-				if(!acrage.equals("")){
+				String ret = lot.trim();
+				if(!acrage.trim().equals("")){
 						if(!ret.equals("")){
 								ret += "/";
 						}
@@ -755,6 +729,7 @@ public class Waiver extends CommonInc implements java.io.Serializable{
 				return tasks;
 		}
 		public List<FileUpload> getUploads(){
+				logger.debug(" get uploads ");
 				if(uploads == null){
 						FileUploadList ful = new FileUploadList();
 						ful.setWaiver_id(id);
@@ -763,6 +738,9 @@ public class Waiver extends CommonInc implements java.io.Serializable{
 								List<FileUpload> ones = ful.getUploads();
 								if(ones != null && ones.size() > 0);
 								uploads = ones;
+						}
+						else{
+								logger.error(back);
 						}
 				}
 				return uploads;
@@ -775,6 +753,7 @@ public class Waiver extends CommonInc implements java.io.Serializable{
 				
 		}
 		public List<Address> getAddresses(){
+				logger.debug(" get addresses ");
 				if(addresses == null){
 						AddressList adl = new AddressList(debug, id);
 						String back = adl.find();
@@ -791,6 +770,7 @@ public class Waiver extends CommonInc implements java.io.Serializable{
 				return addresses != null && addresses.size() > 0;
 		}
 		public String getAddressInfo(){
+				logger.debug(" address info ");
 				String ret = "";
 				if(hasAddresses()){
 						for(Address one:addresses){
@@ -824,6 +804,7 @@ public class Waiver extends CommonInc implements java.io.Serializable{
 				return uploads != null && uploads.size() > 0;
 		}
 		private void findTasks(){
+				logger.debug(" find tasks ");
 				if(!id.equals("")){
 						if(completedTasks == null){
 								TaskList al = new TaskList(debug, id);
@@ -835,6 +816,9 @@ public class Waiver extends CommonInc implements java.io.Serializable{
 												completedTasks = ones;
 										}
 								}
+								else{
+										logger.error(back);
+								}
 						}
 						if(tasks == null){
 								TaskList al = new TaskList(debug, id);
@@ -845,6 +829,9 @@ public class Waiver extends CommonInc implements java.io.Serializable{
 										if(ones != null && ones.size() > 0){
 												tasks = ones;
 										}
+								}
+								else{
+										logger.error(back);
 								}
 						}
 				}
@@ -858,6 +845,9 @@ public class Waiver extends CommonInc implements java.io.Serializable{
 								List<Entity> ones = ol.getEntities();
 								if(ones != null && ones.size() > 0)
 										entities = ones;
+						}
+						else{
+								logger.error(back);
 						}
 				}
 				return entities;
@@ -895,6 +885,7 @@ public class Waiver extends CommonInc implements java.io.Serializable{
 				//
 				// find the first task to start with
 				//
+				logger.debug(" create start task");
 				String back = "";
 				Step step = null;
 				StepList tl = new StepList(debug);
@@ -925,6 +916,9 @@ public class Waiver extends CommonInc implements java.io.Serializable{
 						if(back.equals("")){
 								task2.createNextTasks();
 						}
+						else{
+								logger.error(back);
+						}
 				}
 				return back;
 		}
@@ -946,10 +940,8 @@ public class Waiver extends CommonInc implements java.io.Serializable{
 						addError(back);
 						return back;
 				}
+				logger.debug(qq);				
 				try{
-						if(debug){
-								logger.debug(qq);
-						}				
 						pstmt = con.prepareStatement(qq);
 						rs = pstmt.executeQuery();
 						if(rs.next()){
@@ -1015,10 +1007,8 @@ public class Waiver extends CommonInc implements java.io.Serializable{
 						addError(back);
 						return back;
 				}
+				logger.debug(qq);				
 				try{
-						if(debug){
-								logger.debug(qq);
-						}				
 						pstmt = con.prepareStatement(qq);
 						pstmt.setString(1,id);
 						rs = pstmt.executeQuery();
@@ -1081,7 +1071,8 @@ public class Waiver extends CommonInc implements java.io.Serializable{
 				String back = "";
 		
 				Connection con = null;
-				PreparedStatement pstmt = null;
+				PreparedStatement pstmt = null, pstmt2=null, pstmt3=null,
+						pstmt4=null, pstmt5=null;
 				ResultSet rs = null;
 				if(date.equals("")){
 						date = Helper.getToday();
@@ -1141,11 +1132,8 @@ public class Waiver extends CommonInc implements java.io.Serializable{
 						addError(back);
 						return back;
 				}
+				logger.debug(qq);				
 				try{
-						System.err.println(qq);
-						if(debug){
-								logger.debug(qq);
-						}						
 						pstmt = con.prepareStatement(qq);
 						back = setParamsForSave(pstmt);
 						pstmt.executeUpdate();
@@ -1156,8 +1144,8 @@ public class Waiver extends CommonInc implements java.io.Serializable{
 						if(debug){
 								logger.debug(qq);
 						}
-						pstmt = con.prepareStatement(qq);				
-						rs = pstmt.executeQuery();
+						pstmt2 = con.prepareStatement(qq);				
+						rs = pstmt2.executeQuery();
 						if(rs.next()){
 								id = rs.getString(1);
 						}
@@ -1166,20 +1154,20 @@ public class Waiver extends CommonInc implements java.io.Serializable{
 								if(debug){
 										logger.debug(qq);
 								}						
-								pstmt = con.prepareStatement(qq);
-								pstmt.setString(1, add_entity_id);								
-								pstmt.setString(2, id);
-								pstmt.executeUpdate();
+								pstmt3 = con.prepareStatement(qq);
+								pstmt3.setString(1, add_entity_id);								
+								pstmt3.setString(2, id);
+								pstmt3.executeUpdate();
 						}
 						if(!add_entity_ids.equals("")){
 								qq = qq2;
-								pstmt = con.prepareStatement(qq);
+								pstmt4 = con.prepareStatement(qq);
 								String[] e_ids = add_entity_ids.split(",");
 								if(e_ids != null){
 										for(String str:e_ids){
-												pstmt.setString(1, str);								
-												pstmt.setString(2, id);
-												pstmt.executeUpdate();
+												pstmt4.setString(1, str);								
+												pstmt4.setString(2, id);
+												pstmt4.executeUpdate();
 										}
 								}
 						}
@@ -1188,9 +1176,9 @@ public class Waiver extends CommonInc implements java.io.Serializable{
 								if(debug){
 										logger.debug(qq);
 								}						
-								pstmt = con.prepareStatement(qq);
-								pstmt.setString(1, id);
-								pstmt.executeUpdate();
+								pstmt5 = con.prepareStatement(qq);
+								pstmt5.setString(1, id);
+								pstmt5.executeUpdate();
 						}
 						if(!id.equals("")){
 								back = createStartTask();
@@ -1202,44 +1190,11 @@ public class Waiver extends CommonInc implements java.io.Serializable{
 						addError(back);
 				}
 				finally{
-						Helper.databaseDisconnect(con, pstmt, rs);
+						Helper.databaseDisconnect(con, rs, pstmt, pstmt2, pstmt3, pstmt4, pstmt5);
 				}
 				return back;
 
 		}
-		/*
-			public String modifyBusinessFlag(){
-			String back = "";
-			Connection con = null;
-			PreparedStatement pstmt = null;
-			ResultSet rs = null;
-			String qq = "update waivers set is_business='y' where id= ? ";
-			con = Helper.getConnection();
-			if(con == null){
-			back = "Could not connect to DB";
-			addError(back);
-			return back;
-			}
-			try{
-			if(debug){
-			logger.debug(qq);
-			}						
-			pstmt = con.prepareStatement(qq);
-			pstmt.setString(1, id);
-			pstmt.executeUpdate();
-			//
-			}
-			catch(Exception ex){
-			back += ex;
-			logger.error(back);
-			addError(back);
-			}
-			finally{
-			Helper.databaseDisconnect(con, pstmt, rs);
-			}
-			return back;
-			}
-		*/
 		//
 		// needed for data import
 		//
@@ -1263,11 +1218,9 @@ public class Waiver extends CommonInc implements java.io.Serializable{
 						addError(back);
 						return back;
 				}
+				logger.debug(qq);				
 				try{
 						pstmt = con.prepareStatement(qq);
-						if(debug){
-								logger.debug(qq);
-						}				
 						pstmt.setString(1, entity_id);
 						pstmt.setString(2, id);
 						pstmt.executeUpdate();
@@ -1303,11 +1256,9 @@ public class Waiver extends CommonInc implements java.io.Serializable{
 						addError(back);
 						return back;
 				}
+				logger.debug(qq);				
 				try{
 						pstmt = con.prepareStatement(qq);
-						if(debug){
-								logger.debug(qq);
-						}				
 						pstmt.setString(1, id);
 						pstmt.setString(2, address_id);
 						pstmt.executeUpdate();
@@ -1702,7 +1653,7 @@ public class Waiver extends CommonInc implements java.io.Serializable{
 						return back;
 				}
 				Connection con = null;
-				PreparedStatement pstmt = null;
+				PreparedStatement pstmt = null, pstmt2=null, pstmt3=null;
 				ResultSet rs = null;
 				String qq = "",qq2="";
 				String qq3 = "update addresses set waiver_id=? where id in ";
@@ -1712,43 +1663,41 @@ public class Waiver extends CommonInc implements java.io.Serializable{
 						addError(back);
 						return back;
 				}
+				qq = "update waivers set "+
+								
+						"waiver_num=?,"+
+						"waiver_instrument_num=?,"+
+						"waiver_book=?,"+
+						"waiver_page=?,"+
+						"parcel_pin=?,"+
+						
+						"legal_description=?,"+
+						"parcel_tax_id=?,"+
+						"acrage=?,"+
+						"sec_twp_range_dir=?,"+
+						"development_subdivision=?,"+
+						
+						"lot=?,"+
+						"deed_book=?,"+
+						"deed_page=?,"+
+						"scanned_date=?,"+ 
+						"notes=?,"+ // 15
+						
+						"signed_date=?,"+
+						"deed_instrument_num=?,"+
+						"recorder_date=?,"+
+						"paper_verified_date=?,"+
+						"in_out_city=?,"+
+						
+						"mapped_date=?,"+
+						"gis_notes=?,"+
+						"expire_date=?,"+
+						"date=? "+
+						
+						" where id=? ";
+				qq2 = " insert into entity_waivers values(?,?)";
+				logger.debug(qq);
 				try{
-						qq = "update waivers set "+
-								
-								"waiver_num=?,"+
-								"waiver_instrument_num=?,"+
-								"waiver_book=?,"+
-								"waiver_page=?,"+
-								"parcel_pin=?,"+
-								
-								"legal_description=?,"+
-								"parcel_tax_id=?,"+
-								"acrage=?,"+
-								"sec_twp_range_dir=?,"+
-								"development_subdivision=?,"+
-								
-								"lot=?,"+
-								"deed_book=?,"+
-								"deed_page=?,"+
-								"scanned_date=?,"+ 
-								"notes=?,"+ // 15
-								
-								"signed_date=?,"+
-								"deed_instrument_num=?,"+
-								"recorder_date=?,"+
-								"paper_verified_date=?,"+
-								"in_out_city=?,"+
-								
-								"mapped_date=?,"+
-								"gis_notes=?,"+
-								"expire_date=?,"+
-								"date=? "+
-								
-								" where id=? ";
-						qq2 = " insert into entity_waivers values(?,?)";
-						if(debug){
-								logger.debug(qq);
-						}
 						pstmt = con.prepareStatement(qq);
 						int jj=1;
 						back = setParamsForUpdate(pstmt);
@@ -1759,10 +1708,10 @@ public class Waiver extends CommonInc implements java.io.Serializable{
 								if(debug){
 										logger.debug(qq);
 								}						
-								pstmt = con.prepareStatement(qq);
-								pstmt.setString(1, add_entity_id);								
-								pstmt.setString(2, id);
-								pstmt.executeUpdate();
+								pstmt2 = con.prepareStatement(qq);
+								pstmt2.setString(1, add_entity_id);								
+								pstmt2.setString(2, id);
+								pstmt2.executeUpdate();
 						}
 						if(!add_addr_ids.equals("")){
 								qq = qq3;								
@@ -1770,9 +1719,9 @@ public class Waiver extends CommonInc implements java.io.Serializable{
 								if(debug){
 										logger.debug(qq);
 								}						
-								pstmt = con.prepareStatement(qq);	
-								pstmt.setString(1, id);
-								pstmt.executeUpdate();								
+								pstmt3 = con.prepareStatement(qq);	
+								pstmt3.setString(1, id);
+								pstmt3.executeUpdate();								
 						}
 				}
 				catch(Exception ex){
@@ -1781,7 +1730,7 @@ public class Waiver extends CommonInc implements java.io.Serializable{
 						addError(back);
 				}
 				finally{
-						Helper.databaseDisconnect(con, pstmt, rs);
+						Helper.databaseDisconnect(con, rs, pstmt, pstmt2, pstmt3);
 				}
 				if(back.equals("")){
 						back = doSelect();
@@ -1941,12 +1890,10 @@ public class Waiver extends CommonInc implements java.io.Serializable{
 						addError(back);
 						return back;
 				}
+				qq = "update waivers set "+
+						"status=?,closed_by=?,closed_date=now() where id=?";
+				logger.debug(qq);
 				try{
-						qq = "update waivers set "+
-								"status=?,closed_by=?,closed_date=now() where id=?";
-						if(debug){
-								logger.debug(qq);
-						}
 						pstmt = con.prepareStatement(qq);
 						int jj=1;
 						pstmt.setString(1, "Closed");
@@ -1987,11 +1934,9 @@ public class Waiver extends CommonInc implements java.io.Serializable{
 						addError(back);
 						return back;
 				}
-				try{
-						qq = "update waivers set status='Completed' where id=?";
-						if(debug){
-								logger.debug(qq);
-						}
+				qq = "update waivers set status='Completed' where id=?";
+				logger.debug(qq);
+				try{						
 						pstmt = con.prepareStatement(qq);
 						int jj=1;
 						pstmt.setString(1, id);
@@ -2035,12 +1980,10 @@ public class Waiver extends CommonInc implements java.io.Serializable{
 						addError(back);
 						return back;
 				}
+				qq = "update waivers set "+
+						"signed_date=?,notes=? where id=?";
+				logger.debug(qq);
 				try{
-						qq = "update waivers set "+
-								"signed_date=?,notes=? where id=?";
-						if(debug){
-								logger.debug(qq);
-						}
 						pstmt = con.prepareStatement(qq);
 						java.util.Date  dateTmp = df.parse(signed_date);						
 						pstmt.setDate(1, new java.sql.Date(dateTmp.getTime()));
@@ -2091,14 +2034,12 @@ public class Waiver extends CommonInc implements java.io.Serializable{
 						addError(back);
 						return back;
 				}
+				qq = "update waivers set "+
+						"waiver_instrument_num=?,"+
+						"recorder_date=?,waiver_book=?,waiver_page=?,notes=? "+
+						"where id=?";
+				logger.debug(qq);
 				try{
-						qq = "update waivers set "+
-								"waiver_instrument_num=?,"+
-								"recorder_date=?,waiver_book=?,waiver_page=?,notes=? "+
-								"where id=?";
-						if(debug){
-								logger.debug(qq);
-						}
 						pstmt = con.prepareStatement(qq);
 						if(waiver_instrument_num.equals(""))
 								pstmt.setNull(3, Types.VARCHAR);
@@ -2159,12 +2100,10 @@ public class Waiver extends CommonInc implements java.io.Serializable{
 						addError(back);
 						return back;
 				}
+				qq = "update waivers set "+
+						"paper_verified_date=?,notes=? where id=?";
+				logger.debug(qq);
 				try{
-						qq = "update waivers set "+
-								"paper_verified_date=?,notes=? where id=?";
-						if(debug){
-								logger.debug(qq);
-						}
 						pstmt = con.prepareStatement(qq);
 						java.util.Date  dateTmp = df.parse(paper_verified_date);						
 						pstmt.setDate(1, new java.sql.Date(dateTmp.getTime()));
@@ -2208,13 +2147,11 @@ public class Waiver extends CommonInc implements java.io.Serializable{
 						addError(back);
 						return back;
 				}
+				qq = "update waivers set "+
+						"in_out_city=?,mapped_date=?,gis_notes=?,notes=? "+
+						"where id=?";
+				logger.debug(qq);
 				try{
-						qq = "update waivers set "+
-								"in_out_city=?,mapped_date=?,gis_notes=?,notes=? "+
-								"where id=?";
-						if(debug){
-								logger.debug(qq);
-						}
 						pstmt = con.prepareStatement(qq);						
 						if(in_out_city.equals("")){
 								pstmt.setNull(1, Types.VARCHAR);
@@ -2269,11 +2206,9 @@ public class Waiver extends CommonInc implements java.io.Serializable{
 						addError(back);
 						return back;
 				}
-				try{
-						qq = "delete from waivers where id=?";
-						if(debug){
-								logger.debug(qq);
-						}
+				qq = "delete from waivers where id=?";
+				logger.debug(qq);
+				try{						
 						pstmt = con.prepareStatement(qq);
 						pstmt.setString(1, id);
 						pstmt.executeUpdate();

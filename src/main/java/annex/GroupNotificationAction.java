@@ -9,12 +9,13 @@ import java.io.*;
 import java.text.*;
 import javax.servlet.http.HttpServletResponse;
 import org.apache.struts2.ServletActionContext;  
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 public class GroupNotificationAction extends TopAction{
 
 		static final long serialVersionUID = 290L;	
-		static Logger logger = Logger.getLogger(GroupNotificationAction.class);
+		static Logger logger = LogManager.getLogger(GroupNotificationAction.class);
 		//
 		User user = null;
 		GroupNotification groupNotification = null;
@@ -36,18 +37,22 @@ public class GroupNotificationAction extends TopAction{
 						}	
 				}
 				if(action.equals("Save")){
+						logger.debug(" action save ");
 						back = groupNotification.doSave();
 						if(!back.equals("")){
 								addActionError(back);
+								logger.error(back);
 						}
 						else{
 								addActionMessage("Added Successfully");
 						}
 				}				
-				else if(action.startsWith("Save")){ 
+				else if(action.startsWith("Save")){
+						logger.debug(" action update ");
 						back = groupNotification.doUpdate();
 						if(!back.equals("")){
 								addActionError(back);
+								logger.error(back);
 						}
 						else{
 								addActionMessage("Updated Successfully");
@@ -59,6 +64,7 @@ public class GroupNotificationAction extends TopAction{
 								back = groupNotification.doSelect();
 								if(!back.equals("")){
 										addActionError(back);
+										logger.error(back);
 								}								
 						}
 				}
@@ -90,6 +96,7 @@ public class GroupNotificationAction extends TopAction{
 				return groupNotifications != null && groupNotifications.size() > 0;
 		}
 		public List<GroupNotification> getGroupNotifications(){
+				logger.debug(" get group notifications ");
 				if(groupNotifications == null){
 						GroupNotificationList tl = new GroupNotificationList(debug);
 						String back = tl.find();
@@ -99,11 +106,15 @@ public class GroupNotificationAction extends TopAction{
 										groupNotifications = ones;
 								}
 						}
+						else{
+								logger.error(back);
+						}
 				}
 				return groupNotifications;
 		}
 		public List<Type> getGroups(){
 				if(groups == null){
+						logger.debug(" get groups ");
 						TypeList tl = new TypeList(debug);
 						tl.setTable_name("groups");
 						String back = tl.find();
@@ -113,12 +124,16 @@ public class GroupNotificationAction extends TopAction{
 										groups = ones;
 								}
 						}
+						else{
+								logger.error(back);
+						}
 				}
 				return groups;
 
 		}
 		public List<Step> getSteps(){
 				if(steps == null){
+						logger.debug(" get steps ");
 						StepList tl = new StepList(debug);
 						tl.setExclude_step("Start");
 						String back = tl.find();
@@ -127,6 +142,9 @@ public class GroupNotificationAction extends TopAction{
 								if(ones != null && ones.size() > 0){
 										steps = ones;
 								}
+						}
+						else{
+								logger.error(back);
 						}
 				}
 				return steps;

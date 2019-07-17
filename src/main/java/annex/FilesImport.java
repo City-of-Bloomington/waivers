@@ -20,12 +20,13 @@ import org.apache.commons.csv.CSVParser;
 import org.apache.commons.csv.CSVRecord;
 import org.apache.commons.csv.CSVFormat;
 import java.text.SimpleDateFormat;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 public class FilesImport{
 
 		boolean debug = true;
-		static Logger logger = Logger.getLogger(FilesImport.class);
+		static Logger logger = LogManager.getLogger(FilesImport.class);
 		static final long serialVersionUID = 220L;			
 		SimpleDateFormat dateFormat = new SimpleDateFormat("MM/dd/yyyy");
 		Map<String, String> map = new HashMap<>();

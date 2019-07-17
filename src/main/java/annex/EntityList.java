@@ -8,11 +8,12 @@ import java.util.*;
 import java.sql.*;
 import java.io.*;
 import javax.sql.*;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 public class EntityList extends CommonInc{
 
-		static Logger logger = Logger.getLogger(EntityList.class);
+		static Logger logger = LogManager.getLogger(EntityList.class);
 		static final long serialVersionUID = 230L;
 		String name = "", id="", waiver_id="", limit="limit 30";
 		boolean businessOnly=false, trustOnly=false, peopleOnly=false;
@@ -73,6 +74,7 @@ public class EntityList extends CommonInc{
 				ResultSet rs = null;
 				Connection con = Helper.getConnection();
 				String qq = "select u.id,u.name,u.title,u.is_business,u.is_trust from entities u, entity_waivers ow where ow.entity_id=u.id and ow.waiver_id=? ";
+				logger.debug("find for waiver");
 				if(con == null){
 						back = "Could not connect to DB";
 						addError(back);
@@ -88,11 +90,9 @@ public class EntityList extends CommonInc{
 				// all others
 				String qq4 = qq; // with title
 				qq4 += " and is_business is null and is_trust is null and title is null order by name ";				
-				qq = "("+qq2+") union ("+qq3+") union ("+qq4+")"; 
+				qq = "("+qq2+") union ("+qq3+") union ("+qq4+")";
+				logger.debug(qq);				
 				try{
-						if(debug){
-								logger.debug(qq);
-						}
 						pstmt = con.prepareStatement(qq);
 						int jj=1;
 						pstmt.setString(jj++, waiver_id);
@@ -130,6 +130,7 @@ public class EntityList extends CommonInc{
 				ResultSet rs = null;
 				Connection con = Helper.getConnection();
 				String qq = "select u.id,u.name,u.title,u.is_business,u.is_trust from entities u ", qw ="";
+				logger.debug("find ");
 				if(con == null){
 						back = "Could not connect to DB";
 						addError(back);
@@ -167,10 +168,8 @@ public class EntityList extends CommonInc{
 				if(!limit.equals("")){
 						qq += limit;
 				}
+				logger.debug(qq);				
 				try{
-						if(debug){
-								logger.debug(qq);
-						}
 						pstmt = con.prepareStatement(qq);
 						int jj=1;
 						if(!id.equals("")){

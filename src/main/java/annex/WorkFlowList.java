@@ -8,11 +8,12 @@ import java.util.*;
 import java.sql.*;
 import java.io.*;
 import javax.sql.*;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 public class WorkFlowList extends CommonInc{
 
-		static Logger logger = Logger.getLogger(WorkFlowList.class);
+		static Logger logger = LogManager.getLogger(WorkFlowList.class);
 		static final long serialVersionUID = 235L;
 		String id="", step_id="", next_step_id="",  limit="limit 30";
 		List<WorkFlow> workFlows = null;
@@ -87,11 +88,8 @@ public class WorkFlowList extends CommonInc{
 				if(!limit.equals("")){
 						qq += limit;
 				}
-				System.err.println(qq);
+				logger.debug(qq);
 				try{
-						if(debug){
-								logger.debug(qq);
-						}
 						pstmt = con.prepareStatement(qq);
 						if(!id.equals("")){
 								pstmt.setString(1, id);

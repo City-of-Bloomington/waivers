@@ -22,11 +22,12 @@ import org.apache.http.util.EntityUtils;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.protocol.HTTP;
 import org.json.*;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 public class AddressList extends CommonInc{
 
-		static Logger logger = Logger.getLogger(AddressList.class);
+		static Logger logger = LogManager.getLogger(AddressList.class);
 		static final long serialVersionUID = 230L;
 		String street_address = "", id="", waiver_id="", limit="limit 30";
 		List<Address> addresses = null;
@@ -73,6 +74,7 @@ public class AddressList extends CommonInc{
 				PreparedStatement pstmt = null;
 				ResultSet rs = null;
 				Connection con = Helper.getConnection();
+				logger.debug(" in find ");
 				String qq = "select u.id,u.street_address,u.waiver_id,u.invalid from addresses u ", qw ="";
 				if(con == null){
 						back = "Could not connect to DB";
@@ -99,9 +101,7 @@ public class AddressList extends CommonInc{
 						qq += limit;
 				}
 				try{
-						if(debug){
-								logger.debug(qq);
-						}
+						logger.debug(qq);
 						pstmt = con.prepareStatement(qq);
 						int jj=1;
 						if(!id.equals("")){
@@ -146,6 +146,7 @@ public class AddressList extends CommonInc{
 				String back = "";
 				String urlStr = url+"/?";
 				String query="format=json;queryType=address;query=";
+				logger.debug(" find similar addresses ");
 				if(addr == null || addr.equals("")){
 					 back = " No address set ";
 						return back;

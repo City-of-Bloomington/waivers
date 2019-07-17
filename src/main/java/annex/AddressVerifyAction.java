@@ -9,7 +9,8 @@ import java.io.*;
 import java.text.*;
 import javax.servlet.http.HttpServletResponse;
 import org.apache.struts2.ServletActionContext;  
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 /**
  * this code probably is not needed anymore, we are using AddressAction
  * class instead
@@ -18,7 +19,7 @@ import org.apache.log4j.Logger;
 public class AddressVerifyAction extends TopAction{
 
 		static final long serialVersionUID = 315L;	
-		static Logger logger = Logger.getLogger(AddressVerifyAction.class);
+		static Logger logger = LogManager.getLogger(AddressVerifyAction.class);
 		//
 		String waiver_id="";
 		Address address = null;
@@ -39,6 +40,7 @@ public class AddressVerifyAction extends TopAction{
 						}	
 				}
 				else if(action.equals("Save")){
+						logger.debug(" action save ");
 						back = doVerify();
 						if(!back.equals("")){
 								addActionError(back);
@@ -47,6 +49,7 @@ public class AddressVerifyAction extends TopAction{
 								back = doSave();
 								if(!back.equals("")){
 										addActionError(back);
+										logger.error(back);
 								}
 								else{
 										addActionMessage("Saved Successfully");
@@ -69,13 +72,15 @@ public class AddressVerifyAction extends TopAction{
 				}
 				return ret;
 		}
-		public Address getAddress(){ 
+		public Address getAddress(){
+				logger.debug(" get address ");
 				if(address == null){
 						if(!id.equals("")){
 								address = new Address(debug, id);
 								String back = address.doSelect();
 								if(!back.equals("")){
 										addActionError(back);
+										logger.error(back);
 								}
 						}
 						else{
@@ -116,6 +121,7 @@ public class AddressVerifyAction extends TopAction{
 		// 
 		private String doVerify(){
 				String back = "";
+				logger.debug(" do verify ");
 				if(address != null && address.canVerify()){
 						AddressList adl = new AddressList();
 						back = adl.findSimilarAddr(addrUrl, address.getAddressToVerify());
@@ -125,12 +131,16 @@ public class AddressVerifyAction extends TopAction{
 										address.setInvalid(true);
 								}
 						}
+						else{
+								logger.error(back);								
+						}
 				}
 				return back;
 		}
 		private String doSave(){
 				String ret = "";
 				if(addrCombs != null){
+						logger.debug(" action save ");
 						for(String str:addrCombs){
 								Address addr = new Address();
 								addr.setWaiver_id(waiver_id);

@@ -5,15 +5,14 @@ package annex;
  * @author W. Sibo <sibow@bloomington.in.gov>
  */
 import java.sql.*;
-import javax.naming.*;
-import javax.naming.directory.*;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 public class Type extends CommonInc implements java.io.Serializable{
 
     String id="", name="", inactive="", table_name="groups";
 		static final long serialVersionUID = 250L;	
-		static Logger logger = Logger.getLogger(Type.class);
+		static Logger logger = LogManager.getLogger(Type.class);
 		//
 		public Type(){
 				super();
@@ -139,10 +138,8 @@ public class Type extends CommonInc implements java.io.Serializable{
 						addError(back);
 						return back;
 				}
+				logger.debug(qq);				
 				try{
-						if(debug){
-								logger.debug(qq);
-						}				
 						pstmt = con.prepareStatement(qq);
 						pstmt.setString(1,id);
 						rs = pstmt.executeQuery();
@@ -171,7 +168,7 @@ public class Type extends CommonInc implements java.io.Serializable{
 				String back = "";
 		
 				Connection con = null;
-				PreparedStatement pstmt = null;
+				PreparedStatement pstmt = null, pstmt2=null;
 				ResultSet rs = null;
 				String qq = "insert into "+table_name+" values(0,?,null)";
 				if(name.equals("")){
@@ -186,11 +183,9 @@ public class Type extends CommonInc implements java.io.Serializable{
 						addError(back);
 						return back;
 				}
+				logger.debug(qq);				
 				try{
 						pstmt = con.prepareStatement(qq);
-						if(debug){
-								logger.debug(qq);
-						}
 						pstmt.setString(1,name);
 						pstmt.executeUpdate();
 						//
@@ -200,8 +195,8 @@ public class Type extends CommonInc implements java.io.Serializable{
 						if(debug){
 								logger.debug(qq);
 						}
-						pstmt = con.prepareStatement(qq);				
-						rs = pstmt.executeQuery();
+						pstmt2 = con.prepareStatement(qq);				
+						rs = pstmt2.executeQuery();
 						if(rs.next()){
 								id = rs.getString(1);
 						}
@@ -212,7 +207,7 @@ public class Type extends CommonInc implements java.io.Serializable{
 						addError(back);
 				}
 				finally{
-						Helper.databaseDisconnect(con, pstmt, rs);
+						Helper.databaseDisconnect(con, rs, pstmt, pstmt2);
 				}
 				return back;
 
@@ -239,12 +234,9 @@ public class Type extends CommonInc implements java.io.Serializable{
 						addError(back);
 						return back;
 				}
+				qq = "update "+table_name+" set name=?,inactive=? where id=?";
+				logger.debug(qq);
 				try{
-						qq = "update "+table_name+" set name=?,inactive=? "+
-								"where id=?";
-						if(debug){
-								logger.debug(qq);
-						}
 						pstmt = con.prepareStatement(qq);
 						pstmt.setString(1,name);
 						if(inactive.equals(""))
@@ -279,11 +271,9 @@ public class Type extends CommonInc implements java.io.Serializable{
 						addError(back);
 						return back;
 				}
+				qq = "delete from "+table_name+" where id=?";
+				logger.debug(qq);
 				try{
-						qq = "delete from "+table_name+" where id=?";
-						if(debug){
-								logger.debug(qq);
-						}
 						pstmt = con.prepareStatement(qq);
 						pstmt.setString(1,id);
 						pstmt.executeUpdate();

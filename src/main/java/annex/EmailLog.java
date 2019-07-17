@@ -5,9 +5,9 @@ package annex;
  * @author W. Sibo <sibow@bloomington.in.gov>
  */
 import java.sql.*;
-import javax.naming.*;
-import javax.naming.directory.*;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 
 public class EmailLog extends CommonInc implements java.io.Serializable{
 
@@ -21,7 +21,7 @@ public class EmailLog extends CommonInc implements java.io.Serializable{
 				msg="",
 				email_errors="";
 		static final long serialVersionUID = 250L;	
-		static Logger logger = Logger.getLogger(EmailLog.class);
+		static Logger logger = LogManager.getLogger(EmailLog.class);
 		//
 		public EmailLog(){
 
@@ -184,9 +184,7 @@ public class EmailLog extends CommonInc implements java.io.Serializable{
 						return back;
 				}
 				try{
-						if(debug){
-								logger.debug(qq);
-						}				
+						logger.debug(qq);
 						pstmt = con.prepareStatement(qq);
 						pstmt.setString(1,id);
 						rs = pstmt.executeQuery();
@@ -223,7 +221,7 @@ public class EmailLog extends CommonInc implements java.io.Serializable{
 				String back = "";
 		
 				Connection con = null;
-				PreparedStatement pstmt = null;
+				PreparedStatement pstmt = null, pstmt2=null;
 				ResultSet rs = null;
 				String qq = "insert into email_logs values(0,?,?,now(),?, ?,?,?,?,?)";
 				con = Helper.getConnection();
@@ -232,12 +230,10 @@ public class EmailLog extends CommonInc implements java.io.Serializable{
 						addError(back);
 						return back;
 				}
+				logger.debug(qq);
 				try{
 						pstmt = con.prepareStatement(qq);
-						if(debug){
-								logger.debug(qq);
-						}
-						pstmt.setString(1,waiver_id);
+							pstmt.setString(1,waiver_id);
 						
 						if(task_id.equals(""))
 								pstmt.setNull(2, Types.INTEGER);
@@ -275,8 +271,8 @@ public class EmailLog extends CommonInc implements java.io.Serializable{
 						if(debug){
 								logger.debug(qq);
 						}
-						pstmt = con.prepareStatement(qq);				
-						rs = pstmt.executeQuery();
+						pstmt2 = con.prepareStatement(qq);				
+						rs = pstmt2.executeQuery();
 						if(rs.next()){
 								id = rs.getString(1);
 						}
@@ -287,7 +283,7 @@ public class EmailLog extends CommonInc implements java.io.Serializable{
 						addError(back);
 				}
 				finally{
-						Helper.databaseDisconnect(con, pstmt, rs);
+						Helper.databaseDisconnect(con, rs, pstmt, pstmt2);
 				}
 				return back;
 

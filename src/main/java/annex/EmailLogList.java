@@ -8,12 +8,13 @@ import java.util.*;
 import java.sql.*;
 import java.io.*;
 import javax.sql.*;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 
 public class EmailLogList extends CommonInc{
 
-		static Logger logger = Logger.getLogger(EmailLogList.class);
+		static Logger logger = LogManager.getLogger(EmailLogList.class);
 		static final long serialVersionUID = 260L;
 		String waiver_id = "", waiver_num="", task_id="", limit="limit 12"; 
 		List<EmailLog> emailLogs = null;
@@ -59,10 +60,12 @@ public class EmailLogList extends CommonInc{
 				PreparedStatement pstmt = null;
 				ResultSet rs = null;
 				Connection con = Helper.getConnection();
+				logger.debug(" in find ");
 				String qq = "select t.id,t.waiver_id,t.task_id,date_format(t.date,'%m/%d/%Y'),t.to_user,t.from_user,t.cc_users,t.subject,t.msg,t.email_errors from email_logs t ";
 				if(con == null){
 						back = "Could not connect to DB";
 						addError(back);
+						logger.error(back);
 						return back;
 				}
 				String qw = "";
@@ -85,9 +88,7 @@ public class EmailLogList extends CommonInc{
 						}
 						qq += " order by t.id desc ";
 						qq += " "+limit;
-						if(debug){
-								logger.debug(qq);
-						}
+						logger.debug(qq);
 						pstmt = con.prepareStatement(qq);
 						int jj=1;
 						if(!waiver_id.equals("")){

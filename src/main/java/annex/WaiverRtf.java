@@ -19,14 +19,15 @@ import com.lowagie.text.Font;
 import com.lowagie.text.Element;
 import com.lowagie.text.FontFactory;
 import com.lowagie.text.Paragraph;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
-import org.apache.log4j.Logger;
 
 public class WaiverRtf extends HttpServlet {
 
-    String url="";
+    static Logger logger = LogManager.getLogger(WaiverRtf.class);		
     static final long serialVersionUID = 70L;
-    static Logger logger = Logger.getLogger(WaiverRtf.class);
+    String url="";
     boolean debug = false;
     String fileAndPath = "waiver.rtf";
     /**
@@ -83,6 +84,7 @@ public class WaiverRtf extends HttpServlet {
 						res.sendRedirect(str);
 						return; 
 				}
+				logger.debug(" waiver rtf ");
 				//
 				/// Release judgment
 				//

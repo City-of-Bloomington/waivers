@@ -6,15 +6,15 @@ package annex;
  */
 import java.util.*;
 import java.io.*;
-import java.text.*;
 import javax.servlet.http.HttpServletResponse;
 import org.apache.struts2.ServletActionContext;  
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 public class StepAction extends TopAction{
 
 		static final long serialVersionUID = 290L;	
-		static Logger logger = Logger.getLogger(StepAction.class);
+		static Logger logger = LogManager.getLogger(StepAction.class);
 		//
 		User user = null;
 		Step step = null;
@@ -31,22 +31,26 @@ public class StepAction extends TopAction{
 								res.sendRedirect(str);
 								return super.execute();
 						}catch(Exception ex){
-								System.err.println(ex);
+								logger.error(ex);
 						}	
 				}
 				if(action.equals("Save")){
+						logger.debug(" action save ");
 						back = step.doSave();
 						if(!back.equals("")){
 								addActionError(back);
+								logger.error(back);
 						}
 						else{
 								addActionMessage("Added Successfully");
 						}
 				}				
-				else if(action.startsWith("Save")){ 
+				else if(action.startsWith("Save")){
+						logger.debug(" action update ");
 						back = step.doUpdate();
 						if(!back.equals("")){
 								addActionError(back);
+								logger.error(back);
 						}
 						else{
 								addActionMessage("Updated Successfully");
@@ -55,9 +59,11 @@ public class StepAction extends TopAction{
 				else{		
 						getStep();
 						if(!id.equals("")){
+								logger.debug(" action select ");
 								back = step.doSelect();
 								if(!back.equals("")){
 										addActionError(back);
+										logger.error(back);
 								}								
 						}
 				}
@@ -86,6 +92,7 @@ public class StepAction extends TopAction{
 		}
 		public List<Step> getSteps(){
 				if(steps == null){
+						logger.debug(" get steps ");
 						StepList tl = new StepList(debug);
 						String back = tl.find();
 						if(back.equals("")){
@@ -94,11 +101,15 @@ public class StepAction extends TopAction{
 										steps = ones;
 								}
 						}
+						else{
+								logger.error(back);
+						}
 				}
 				return steps;
 		}
 		public List<Type> getGroups(){
 				if(groups == null){
+						logger.debug(" get groups ");
 						TypeList tl = new TypeList(debug, null, "groups");
 						String back = tl.find();
 						if(back.equals("")){
@@ -106,6 +117,9 @@ public class StepAction extends TopAction{
 								if(ones != null && ones.size() > 0){
 										groups = ones;
 								}
+						}
+						else{
+								logger.error(back);
 						}
 				}
 				return groups;

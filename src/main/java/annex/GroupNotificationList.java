@@ -8,12 +8,12 @@ import java.util.*;
 import java.sql.*;
 import java.io.*;
 import javax.sql.*;
-import org.apache.log4j.Logger;
-
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 public class GroupNotificationList extends CommonInc{
 
-		static Logger logger = Logger.getLogger(GroupNotificationList.class);
+		static Logger logger = LogManager.getLogger(GroupNotificationList.class);
 		static final long serialVersionUID = 260L;
 		String completed_step_id = "", group_id=""; 
 		List<GroupNotification> groupNotifications = null;
@@ -52,23 +52,23 @@ public class GroupNotificationList extends CommonInc{
 						return back;
 				}
 				String qw = "";
+				if(!completed_step_id.equals("")){
+						if(!qw.equals("")) qw += " and ";
+						qw += " t.completed_step_id = ? ";
+				}
+				if(!group_id.equals("")){
+						if(!qw.equals("")) qw += " and ";
+						qw += " t.group_id = ? ";
+				}						
+				if(!qw.equals("")){
+						qq += " where "+qw;
+				}
+				qq += " order by t.id ";
+				if(debug){
+						logger.debug(qq);
+				}
+				
 				try{
-						if(!completed_step_id.equals("")){
-								if(!qw.equals("")) qw += " and ";
-								qw += " t.completed_step_id = ? ";
-						}
-						if(!group_id.equals("")){
-								if(!qw.equals("")) qw += " and ";
-								qw += " t.group_id = ? ";
-						}						
-						if(!qw.equals("")){
-								qq += " where "+qw;
-						}
-						qq += " order by t.id ";
-						if(debug){
-								logger.debug(qq);
-						}
-						System.err.println(qq);
 						pstmt = con.prepareStatement(qq);
 						int jj=1;
 						if(!completed_step_id.equals("")){

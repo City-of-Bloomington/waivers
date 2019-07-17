@@ -9,12 +9,13 @@ import java.io.*;
 import java.text.*;
 import javax.servlet.http.HttpServletResponse;
 import org.apache.struts2.ServletActionContext;  
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 public class GroupAction extends TopAction{
 
 		static final long serialVersionUID = 290L;	
-		static Logger logger = Logger.getLogger(GroupAction.class);
+		static Logger logger = LogManager.getLogger(GroupAction.class);
 		//
 		User user = null;
 		Type group = null;
@@ -34,18 +35,22 @@ public class GroupAction extends TopAction{
 						}	
 				}
 				if(action.equals("Save")){
+						logger.debug(" action save ");
 						back = group.doSave();
 						if(!back.equals("")){
 								addActionError(back);
+								logger.error(back);								
 						}
 						else{
 								addActionMessage("Added Successfully");
 						}
 				}				
-				else if(action.startsWith("Save")){ 
+				else if(action.startsWith("Save")){
+						logger.debug(" action update ");
 						back = group.doUpdate();
 						if(!back.equals("")){
 								addActionError(back);
+								logger.error(back);									
 						}
 						else{
 								addActionMessage("Updated Successfully");
@@ -57,7 +62,10 @@ public class GroupAction extends TopAction{
 								back = group.doSelect();
 								if(!back.equals("")){
 										addActionError(back);
-								}								
+								}
+								else{
+										logger.error(back);	
+								}
 						}
 				}
 				return ret;
@@ -86,6 +94,7 @@ public class GroupAction extends TopAction{
 						action = val;
 		}
 		public List<Type> getGroups(){
+				logger.debug(" get groups ");
 				if(groups == null){
 						TypeList tl = new TypeList(debug, null, "groups");
 						String back = tl.find();
@@ -94,6 +103,9 @@ public class GroupAction extends TopAction{
 								if(ones != null && ones.size() > 0){
 										groups = ones;
 								}
+						}
+						else{
+								logger.error(back);	
 						}
 				}
 				return groups;

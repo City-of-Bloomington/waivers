@@ -9,12 +9,13 @@ import java.io.*;
 import java.text.*;
 import javax.servlet.http.HttpServletResponse;
 import org.apache.struts2.ServletActionContext;  
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 public class EntityAction extends TopAction{
 
 		static final long serialVersionUID = 315L;	
-		static Logger logger = Logger.getLogger(EntityAction.class);
+		static Logger logger = LogManager.getLogger(EntityAction.class);
 		//
 		String name = "", type="", waiver_id="";
 		Entity entity = null;
@@ -31,15 +32,18 @@ public class EntityAction extends TopAction{
 								return super.execute();
 						}catch(Exception ex){
 								System.err.println(ex);
+								logger.error(ex);
 						}	
 				}
 				if(!type.equals("")){
 						ret = "popup";
 				}
 				if(action.equals("Save")){
+						logger.debug(" action save ");
 						back = entity.doSave();
 						if(!back.equals("")){
 								addActionError(back);
+								logger.error(back);
 						}
 						else{
 								id = entity.getId();
@@ -47,18 +51,22 @@ public class EntityAction extends TopAction{
 						}
 				}				
 				else if(action.equals("Save Changes")){
+						logger.debug(" action save changes ");
 						back = entity.doUpdate();
 						if(!back.equals("")){
 								addActionError(back);
+								logger.error(back);
 						}
 						else{
 								addActionMessage("Updated Successfully");
 						}
 				}
 				else if(action.equals("Remove")){
+						logger.debug(" action remove ");
 						back = entity.doRemove();
 						if(!back.equals("")){
 								addActionError(back);
+								logger.error(back);
 						}
 						else{
 								addActionMessage("Entity removed Successfully");
@@ -68,7 +76,7 @@ public class EntityAction extends TopAction{
 										res.sendRedirect(str);
 										return super.execute();
 								}catch(Exception ex){
-										System.err.println(ex);
+									 logger.error(ex);
 								}									
 						}
 				}				
@@ -99,11 +107,13 @@ public class EntityAction extends TopAction{
 		}
 		public Entity getEntity(){ 
 				if(entity == null){
+						logger.debug(" get entity");	
 						if(!id.equals("")){
 								entity = new Entity(debug, id);
 								String back = entity.doSelect();
 								if(!back.equals("")){
 										addActionError(back);
+										logger.error(back);	
 								}
 						}
 						else{
@@ -142,9 +152,15 @@ public class EntityAction extends TopAction{
 		// we can use to get entity list for auto_complete
 		public List<Entity> getEntities(){ 
 				if(entities == null){
+						logger.debug(" get entities");						
 						EntityList dl = new EntityList();
 						String back = dl.find();
-						entities = dl.getEntities();
+						if(back.equals("")){
+								entities = dl.getEntities();
+						}
+						else{
+								logger.error(back);
+						}
 				}		
 				return entities;
 		}

@@ -9,12 +9,15 @@ package annex;
 import java.sql.*;
 import java.util.List;
 import java.util.ArrayList;
-
 import java.text.SimpleDateFormat;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 public class Task extends Step{
 
+		static Logger logger = LogManager.getLogger(Task.class);
+		static final long serialVersionUID = 100L;			
+		SimpleDateFormat df = new SimpleDateFormat("MM/dd/yyyy");		
 		//
 		// we are using action_id instead of id as we need step id so that
 		// we do not need to override step functions that uses step id
@@ -23,9 +26,7 @@ public class Task extends Step{
 		String field_value = "", field2_value="";
 		String task_id="", waiver_id="", start_date="", completed_date="",
 				claimed_by="";
-		static Logger logger = Logger.getLogger(Task.class);
-		static final long serialVersionUID = 100L;			
-		SimpleDateFormat df = new SimpleDateFormat("MM/dd/yyyy");
+
 		boolean completed = false, hasNextTask=false;
 		Waiver waiver = null;
 		List<GroupNotification> groupNotifications = null; 
@@ -269,6 +270,7 @@ public class Task extends Step{
 				Connection con = null;
 				PreparedStatement pstmt = null;
 				ResultSet rs = null;
+				logger.debug(" save ");
 				if(waiver_id.equals("") || id.equals("")){
 						back = "step id or waiver_id not set ";
 						return back;
@@ -284,11 +286,9 @@ public class Task extends Step{
 						addError(back);
 						return back;
 				}
+				logger.debug(qq);				
 				try{
 						pstmt = con.prepareStatement(qq);
-						if(debug){
-								logger.debug(qq);
-						}
 						int jj=1;
 						pstmt.setString(jj++, waiver_id);
 						pstmt.setString(jj++, id); // step_id
@@ -352,23 +352,21 @@ public class Task extends Step{
 				ResultSet rs = null;
 				String str="";
 				String qq = "";
-		
+				logger.debug(" update ");		
 				con = Helper.getConnection();
 				if(con == null){
 						back = "Could not connect to DB";
 						addError(back);
 						return back;
 				}
+				if(completed){
+						qq = "update tasks set claimed_by=?, field_value=?,field2_value=?,completed_date=now() where task_id=?";								
+				}
+				else{
+						qq = "update tasks set claimed_by=?, field_value=?,field2_value=? where task_id=?";
+				}
+				logger.debug(qq);				
 				try{
-						if(completed){
-								qq = "update tasks set claimed_by=?, field_value=?,field2_value=?,completed_date=now() where task_id=?";								
-						}
-						else{
-								qq = "update tasks set claimed_by=?, field_value=?,field2_value=? where task_id=?";
-						}
-						if(debug){
-								logger.debug(qq);
-						}
 						pstmt = con.prepareStatement(qq);
 						if(claimed_by.equals(""))
 								pstmt.setNull(1,Types.INTEGER);
@@ -421,11 +419,9 @@ public class Task extends Step{
 						return back;
 				}
 				else{
+						qq = "delete from tasks where task_id=?";
+						logger.debug(qq);
 						try{
-								qq = "delete from tasks where task_id=?";
-								if(debug){
-										logger.debug(qq);
-								}
 								pstmt = con.prepareStatement(qq);
 								pstmt.setString(1,task_id);
 								pstmt.executeUpdate();
@@ -476,10 +472,8 @@ public class Task extends Step{
 						addError(back);
 						return back;
 				}
+				logger.debug(qq);				
 				try{
-						if(debug){
-								logger.debug(qq);
-						}				
 						pstmt = con.prepareStatement(qq);
 						pstmt.setString(1,task_id);
 						rs = pstmt.executeQuery();

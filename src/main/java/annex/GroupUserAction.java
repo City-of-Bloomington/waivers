@@ -9,12 +9,13 @@ import java.io.*;
 import java.text.*;
 import javax.servlet.http.HttpServletResponse;
 import org.apache.struts2.ServletActionContext;  
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 public class GroupUserAction extends TopAction{
 
 		static final long serialVersionUID = 290L;	
-		static Logger logger = Logger.getLogger(GroupUserAction.class);
+		static Logger logger = LogManager.getLogger(GroupUserAction.class);
 		//
 		String group_id="", dept="";
 		User user = null;
@@ -37,18 +38,22 @@ public class GroupUserAction extends TopAction{
 						}	
 				}
 				if(action.startsWith("Add")){
+						logger.debug(" action add ");
 						back = groupUser.doAdd();
 						if(!back.equals("")){
 								addActionError(back);
+								logger.error(back);
 						}
 						else{
 								addActionMessage("Added Successfully");
 						}
 				}				
-				else if(action.startsWith("Remove")){ 
+				else if(action.startsWith("Remove")){
+						logger.debug(" action remove ");
 						back = groupUser.doRemove();
 						if(!back.equals("")){
 								addActionError(back);
+								logger.error(back);
 						}
 						else{
 								addActionMessage("Removed Successfully");
@@ -83,6 +88,7 @@ public class GroupUserAction extends TopAction{
 						action = val;
 		}
 		public List<Type> getGroups(){
+				logger.debug(" get groups ");
 				if(groups == null){
 						TypeList tl = new TypeList(debug, null, "groups");
 						String back = tl.find();
@@ -92,25 +98,12 @@ public class GroupUserAction extends TopAction{
 										groups = ones;
 								}
 						}
+						else{
+								logger.error(back);
+						}
 				}
 				return groups;
 		}
-		/*
-		public List<User> getOther_users(){
-				getGroupUser();
-				if(groupUser != null){
-						other_users = groupUser.getOtherUsers();
-				}
-				return other_users;
-		}
-		public List<User> getGroup_users(){
-				getGroupUser();
-				if(groupUser != null){
-						group_users = groupUser.getGroupUsers();
-				}
-				return group_users;
-		}		
-		*/		
 
 }
 

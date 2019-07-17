@@ -5,7 +5,8 @@ import javax.mail.*;
 import javax.mail.Address;
 import javax.mail.internet.*;
 import javax.activation.*;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 /**
  * msgmail creates a very simple text/plain message and sends it.
@@ -22,7 +23,7 @@ import org.apache.log4j.Logger;
 public class EmailHandle{
 
 		final static long serialVersionUID = 580L;
-		static Logger logger = Logger.getLogger(EmailHandle.class);			
+		static Logger logger = LogManager.getLogger(EmailHandle.class);			
     static String msgText = "This is a message body.\nHere's the second line.";
     static String to = "sibow@bloomington.in.gov";
     static String from = "sibow@bloomington.in.gov";
@@ -159,6 +160,7 @@ public class EmailHandle{
 		public String send(){
 		
 				String message = "";
+				logger.debug(" sending emails ");
 				try {
 						//
 						// create some properties and get the default Session
@@ -250,6 +252,7 @@ public class EmailHandle{
 		public String sendWAttach(){
 		
 				String message = "";
+				logger.debug("send with attach ");
 				try {
 						//
 						// create some properties and get the default Session

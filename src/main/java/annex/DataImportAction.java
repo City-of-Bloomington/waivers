@@ -9,12 +9,13 @@ import java.io.*;
 import java.text.*;
 import javax.servlet.http.HttpServletResponse;
 import org.apache.struts2.ServletActionContext;  
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 public class DataImportAction extends TopAction{
 
 		static final long serialVersionUID = 290L;	
-		static Logger logger = Logger.getLogger(DataImportAction.class);
+		static Logger logger = LogManager.getLogger(DataImportAction.class);
 		//
 		// old file
 		// String file_name = "c:\\webapps\\waivers\\docs\\Waiver_GIS20160816.csv";

@@ -6,15 +6,15 @@ package annex;
  */
 import java.util.*;
 import java.io.*;
-import java.text.*;
 import javax.servlet.http.HttpServletResponse;
 import org.apache.struts2.ServletActionContext;  
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 public class TaskAction extends TopAction{
 
 		static final long serialVersionUID = 315L;	
-		static Logger logger = Logger.getLogger(TaskAction.class);
+		static Logger logger = LogManager.getLogger(TaskAction.class);
 		//
 		Task task = null;
 		Waiver waiver = null;
@@ -37,10 +37,12 @@ public class TaskAction extends TopAction{
 						}	
 				}
 				if(action.equals("Save")){
+						logger.debug(" action save ");
 						task.setClaimedByIfNotSet(user.getId());
 						back = task.doSave();
 						if(!back.equals("")){
 								addActionError(back);
+								logger.error(back);
 						}
 						else{
 								id = task.getId();
@@ -53,10 +55,12 @@ public class TaskAction extends TopAction{
 						}
 				}				
 				else if(action.equals("Save Changes")){
+						logger.debug(" action update ");
 						task.setClaimedByIfNotSet(user.getId());	 // we needed for actions					
 						back = task.doUpdate();
 						if(!back.equals("")){
 								addActionError(back);
+								logger.error(back);								
 						}
 						else{
 								if(task.hasPartName()){
@@ -67,10 +71,12 @@ public class TaskAction extends TopAction{
 								ret = "view";
 						}
 				}
-				else if(action.equals("Delete")){ 
+				else if(action.equals("Delete")){
+						logger.debug(" action delete ");
 						back = task.doDelete();
 						if(!back.equals("")){
 								addActionError(back);
+								logger.error(back);
 						}
 						else{
 								addActionMessage("Deleted Successfully");								
@@ -78,6 +84,7 @@ public class TaskAction extends TopAction{
 						}
 				}
 				else if(action.endsWith("Completed")){
+						logger.debug(" action completed ");
 						getTask();
 						if(!task.isCompleted()){
 								task.setClaimedByIfNotSet(user.getId());
@@ -85,6 +92,7 @@ public class TaskAction extends TopAction{
 								back = task.doUpdate();
 								if(!back.equals("")){
 										addActionError(back);
+										logger.error(back);
 								}
 								else{
 										waiver = task.getWaiver();								
@@ -125,6 +133,7 @@ public class TaskAction extends TopAction{
 						back = task.doSelect();
 						if(!back.equals("")){
 								addActionError(back);
+								logger.error(back);
 						}
 				}
 				else if(!task_id.equals("")){
@@ -137,6 +146,7 @@ public class TaskAction extends TopAction{
 				return ret;
 		}
 		public Waiver getWaiver(){
+				logger.debug(" action get waiver ");
 				if(waiver == null){
 						if(!waiver_id.equals("")){
 								waiver = new Waiver(debug, waiver_id);
@@ -156,7 +166,8 @@ public class TaskAction extends TopAction{
 						addActionError(back);
 				}
 		}
-		public Task getTask(){ 
+		public Task getTask(){
+				logger.debug(" get task ");
 				if(task == null){
 						if(!task_id.equals("")){
 								task = new Task(debug, task_id);
@@ -213,7 +224,10 @@ public class TaskAction extends TopAction{
 				if(tasks == null){
 						TaskList dl = new TaskList();
 						String back = dl.find();
-						tasks = dl.getTasks();
+						if(back.equals(""))
+								tasks = dl.getTasks();
+						else
+								logger.error(back);
 				}		
 				return tasks;
 		}
@@ -227,6 +241,9 @@ public class TaskAction extends TopAction{
 								emailLogs = logs;
 						}
 				}
+				else{
+						logger.error(back);
+				}
 				return emailLogs != null && emailLogs.size() > 0;
 		}
 		public List<EmailLog> getEmailLogs(){
@@ -237,6 +254,7 @@ public class TaskAction extends TopAction{
 				String subject = "", msg = "";
 				String from = user.getUsername()+city_email;
 				String to = "", cc = null;
+				logger.debug(" process emails ");
 				if(waiver == null){
 						back = "No waiver available";
 						return back;
@@ -316,7 +334,6 @@ public class TaskAction extends TopAction{
 				if(to.equals("")) return msg;
 				EmailHandle mail = new EmailHandle(to, from, cc, subject, msg, debug);
 				if(activeMail){
-						System.err.println("Email will be sent ");
 						back = mail.send();
 						EmailLog elog = new EmailLog(debug, task.getWaiver_id(), task.getTask_id(), to, from, cc, subject, msg, back);
 						back += elog.doSave();

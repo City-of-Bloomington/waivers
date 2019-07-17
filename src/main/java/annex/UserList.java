@@ -8,12 +8,12 @@ import java.util.*;
 import java.sql.*;
 import java.io.*;
 import javax.sql.*;
-import org.apache.log4j.Logger;
-
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 public class UserList extends CommonInc{
 
-		static Logger logger = Logger.getLogger(UserList.class);
+		static Logger logger = LogManager.getLogger(UserList.class);
 		static final long serialVersionUID = 300L;
 		String name = "", id="", username="", role="", limit="limit 30";
 		String group_id = "", exclude_group_id="", dept="";
@@ -150,10 +150,8 @@ public class UserList extends CommonInc{
 				if(!limit.equals("")){
 						qq += limit;
 				}
+				logger.debug(qq);				
 				try{
-						if(debug){
-								logger.debug(qq);
-						}
 						pstmt = con.prepareStatement(qq);
 						if(!id.equals("")){
 								pstmt.setString(1, id);

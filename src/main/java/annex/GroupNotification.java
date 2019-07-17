@@ -7,15 +7,15 @@ package annex;
 import java.sql.*;
 import javax.naming.*;
 import javax.naming.directory.*;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 public class GroupNotification extends CommonInc implements java.io.Serializable{
-
+		static final long serialVersionUID = 250L;	
+		static Logger logger = LogManager.getLogger(GroupNotification.class);
     String id="",
 				group_id="", completed_step_id="",
 				inactive="";
-		static final long serialVersionUID = 250L;	
-		static Logger logger = Logger.getLogger(GroupNotification.class);
 		Group group = null;
 		Step step = null;
 		//
@@ -114,6 +114,9 @@ public class GroupNotification extends CommonInc implements java.io.Serializable
 						if(back.equals("")){
 								group  = one;
 						}
+						else{
+								logger.error(back);
+						}
 				}
 				return group;
 		}
@@ -123,6 +126,9 @@ public class GroupNotification extends CommonInc implements java.io.Serializable
 						String back = one.doSelect();
 						if(back.equals("")){
 								step  = one;
+						}
+						else{
+								logger.error(back);
 						}
 				}
 				return step;
@@ -141,10 +147,8 @@ public class GroupNotification extends CommonInc implements java.io.Serializable
 						addError(back);
 						return back;
 				}
+				logger.debug(qq);				
 				try{
-						if(debug){
-								logger.debug(qq);
-						}				
 						pstmt = con.prepareStatement(qq);
 						pstmt.setString(1,id);
 						rs = pstmt.executeQuery();

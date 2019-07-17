@@ -13,7 +13,7 @@
 	</dl>
 	<dl class="fn1-output-field">
 		<dt>Waiver Book/Page </dt>
-		<dd><s:property value="#waiver.waiverBook" />/<s:property value="#waiver.waiverPage" />
+		<dd><s:property value="#waiver.waiverBookPage" />
 		</dd>
 	</dl>		
 	<dl class="fn1-output-field">

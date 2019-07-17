@@ -6,15 +6,17 @@ package annex;
  */
 import java.sql.*;
 import java.util.*;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 public class User extends CommonInc implements java.io.Serializable{
 
+		static final long serialVersionUID = 280L;
+		static Logger logger = LogManager.getLogger(User.class);
+		
     String id="", username="", role="user", // user, admin
 				dept="", inactive="", activeMail="";
 		String full_name="";
-		static final long serialVersionUID = 280L;
-		static Logger logger = Logger.getLogger(User.class);
 		static Map<String, String> rolesMap = null;
 		//
 		public User(){
@@ -198,9 +200,7 @@ public class User extends CommonInc implements java.io.Serializable{
 						addError(msg);
 						return msg;
 				}
-				if(debug){
-						logger.debug(qq);
-				}
+				logger.debug(qq);
 				con = Helper.getConnection();
 				if(con == null){
 						msg = "Could not connect to DB";
@@ -241,7 +241,7 @@ public class User extends CommonInc implements java.io.Serializable{
     public String doSave(){
 		
 				Connection con = null;
-				PreparedStatement stmt = null;
+				PreparedStatement stmt = null, stmt2=null;
 				ResultSet rs = null;		
 		
 				String str="", msg="";
@@ -252,9 +252,7 @@ public class User extends CommonInc implements java.io.Serializable{
 				}
 				qq = "insert into users values(0,?,?,?,?,?,?)";
 				//
-				if(debug){
-						logger.debug(qq);
-				}
+				logger.debug(qq);
 				con = Helper.getConnection();
 				if(con == null){
 						msg = "Could not connect to DB";
@@ -286,8 +284,8 @@ public class User extends CommonInc implements java.io.Serializable{
 						if(debug){
 								logger.debug(qq);
 						}
-						stmt = con.prepareStatement(qq);				
-						rs = stmt.executeQuery();
+						stmt2 = con.prepareStatement(qq);				
+						rs = stmt2.executeQuery();
 						if(rs.next())
 								id = rs.getString(1);
 				}
@@ -298,7 +296,7 @@ public class User extends CommonInc implements java.io.Serializable{
 						return msg;
 				}
 				finally{
-						Helper.databaseDisconnect(con, stmt, rs);
+						Helper.databaseDisconnect(con, rs, stmt, stmt2);
 				}
 				return msg; // success
     }
@@ -316,9 +314,7 @@ public class User extends CommonInc implements java.io.Serializable{
 						msg = "User id, username or full name not set";
 						return msg;
 				}				
-				if(debug){
-						logger.debug(qq);
-				}
+				logger.debug(qq);
 				con = Helper.getConnection();
 				if(con == null){
 						msg = "Could not connect to DB";
@@ -367,6 +363,7 @@ public class User extends CommonInc implements java.io.Serializable{
 				PreparedStatement stmt = null;
 				ResultSet rs = null;			
 				qq = "delete from  users where id=?";
+				logger.debug(qq);
 				con = Helper.getConnection();
 				if(con == null){
 						msg = "Could not connect to DB";

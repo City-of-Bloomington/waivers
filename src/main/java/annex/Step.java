@@ -11,21 +11,21 @@ import java.util.List;
 import java.util.ArrayList;
 import javax.naming.*;
 import javax.naming.directory.*;
-
 import java.text.SimpleDateFormat;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 public class Step extends Type{
 
+		static Logger logger = LogManager.getLogger(Step.class);
+		static final long serialVersionUID = 220L;
+		SimpleDateFormat dateFormat = new SimpleDateFormat("MM/dd/yyyy");		
 		String field_name = "",
 				field2_name="",
 				part_name="",
 				require_upload="",
 				suggested_upload_type=""; // Application, Deed, Recorded Waiver, Map
 		String group_id = "", alias=""; // when assign step to group
-		static Logger logger = Logger.getLogger(Step.class);
-		static final long serialVersionUID = 220L;			
-		SimpleDateFormat dateFormat = new SimpleDateFormat("MM/dd/yyyy");
 		Group group = null;
 		List<Step> nextSteps = null;
 		//
@@ -212,10 +212,8 @@ public class Step extends Type{
 						addError(back);
 						return back;
 				}
+				logger.debug(qq);				
 				try{
-						if(debug){
-								logger.debug(qq);
-						}
 						pstmt = con.prepareStatement(qq);
 						pstmt.setString(1,id);
 						rs = pstmt.executeQuery();
@@ -267,10 +265,8 @@ public class Step extends Type{
 						addError(back);
 						return back;
 				}
+				logger.debug(qq);				
 				try{
-						if(debug){
-								logger.debug(qq);
-						}						
 						pstmt = con.prepareStatement(qq);
 						pstmt.setString(1,id);
 						rs = pstmt.executeQuery();
@@ -312,11 +308,9 @@ public class Step extends Type{
 						addError(back);
 						return back;
 				}
+				logger.debug(qq);				
 				try{
 						pstmt = con.prepareStatement(qq);
-						if(debug){
-								logger.debug(qq);
-						}
 						pstmt.setString(1,name);
 						if(alias.equals("")){
 								if(name.length() > 20)
@@ -395,12 +389,9 @@ public class Step extends Type{
 						return back;
 				}
 				else{
+						qq = "update steps set name=?,alias=?,inactive=?,field_name=?,field2_name=?,part_name=?,require_upload=?,suggested_upload_type=?,inactive=? where id=?";
+						logger.debug(qq);
 						try{
-								qq = "update steps set name=?,alias=?,inactive=?,field_name=?,field2_name=?,part_name=?,require_upload=?,suggested_upload_type=?,inactive=? where id=?";
-				
-								if(debug){
-										logger.debug(qq);
-								}
 								pstmt = con.prepareStatement(qq);
 								pstmt.setString(1,name);
 								if(alias.equals("")){
@@ -481,9 +472,7 @@ public class Step extends Type{
 								qq = "insert into group_steps (group_id,step_id) values(?,?)";
 						else
 								qq = "update group_steps set group_id=? where step_id=?";
-						if(debug){
-								logger.debug(qq);
-						}
+						logger.debug(qq);
 						pstmt = con.prepareStatement(qq);
 						pstmt.setString(1, group_id);
 						pstmt.setString(2, id);
@@ -515,11 +504,9 @@ public class Step extends Type{
 						return back;
 				}
 				else{
+						qq = "delete from steps where id=?";
+						logger.debug(qq);
 						try{
-								qq = "delete from steps where id=?";
-								if(debug){
-										logger.debug(qq);
-								}
 								pstmt = con.prepareStatement(qq);
 								pstmt.setString(1, id);
 								pstmt.executeUpdate();
@@ -554,10 +541,8 @@ public class Step extends Type{
 						addError(back);
 						return back;
 				}
+				logger.debug(qq);				
 				try{
-						if(debug){
-								logger.debug(qq);
-						}				
 						pstmt = con.prepareStatement(qq);
 						pstmt.setString(1,id);
 						rs = pstmt.executeQuery();
