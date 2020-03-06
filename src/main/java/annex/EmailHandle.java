@@ -158,7 +158,10 @@ public class EmailHandle{
 		}
 		//
 		public String send(){
-		
+
+				if(from != null && !from.isEmpty() && to.indexOf(from) > -1){
+						return "No email sent ";
+				}
 				String message = "";
 				logger.debug(" sending emails ");
 				try {
@@ -252,7 +255,11 @@ public class EmailHandle{
 		public String sendWAttach(){
 		
 				String message = "";
+				if(from != null && !from.isEmpty() && to.indexOf(from) > -1){
+						return "No email sent ";
+				}				
 				logger.debug("send with attach ");
+				
 				try {
 						//
 						// create some properties and get the default Session

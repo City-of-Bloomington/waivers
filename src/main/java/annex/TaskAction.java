@@ -265,16 +265,19 @@ public class TaskAction extends TopAction{
 								List<User> users = gg.getUsers();
 								for(User one:users){
 										if(one.hasActiveMail() && one.isActive()){
+												String receiver = one.getUsername()+city_email;
+												// we do not want to send email to himself
+												if(from.indexOf(receiver) > -1) continue;
 												if(to.equals("")){
-														to = one.getUsername()+city_email;
+														to = receiver;
 												}
 												else{
 														if(cc == null || cc.equals("")){
-																cc = one.getUsername()+city_email;
+																cc = receiver;
 														}
 														else{
 																if(!cc.equals("")) cc +=",";
-																cc += one.getUsername()+city_email;
+																cc += receiver;
 														}
 												}
 										}
@@ -289,7 +292,9 @@ public class TaskAction extends TopAction{
 												" Owner(s): "+waiver.getBasicInfo2()+"\n"+
 												" Other Waiver Info: "+waiver.getBasicInfo3()+"\n\n"+
 												" Thanks\n\n";
-										back = sendEmails(to, from, cc, subject, msg);
+										if(!to.isEmpty()){
+												back = sendEmails(to, from, cc, subject, msg);
+										}
 								}
 								else if(gg.getName().equals("Utilities")){
 										subject = " Waiver ready to be recorded and service connection to proceed ";
@@ -302,7 +307,9 @@ public class TaskAction extends TopAction{
 												" Owner(s): "+waiver.getBasicInfo2()+"\n"+
 												" Other Waiver Info: "+waiver.getBasicInfo3()+"\n\n"+
 												" Thanks\n\n";
-										back = sendEmails(to, from, cc, subject, msg);
+										if(!to.isEmpty()){
+												back = sendEmails(to, from, cc, subject, msg);
+										}
 								}
 								else if(gg.getName().equals("GIS")){
 										subject = " Waiver ready to be added to GIS map ";
@@ -315,11 +322,15 @@ public class TaskAction extends TopAction{
 												" Owner(s):"+waiver.getBasicInfo2()+"\n"+
 												"Other waiver info: "+waiver.getBasicInfo3()+"\n\n"+
 												" Thanks\n\n";
-										back = sendEmails(to, from, cc, subject, msg);
+										if(!to.isEmpty()){
+												back = sendEmails(to, from, cc, subject, msg);
+										}
 								}
-								if(!back.equals("")){
-										logger.error(back);
-										System.err.println(back);
+								if(!to.isEmpty()){
+										if(!back.equals("")){
+												logger.error(back);
+												System.err.println(back);
+										}
 								}
 						}
 				}
