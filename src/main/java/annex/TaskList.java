@@ -9,12 +9,12 @@ import java.sql.*;
 import java.io.*;
 import javax.sql.*;
 import java.text.SimpleDateFormat;
-import org.apache.log4j.Logger;
-
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 public class TaskList extends CommonInc{
 
-		static Logger logger = Logger.getLogger(TaskList.class);
+		static Logger logger = LogManager.getLogger(TaskList.class);
 		static final long serialVersionUID = 110L;
 		SimpleDateFormat df = new SimpleDateFormat("MM/dd/yyyy");		
 		String date_from = "", date_to="",  id="", waiver_id="", limit="limit 30";
@@ -188,10 +188,8 @@ public class TaskList extends CommonInc{
 				if(!limit.equals("")){
 						qq += limit;
 				}
+				logger.debug(qq);				
 				try{
-						if(debug){
-								logger.debug(qq);
-						}
 						pstmt = con.prepareStatement(qq);
 						if(!task_id.equals("")){
 								

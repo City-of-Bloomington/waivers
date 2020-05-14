@@ -13,7 +13,8 @@ import javax.naming.directory.*;
 import java.io.*;
 import java.text.*;
 import java.security.MessageDigest;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 public class Helper{
 
@@ -32,7 +33,7 @@ public class Helper{
     // Non static variables
     //
 				static NumberFormat cf = NumberFormat.getCurrencyInstance();	
-		static Logger logger = Logger.getLogger(Helper.class);
+		static Logger logger = LogManager.getLogger(Helper.class);
     //
     // basic constructor
     public Helper(boolean deb){
@@ -475,7 +476,8 @@ public class Helper{
 						rs = null;
 						if(stmt != null){
 								for(PreparedStatement one:stmt){
-										one.close();
+										if(one != null)
+												one.close();
 								}
 								stmt = null;
 						}
@@ -496,8 +498,9 @@ public class Helper{
 						}
 						if (stmt != null) {
 								try {
-										for(PreparedStatement one:stmt){										
-												one.close();
+										for(PreparedStatement one:stmt){
+												if(one != null)
+														one.close();
 										}
 								} catch (SQLException e) { ; }
 								stmt = null;

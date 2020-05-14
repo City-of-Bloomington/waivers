@@ -12,12 +12,13 @@ import javax.servlet.*;
 import javax.servlet.http.*;
 import java.util.ArrayList;
 import java.util.List;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 public class EntityService extends HttpServlet{
 
 		static final long serialVersionUID = 2210L;
-		static Logger logger = Logger.getLogger(EntityService.class);
+		static Logger logger = LogManager.getLogger(EntityService.class);
     String url="";
     boolean debug = false;
 		
@@ -66,6 +67,7 @@ public class EntityService extends HttpServlet{
 								// System.err.println(name+" "+value);
 						}
 				}
+				logger.debug(" entity service ");
 				EntityList olist =  null;
 				List<Entity> entities = null;
 				if(!term.equals("")){
@@ -74,6 +76,9 @@ public class EntityService extends HttpServlet{
 						String back = olist.find();
 						if(back.equals("")){
 								entities = olist.getEntities();
+						}
+						else{
+								logger.error(back);
 						}
 				}
 				if(entities != null && entities.size() > 0){

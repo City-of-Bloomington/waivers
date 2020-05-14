@@ -9,16 +9,17 @@ import java.io.*;
 import java.text.*;
 import javax.servlet.http.HttpServletResponse;
 import org.apache.struts2.ServletActionContext;  
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 
 public class FilesImportAction extends TopAction{
 
 		static final long serialVersionUID = 290L;	
-		static Logger logger = Logger.getLogger(FilesImportAction.class);
+		static Logger logger = LogManager.getLogger(FilesImportAction.class);
 		//
 		// old file
 		String file_name = "c:\\webapps\\waivers\\docs\\pdf_list.txt";
-		// String file_name = "c:\\webapps\\waivers\\docs\\pdf_short.txt";		
 		
 		FilesImport fimport = null;
 		public String execute(){

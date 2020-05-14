@@ -9,12 +9,13 @@ import java.io.*;
 import java.text.*;
 import javax.servlet.http.HttpServletResponse;
 import org.apache.struts2.ServletActionContext;  
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 public class AddressAction extends TopAction{
 
 		static final long serialVersionUID = 315L;	
-		static Logger logger = Logger.getLogger(AddressAction.class);
+		static Logger logger = LogManager.getLogger(AddressAction.class);
 		//
 		String waiver_id="", type="";
 		Address address = null;
@@ -34,6 +35,7 @@ public class AddressAction extends TopAction{
 						}	
 				}
 				if(action.endsWith("Way")){ // Save any Way
+						logger.debug("Save Any Way action" );
 						if(address.hasId()){
 								back = doVerify();								
 								back += address.doUpdate();								
@@ -44,6 +46,7 @@ public class AddressAction extends TopAction{
 						}
 						if(!back.equals("")){
 								addActionError(back);
+								logger.error(back);
 						}
 						else{
 								id = address.getId();
@@ -51,6 +54,7 @@ public class AddressAction extends TopAction{
 						}
 				}					
 				if(action.startsWith("Save")){
+						logger.debug("Adddress Save action ");
 						if(address.hasId()){
 								back = doVerify();								
 								back += address.doUpdate();								
@@ -66,6 +70,7 @@ public class AddressAction extends TopAction{
 						}
 						if(!back.equals("")){
 								addActionError(back);
+								logger.error(back);
 						}
 						else{
 								id = address.getId();
@@ -73,6 +78,7 @@ public class AddressAction extends TopAction{
 						}
 				}				
 				else if(action.startsWith("Remove")){
+						logger.debug("address action remove");
 						back = address.doRemove();
 						if(!back.equals("")){
 								addActionError(back);
@@ -86,6 +92,7 @@ public class AddressAction extends TopAction{
 										return super.execute();
 								}catch(Exception ex){
 										System.err.println(ex);
+										logger.error(" address action "+ex);
 								}										
 						}
 				}
@@ -107,6 +114,7 @@ public class AddressAction extends TopAction{
 		}
 		public Address getAddress(){ 
 				if(address == null){
+						logger.debug("get address");
 						if(!id.equals("")){
 								address = new Address(debug, id);
 								String back = address.doSelect();
@@ -154,6 +162,7 @@ public class AddressAction extends TopAction{
 		}
 		private String doVerify(){
 				String back = "";
+				logger.debug(" do verify");
 				if(address != null && address.canVerify()){
 						AddressList adl = new AddressList();
 						back = adl.findSimilarAddr(addrUrl, address.getAddressToVerify());
@@ -170,9 +179,15 @@ public class AddressAction extends TopAction{
 		// we can use to get addresss list for auto_complete
 		public List<Address> getAddresses(){ 
 				if(addresses == null){
+						logger.debug(" get addresses ");
 						AddressList dl = new AddressList(debug, waiver_id);
 						String back = dl.find();
-						addresses = dl.getAddresses();
+						if(back.equals("")){
+								addresses = dl.getAddresses();
+						}
+						else{
+								logger.error(back);
+						}
 				}		
 				return addresses;
 		}

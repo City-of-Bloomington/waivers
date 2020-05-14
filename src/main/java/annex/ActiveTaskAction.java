@@ -9,12 +9,14 @@ import java.io.*;
 import java.text.*;
 import javax.servlet.http.HttpServletResponse;
 import org.apache.struts2.ServletActionContext;  
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 
 public class ActiveTaskAction extends TopAction{
 
 		static final long serialVersionUID = 317L;	
-		static Logger logger = Logger.getLogger(ActiveTaskAction.class);
+		static Logger logger = LogManager.getLogger(ActiveTaskAction.class);
 		//
 		List<Task> tasks = null;
 		String task_id = "";
@@ -33,9 +35,11 @@ public class ActiveTaskAction extends TopAction{
 								System.err.println(ex);
 						}	
 				}
+				logger.debug("Active tasks action");
 				back = prepareTaskList();
 				if(!back.equals("")){
 						addActionError(back);
+						logger.error(back);
 				}
 				else{
 						if(tasks == null){
@@ -59,6 +63,9 @@ public class ActiveTaskAction extends TopAction{
 								if(ones != null && ones.size() > 0){
 										tasks = ones;
 								}
+						}
+						else{
+								logger.error(" Prepare task list "+back);
 						}
 				}
 				return back;

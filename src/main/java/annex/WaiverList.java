@@ -9,12 +9,12 @@ import java.sql.*;
 import java.io.*;
 import javax.sql.*;
 import java.text.SimpleDateFormat;
-import org.apache.log4j.Logger;
-
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 public class WaiverList extends CommonInc{
 
-		static Logger logger = Logger.getLogger(WaiverList.class);
+		static Logger logger = LogManager.getLogger(WaiverList.class);
 		static final long serialVersionUID = 320L;
 		SimpleDateFormat df = new SimpleDateFormat("MM/dd/yyyy");
 		String hookup_address="", parcel_tax_id="", instrumnet_num="";
@@ -22,6 +22,7 @@ public class WaiverList extends CommonInc{
 				imported="",type="", development_subdivision="",
 				legal_description="", waiver_num="",
 				which_date="w.date", limit = " limit 30";
+		boolean showAll = false;
 		List<Waiver> waivers = null;
 	
 		public WaiverList(){
@@ -92,6 +93,12 @@ public class WaiverList extends CommonInc{
 				if(val != null && !val.equals("-1"))
 						type = val; // business, trust, individual
 		}
+		public void setShowAll(boolean val){
+				if(val){
+						showAll = true;
+						setNoLimit();
+				}
+		}
 
 		public void setNoLimit(){
 				limit = "";
@@ -116,6 +123,9 @@ public class WaiverList extends CommonInc{
 		}
 		public String getWhichDate(){
 				return which_date;
+		}
+		public boolean getShowAll(){
+				return showAll;
 		}
 		public String getStatus(){
 				if(status.equals(""))
@@ -202,83 +212,82 @@ public class WaiverList extends CommonInc{
 				}
 				String qw = "";
 				boolean entityTbl = false;
-				try{
-						if(!id.equals("")){
-								if(!qw.equals("")) qw += " and ";
-								qw += " w.id = ? ";
-						}
-						if(!waiver_num.equals("")){
-								if(!qw.equals("")) qw += " and ";
-								qw += " w.waiver_num = ? ";
-						}						
-						if(!status.equals("")){
-								if(!qw.equals("")) qw += " and ";
-								qw += " w.status = ? ";
-						}
-						if(!imported.equals("")){
-								if(!qw.equals("")) qw += " and ";
-								if(imported.equals("n"))
-										qw += " w.imported is null ";
-								else
-										qw += " w.imported is not null ";										
-						}
-						if(!type.equals("")){
-								entityTbl = true;
-								if(!qw.equals("")) qw += " and ";
-								if(type.equals("business"))
-										qw += " e.is_business is not null ";
-								else if(type.equals("trust"))
-										qw += " e.is_trust is not null ";
-								else
-										qw += " e.is_business is null and e.is_trust is null";
-						}						
-						if(!name.equals("")){
-								entityTbl = true;
-								if(!qw.equals("")) qw += " and ";
-								qw += " e.name like ?";
-						}
-						if(!hookup_address.equals("")){
-								qq += ", addresses a ";
-								if(!qw.equals("")) qw += " and ";
-								qw += " a.waiver_id=w.id ";
-								qw += " and a.street_address like ? ";
-						}
-						if(!development_subdivision.equals("")){
-								if(!qw.equals("")) qw += " and ";
-								qw += " w.development_subdivision like ? ";
-						}
-						if(!legal_description.equals("")){
-								if(!qw.equals("")) qw += " and ";
-								qw += " w.legal_description like ? ";
-						}						
-						if(!parcel_tax_id.equals("")){
-								if(!qw.equals("")) qw += " and ";
-								qw += " (w.parcel_tax_id like ?  or w.parcel_pin like ? )";
-						}
-						if(!instrumnet_num.equals("")){
-								if(!qw.equals("")) qw += " and ";
-								qw += " (w.deed_instrument_num = ? or w.waiver_instrument_num=?)";
-						}						
-						if(!date_from.equals("")){
-								if(!qw.equals("")) qw += " and ";
-								qw += which_date +" = ? ";
-						}
-						if(!date_to.equals("")){
-								if(!qw.equals("")) qw += " and ";
-								qw += which_date +" = ? ";
-						}
-						if(entityTbl){
-								qq += ", entities e, entity_waivers ew ";
-								if(!qw.equals("")) qw += " and ";
-								qw += " e.id = ew.entity_id and w.id=ew.waiver_id ";
-						}
-						if(!qw.equals("")){
-								qq += " where "+qw;
-						}
-						qq += " order by w.id desc "+limit;
-						if(debug){
-								logger.debug(qq);
-						}
+
+				if(!id.equals("")){
+						if(!qw.equals("")) qw += " and ";
+						qw += " w.id = ? ";
+				}
+				if(!waiver_num.equals("")){
+						if(!qw.equals("")) qw += " and ";
+						qw += " w.waiver_num = ? ";
+				}						
+				if(!status.equals("")){
+						if(!qw.equals("")) qw += " and ";
+						qw += " w.status = ? ";
+				}
+				if(!imported.equals("")){
+						if(!qw.equals("")) qw += " and ";
+						if(imported.equals("n"))
+								qw += " w.imported is null ";
+						else
+								qw += " w.imported is not null ";										
+				}
+				if(!type.equals("")){
+						entityTbl = true;
+						if(!qw.equals("")) qw += " and ";
+						if(type.equals("business"))
+								qw += " e.is_business is not null ";
+						else if(type.equals("trust"))
+								qw += " e.is_trust is not null ";
+						else
+								qw += " e.is_business is null and e.is_trust is null";
+				}						
+				if(!name.equals("")){
+						entityTbl = true;
+						if(!qw.equals("")) qw += " and ";
+						qw += " e.name like ?";
+				}
+				if(!hookup_address.equals("")){
+						qq += ", addresses a ";
+						if(!qw.equals("")) qw += " and ";
+						qw += " a.waiver_id=w.id ";
+						qw += " and a.street_address like ? ";
+				}
+				if(!development_subdivision.equals("")){
+						if(!qw.equals("")) qw += " and ";
+						qw += " w.development_subdivision like ? ";
+				}
+				if(!legal_description.equals("")){
+						if(!qw.equals("")) qw += " and ";
+						qw += " w.legal_description like ? ";
+				}						
+				if(!parcel_tax_id.equals("")){
+						if(!qw.equals("")) qw += " and ";
+						qw += " (w.parcel_tax_id like ?  or w.parcel_pin like ? )";
+				}
+				if(!instrumnet_num.equals("")){
+						if(!qw.equals("")) qw += " and ";
+						qw += " (w.deed_instrument_num = ? or w.waiver_instrument_num=?)";
+				}						
+				if(!date_from.equals("")){
+						if(!qw.equals("")) qw += " and ";
+						qw += which_date +" >= ? ";
+				}
+				if(!date_to.equals("")){
+						if(!qw.equals("")) qw += " and ";
+						qw += which_date +" <= ? ";
+				}
+				if(entityTbl){
+						qq += ", entities e, entity_waivers ew ";
+						if(!qw.equals("")) qw += " and ";
+						qw += " e.id = ew.entity_id and w.id=ew.waiver_id ";
+				}
+				if(!qw.equals("")){
+						qq += " where "+qw;
+				}
+				qq += " order by w.id desc "+limit;
+				logger.debug(qq);
+				try{						
 						pstmt = con.prepareStatement(qq);
 						int jj=1;
 						if(!id.equals("")){

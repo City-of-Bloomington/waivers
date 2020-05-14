@@ -6,7 +6,8 @@ package annex;
  */
 import java.sql.*;
 import java.util.*;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 public class GroupUser extends CommonInc {
 
@@ -15,7 +16,7 @@ public class GroupUser extends CommonInc {
 		List<User> group_users = null;
 		List<User> other_users = null;
 		static final long serialVersionUID = 285L;
-		static Logger logger = Logger.getLogger(GroupUser.class);
+		static Logger logger = LogManager.getLogger(GroupUser.class);
 		//
 		public GroupUser(){
 				super();
@@ -73,6 +74,7 @@ public class GroupUser extends CommonInc {
 				return other_users != null && other_users.size() > 0;
 		}		
 		public List<User> getGroup_users(){
+				logger.debug(" get group users");
 				if(group_users == null && !group_id.equals("")){
 						UserList ul = new UserList();
 						ul.setGroup_id(group_id);
@@ -84,6 +86,7 @@ public class GroupUser extends CommonInc {
 				return group_users;
 		}
 		public List<User> getOther_users(){
+				logger.debug(" get other users");
 				if(other_users == null){
 						UserList ul = new UserList();
 						if(!group_id.equals("")){
@@ -116,9 +119,7 @@ public class GroupUser extends CommonInc {
 						addError(msg);
 						return msg;
 				}
-				if(debug){
-						logger.debug(qq);
-				}
+				logger.debug(qq);
 				con = Helper.getConnection();
 				if(con == null){
 						msg = "Could not connect to DB";
@@ -159,9 +160,7 @@ public class GroupUser extends CommonInc {
 						addError(msg);
 						return msg;
 				}
-				if(debug){
-						logger.debug(qq);
-				}
+				logger.debug(qq);
 				con = Helper.getConnection();
 				if(con == null){
 						msg = "Could not connect to DB";

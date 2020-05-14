@@ -9,7 +9,8 @@ import java.sql.*;
 import javax.naming.*;
 import javax.naming.directory.*;
 import java.nio.charset.*;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 
 public class FileUpload implements java.io.Serializable{
@@ -19,7 +20,7 @@ public class FileUpload implements java.io.Serializable{
 		String waiver_id="", type="", notes="", hardcopy_location="";
 		String task_id="";
 		static final long serialVersionUID = 140L;		
-		static Logger logger = Logger.getLogger(FileUpload.class);
+		static Logger logger = LogManager.getLogger(FileUpload.class);
 		User user = null;
 		private Waiver waiver = null;
 		private Task task = null;
@@ -242,7 +243,7 @@ public class FileUpload implements java.io.Serializable{
 		}
 		String findNewId(){
 				String msg="";
-				PreparedStatement pstmt = null;
+				PreparedStatement pstmt = null, pstmt2=null;
 				Connection con = null;
 				ResultSet rs = null;
 				String qq = "insert into attachment_seq values(0)";
@@ -256,8 +257,8 @@ public class FileUpload implements java.io.Serializable{
 						pstmt = con.prepareStatement(qq);
 						pstmt.executeUpdate();
 						qq = "select LAST_INSERT_ID() ";
-						pstmt = con.prepareStatement(qq);
-						rs = pstmt.executeQuery();
+						pstmt2 = con.prepareStatement(qq);
+						rs = pstmt2.executeQuery();
 						if(rs.next()){
 								id = rs.getString(1);
 						}
@@ -267,7 +268,7 @@ public class FileUpload implements java.io.Serializable{
 						logger.error(ex+":"+qq);
 				}
 				finally{
-						Helper.databaseDisconnect(con, pstmt, rs);
+						Helper.databaseDisconnect(con, rs, pstmt, pstmt2);
 				}
 				return msg;		
 

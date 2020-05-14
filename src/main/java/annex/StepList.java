@@ -8,11 +8,12 @@ import java.util.*;
 import java.sql.*;
 import java.io.*;
 import javax.sql.*;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 public class StepList extends CommonInc{
 
-		static Logger logger = Logger.getLogger(StepList.class);
+		static Logger logger = LogManager.getLogger(StepList.class);
 		static final long serialVersionUID = 230L;
 		String field_name = "", id="", name="", limit="limit 30";
 		String group_id = "", exclude_step=""; // by name
@@ -106,10 +107,8 @@ public class StepList extends CommonInc{
 				if(!limit.equals("")){
 						qq += limit;
 				}
+				logger.debug(qq);				
 				try{
-						if(debug){
-								logger.debug(qq);
-						}
 						pstmt = con.prepareStatement(qq);
 						if(!id.equals("")){
 								pstmt.setString(1, id);
@@ -174,10 +173,8 @@ public class StepList extends CommonInc{
 						addError(back);
 						return null;
 				}
+				logger.debug(qq);				
 				try{
-						if(debug){
-								logger.debug(qq);
-						}
 						pstmt = con.prepareStatement(qq);
 						rs = pstmt.executeQuery();
 						if(rs.next()){

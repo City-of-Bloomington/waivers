@@ -8,8 +8,8 @@ import java.sql.*;
 import java.util.List;
 import java.util.ArrayList;
 import java.text.SimpleDateFormat;
-import org.apache.log4j.Logger;
-
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 public class FileUploadList{
 
@@ -18,7 +18,7 @@ public class FileUploadList{
 		String type = "", waiver_id="", task_id="";
 		String limit = " limit 30 ";
 		static final long serialVersionUID = 150L;		
-		static Logger logger = Logger.getLogger(FileUploadList.class);
+		static Logger logger = LogManager.getLogger(FileUploadList.class);
 		List<FileUpload> uploads = null;
     public FileUploadList(){
 		

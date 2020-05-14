@@ -6,15 +6,17 @@ package annex;
  */
 import java.sql.*;
 import java.util.*;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 public class User extends CommonInc implements java.io.Serializable{
 
-    String id="", username="", role="user", // user, admin
-				dept="", inactive="";
-		String full_name="";
 		static final long serialVersionUID = 280L;
-		static Logger logger = Logger.getLogger(User.class);
+		static Logger logger = LogManager.getLogger(User.class);
+		
+    String id="", username="", role="user", // user, admin
+				dept="", inactive="", activeMail="";
+		String full_name="";
 		static Map<String, String> rolesMap = null;
 		//
 		public User(){
@@ -51,7 +53,8 @@ public class User extends CommonInc implements java.io.Serializable{
 								String val3,
 								String val4,
 								String val5,
-								boolean val6
+								boolean val6,
+								boolean val7
 								){
 				//
 				// initialize
@@ -62,7 +65,8 @@ public class User extends CommonInc implements java.io.Serializable{
 				setFullName(val3);
 				setDept(val4);
 				setRole(val5);
-				setInactive(val6);
+				setActiveMail(val6);
+				setInactive(val7);
     }
 		public String getId(){
 				return id;
@@ -90,6 +94,9 @@ public class User extends CommonInc implements java.io.Serializable{
 		public boolean getInactive(){
 				return !inactive.equals("");
 		}
+		public boolean getActiveMail(){
+				return !activeMail.equals("");
+		}		
 
 		public void setId(String val){
 				if(val != null)
@@ -114,12 +121,25 @@ public class User extends CommonInc implements java.io.Serializable{
 		public void setInactive(boolean val){
 				if(val)
 						inactive = "y";
+		}
+		public void setActiveMail(boolean val){
+				if(val)
+						activeMail = "y";
+		}
+		public boolean hasActiveMail(){
+				return !activeMail.equals("");
+		}
+		public boolean isInactive(){
+				return !inactive.equals("");
+		}
+		public boolean isActive(){
+				return inactive.equals("");
 		}		
 		//
 		public boolean userExists(){
 				return !full_name.equals("");
 		}
-		    //
+		//
     public boolean hasRole(String val){
 				return role != null && role.indexOf(val) > -1;
     }
@@ -141,7 +161,7 @@ public class User extends CommonInc implements java.io.Serializable{
 						rolesMap = new HashMap<>();
 						rolesMap.put("View","View");
 						rolesMap.put("Edit","Edit");
-						rolesMap.put("Edit:Delete","Edit and Delete");						
+						rolesMap.put("Edit:Delete","Edit, Delete");						
 						rolesMap.put("Edit:Delete:Admin","Admin (all)");
 				}
 		}
@@ -168,7 +188,7 @@ public class User extends CommonInc implements java.io.Serializable{
 				Connection con = null;
 				PreparedStatement stmt = null;
 				ResultSet rs = null;		
-				String qq = " select id,username,full_name,dept,role,inactive from users where  ";
+				String qq = " select id,username,full_name,dept,role,activeMail,inactive from users where  ";
 				if(!id.equals("")){
 						qq += " id = ? ";
 				}
@@ -180,9 +200,7 @@ public class User extends CommonInc implements java.io.Serializable{
 						addError(msg);
 						return msg;
 				}
-				if(debug){
-						logger.debug(qq);
-				}
+				logger.debug(qq);
 				con = Helper.getConnection();
 				if(con == null){
 						msg = "Could not connect to DB";
@@ -202,7 +220,8 @@ public class User extends CommonInc implements java.io.Serializable{
 								setFullName(rs.getString(3));
 								setDept(rs.getString(4));
 								setRole(rs.getString(5));
-								setInactive(rs.getString(6) != null);
+								setActiveMail(rs.getString(6) != null);
+								setInactive(rs.getString(7) != null);								
 						}
 						else{
 								msg = " No such user";
@@ -222,7 +241,7 @@ public class User extends CommonInc implements java.io.Serializable{
     public String doSave(){
 		
 				Connection con = null;
-				PreparedStatement stmt = null;
+				PreparedStatement stmt = null, stmt2=null;
 				ResultSet rs = null;		
 		
 				String str="", msg="";
@@ -231,11 +250,9 @@ public class User extends CommonInc implements java.io.Serializable{
 						msg = "username or  full name not set";
 						return msg;
 				}
-				qq = "insert into users values(0,?,?,?,?,?)";
+				qq = "insert into users values(0,?,?,?,?,?,?)";
 				//
-				if(debug){
-						logger.debug(qq);
-				}
+				logger.debug(qq);
 				con = Helper.getConnection();
 				if(con == null){
 						msg = "Could not connect to DB";
@@ -254,17 +271,21 @@ public class User extends CommonInc implements java.io.Serializable{
 						else
 								stmt.setString(3, dept);
 						stmt.setString(4, role);
-						if(inactive.equals(""))
+						if(activeMail.equals(""))
 								stmt.setNull(5,Types.CHAR);
 						else
 								stmt.setString(5, "y");						
+						if(inactive.equals(""))
+								stmt.setNull(6,Types.CHAR);
+						else
+								stmt.setString(6, "y");						
 						stmt.executeUpdate();
 						qq = "select LAST_INSERT_ID() ";
 						if(debug){
 								logger.debug(qq);
 						}
-						stmt = con.prepareStatement(qq);				
-						rs = stmt.executeQuery();
+						stmt2 = con.prepareStatement(qq);				
+						rs = stmt2.executeQuery();
 						if(rs.next())
 								id = rs.getString(1);
 				}
@@ -275,7 +296,7 @@ public class User extends CommonInc implements java.io.Serializable{
 						return msg;
 				}
 				finally{
-						Helper.databaseDisconnect(con, stmt, rs);
+						Helper.databaseDisconnect(con, rs, stmt, stmt2);
 				}
 				return msg; // success
     }
@@ -287,15 +308,13 @@ public class User extends CommonInc implements java.io.Serializable{
 		
 				String str="", msg="";
 				String qq = "";
-				qq = "update users set username=?,full_name=?,dept=?,role=?,inactive=? where id=?";
+				qq = "update users set username=?,full_name=?,dept=?,role=?,activeMail=?,inactive=? where id=?";
 				//
 				if(id.equals("") || username.equals("") || full_name.equals("")){
 						msg = "User id, username or full name not set";
 						return msg;
 				}				
-				if(debug){
-						logger.debug(qq);
-				}
+				logger.debug(qq);
 				con = Helper.getConnection();
 				if(con == null){
 						msg = "Could not connect to DB";
@@ -314,11 +333,15 @@ public class User extends CommonInc implements java.io.Serializable{
 								stmt.setNull(4,Types.VARCHAR);
 						else
 								stmt.setString(4, role);
-						if(inactive.equals(""))
+						if(activeMail.equals(""))
 								stmt.setNull(5,Types.VARCHAR);
 						else
-								stmt.setString(5, "y");						
-						stmt.setString(6, id);
+								stmt.setString(5, "y");								
+						if(inactive.equals(""))
+								stmt.setNull(6,Types.VARCHAR);
+						else
+								stmt.setString(6, "y");						
+						stmt.setString(7, id);
 						stmt.executeUpdate();
 				}
 				catch(Exception ex){
@@ -340,6 +363,7 @@ public class User extends CommonInc implements java.io.Serializable{
 				PreparedStatement stmt = null;
 				ResultSet rs = null;			
 				qq = "delete from  users where id=?";
+				logger.debug(qq);
 				con = Helper.getConnection();
 				if(con == null){
 						msg = "Could not connect to DB";

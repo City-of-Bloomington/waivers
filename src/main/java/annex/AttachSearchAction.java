@@ -11,12 +11,13 @@ import java.nio.file.*;
 import org.apache.commons.io.FileUtils;
 import javax.servlet.http.HttpServletResponse;
 import org.apache.struts2.ServletActionContext;  
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 public class AttachSearchAction extends TopAction{
 
 		static final long serialVersionUID = 120L;	
-		static Logger logger = Logger.getLogger(AttachSearchAction.class);	
+		static Logger logger = LogManager.getLogger(AttachSearchAction.class);	
 
 		private List<FileUpload> uploads = null;
 		private FileUploadList uploadList = null;
@@ -25,13 +26,14 @@ public class AttachSearchAction extends TopAction{
 				String ret = INPUT;		
 				String back = doPrepare();
 				if(!back.equals("")){
+						logger.error(back);
 						try{
 								HttpServletResponse res = ServletActionContext.getResponse();
 								String str = url+"Login";
 								res.sendRedirect(str);
 								return super.execute();
 						}catch(Exception ex){
-								System.err.println(ex);
+								logger.error(ex);
 						}
 				}		
 				if(!action.equals("")){
@@ -40,6 +42,7 @@ public class AttachSearchAction extends TopAction{
 						back = uploadList.find();
 						if(!back.equals("")){
 								addActionError(back);
+								logger.error(back);
 						}
 						else{
 								uploads = uploadList.getUploads();
@@ -71,7 +74,6 @@ public class AttachSearchAction extends TopAction{
 		}
 		public List<FileUpload> getUploads(){
 				if(uploads == null){
-						// uploadList.setNoLimit();
 						String back = uploadList.find();
 						if(back.equals("")){
 								List<FileUpload> list = uploadList.getUploads();

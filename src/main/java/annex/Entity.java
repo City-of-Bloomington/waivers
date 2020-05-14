@@ -9,11 +9,9 @@ package annex;
 import java.sql.*;
 import java.util.List;
 import java.util.ArrayList;
-import javax.naming.*;
-import javax.naming.directory.*;
-
 import java.text.SimpleDateFormat;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 /**
  * Entity class
  *
@@ -22,13 +20,13 @@ import org.apache.log4j.Logger;
 	 
 public class Entity extends CommonInc{
 
+		static Logger logger = LogManager.getLogger(Entity.class);
+		static final long serialVersionUID = 220L;		
 		String name = "", is_business="", is_trust="",
 				title=""; // for business rep or trust executives
 		String id = "", waiver_id=""; 
 		final static String[] businessTypes = {"LLC","INC","CORP","LLP","CO.","LTD.","TRUST","ENTERPRISE","CONSTRUCTION","CHURCH","DEVELOPMENT"};
 		final static String[] businessTitles = {"PRESIDENT","TRUSTEE","DIRECTOR","MANAGER","CHANCELLOR","SECRETARY"};
-		static Logger logger = Logger.getLogger(Entity.class);
-		static final long serialVersionUID = 220L;
 		//
 		public Entity(){
 				super(Helper.debug);
@@ -94,57 +92,6 @@ public class Entity extends CommonInc{
 				}
 				return ret;
 		}
-		/*
-		private boolean checkBusiness(final String val){
-				String val2 = val.toUpperCase();
-				for(String str:businessTypes){
-						if(val2.indexOf(str) > -1){
-								return true;
-						}
-				}
-				return false;
-		}
-		private boolean hasTitle(final String val){
-				String val2 = val.toUpperCase();
-				for(String str:businessTitles){
-						if(val2.indexOf(str) > 0){
-								return true;
-						}
-				}
-				return false;
-		}
-		private void setEntityTitle(String val){
-				String val2 = val.toUpperCase();
-				for(String str:businessTitles){
-						if(val2.indexOf(str) > 0){
-								title = str;
-								return;
-						}
-				}
-		}		
-		*/
-		/*
-		String setNames(String val){
-				// if Smith, John ==> last, first
-				try{
-						if(val != null && val.indexOf(",") > 0){
-								last_name = val.substring(0, val.indexOf(","));
-								first_name = val.substring(val.indexOf(",")+1);
-						}
-						else if(val.indexOf(" ") > 0){
-								// John Smith
-						first_name = val.substring(0, val.lastIndexOf(" "));
-						last_name = val.substring(val.lastIndexOf(" ")+1);
-						}
-						else{
-								last_name = val;
-						}
-				}catch(Exception ex){
-						System.err.println(" entity 141: "+ex+" "+val);
-				}
-				return "";// problem saving
-		}
-		*/
 		//		
     // setters
     //
@@ -185,7 +132,9 @@ public class Entity extends CommonInc{
 				Connection con = null;
 				PreparedStatement pstmt = null;
 				ResultSet rs = null;
+				
 				String qq = " delete from entity_waivers where entity_id=? and waiver_id=? ";
+				logger.debug("do remove ");
 				if(id.equals("")){
 						back = " Entity ID not provided ";
 						return back;
@@ -200,11 +149,10 @@ public class Entity extends CommonInc{
 						addError(back);
 						return back;
 				}
+				logger.debug(qq);
 				try{
 						pstmt = con.prepareStatement(qq);
-						if(debug){
-								logger.debug(qq);
-						}				
+
 						pstmt.setString(1, id);
 						pstmt.setString(2, waiver_id);
 						pstmt.executeUpdate();
@@ -225,10 +173,11 @@ public class Entity extends CommonInc{
 				String back = "";
 		
 				Connection con = null;
-				PreparedStatement pstmt = null;
+				PreparedStatement pstmt = null, pstmt2=null, pstmt3=null;
 				ResultSet rs = null;
 				String qq = "insert into entities values(0,?,?,?,?)";
 				String qq2 = "insert into entity_waivers values(?,?)";
+				logger.debug("do save");
 				if(name.trim().equals("")){
 						back = "name not set ";
 						logger.error(back);
@@ -241,11 +190,9 @@ public class Entity extends CommonInc{
 						addError(back);
 						return back;
 				}
+				logger.debug(qq);
 				try{
 						pstmt = con.prepareStatement(qq);
-						if(debug){
-								logger.debug(qq);
-						}
 						if(name.equals(""))
 								pstmt.setNull(1, Types.VARCHAR);
 						else
@@ -270,20 +217,20 @@ public class Entity extends CommonInc{
 						if(debug){
 								logger.debug(qq);
 						}
-						pstmt = con.prepareStatement(qq);				
-						rs = pstmt.executeQuery();
+						pstmt2 = con.prepareStatement(qq);				
+						rs = pstmt2.executeQuery();
 						if(rs.next()){
 								id = rs.getString(1);
 						}
 						if(!waiver_id.equals("")){
 								qq = qq2;
-								pstmt = con.prepareStatement(qq);
+								pstmt3 = con.prepareStatement(qq);
 								if(debug){
 										logger.debug(qq);
 								}
-								pstmt.setString(1, id);
-								pstmt.setString(2, waiver_id);
-								pstmt.executeUpdate();
+								pstmt3.setString(1, id);
+								pstmt3.setString(2, waiver_id);
+								pstmt3.executeUpdate();
 						}
 				}
 				catch(Exception ex){
@@ -292,7 +239,7 @@ public class Entity extends CommonInc{
 						addError(back);
 				}
 				finally{
-						Helper.databaseDisconnect(con, pstmt, rs);
+						Helper.databaseDisconnect(con, rs,  pstmt, pstmt2, pstmt3);
 				}
 				return back;
 
@@ -301,11 +248,11 @@ public class Entity extends CommonInc{
 		
 				String back = "";
 				Connection con = null;
-				PreparedStatement pstmt = null;
+				PreparedStatement pstmt = null, pstmt2=null;
 				ResultSet rs = null;
 				String str="";
 				String qq = "", qq2="insert into entity_waivers values(?,?)";
-		
+				logger.debug("do update");		
 				con = Helper.getConnection();
 				if(con == null){
 						back = "Could not connect to DB";
@@ -313,12 +260,9 @@ public class Entity extends CommonInc{
 						return back;
 				}
 				else{
+						logger.debug(qq);						
 						try{
 								qq = "update entities set name=?,title=?,is_business=?,is_trust=? where id=?";
-				
-								if(debug){
-										logger.debug(qq);
-								}
 								pstmt = con.prepareStatement(qq);
 								if(name.equals(""))
 										pstmt.setNull(1,Types.VARCHAR);
@@ -340,13 +284,13 @@ public class Entity extends CommonInc{
 								pstmt.executeUpdate();
 								if(!waiver_id.equals("")){
 										qq = qq2;
-										pstmt = con.prepareStatement(qq);
+										pstmt2 = con.prepareStatement(qq);
 										if(debug){
 												logger.debug(qq);
 										}
-										pstmt.setString(1, id);
-										pstmt.setString(2, waiver_id);
-										pstmt.executeUpdate();
+										pstmt2.setString(1, id);
+										pstmt2.setString(2, waiver_id);
+										pstmt2.executeUpdate();
 								}
 						}
 						catch(Exception ex){
@@ -355,7 +299,7 @@ public class Entity extends CommonInc{
 								addError(back);
 						}
 						finally{
-								Helper.databaseDisconnect(con, pstmt, rs);
+								Helper.databaseDisconnect(con, rs, pstmt, pstmt2);
 						}
 				}
 				return back;
@@ -370,16 +314,15 @@ public class Entity extends CommonInc{
 				ResultSet rs = null;
 				String qq = "select name,title,is_business,is_trust "+
 						"from entities where id=?";
+				logger.debug("do select");		
 				con = Helper.getConnection();
 				if(con == null){
 						back = "Could not connect to DB";
 						addError(back);
 						return back;
 				}
+				logger.debug(qq);				
 				try{
-						if(debug){
-								logger.debug(qq);
-						}				
 						pstmt = con.prepareStatement(qq);
 						pstmt.setString(1,id);
 						rs = pstmt.executeQuery();

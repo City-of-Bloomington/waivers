@@ -7,13 +7,14 @@ package annex;
 import java.sql.*;
 import javax.naming.*;
 import javax.naming.directory.*;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 public class WorkFlow extends CommonInc{
 
     String id="", step_id="", next_step_id="";
 		static final long serialVersionUID = 340L;	
-		static Logger logger = Logger.getLogger(WorkFlow.class);
+		static Logger logger = LogManager.getLogger(WorkFlow.class);
 		Step step = null;
 		Step nextStep = null;
 		//
@@ -167,6 +168,7 @@ public class WorkFlow extends CommonInc{
 				return id;
     }
 		public Step getStep(){
+				logger.debug(" get step ");
 				if(step == null && !step_id.equals("")){
 						Step one = new Step(debug, step_id);
 						String back = one.doSelect();
@@ -177,6 +179,7 @@ public class WorkFlow extends CommonInc{
 				return step;
 		}
 		public Step getNextStep(){
+				logger.debug(" get next step ");
 				if(nextStep == null && !next_step_id.equals("")){
 						Step one = new Step(debug, next_step_id);
 						String back = one.doSelect();
@@ -204,10 +207,8 @@ public class WorkFlow extends CommonInc{
 						addError(back);
 						return back;
 				}
+				logger.debug(qq);				
 				try{
-						if(debug){
-								logger.debug(qq);
-						}				
 						pstmt = con.prepareStatement(qq);
 						pstmt.setString(1,id);
 						rs = pstmt.executeQuery();
@@ -255,7 +256,7 @@ public class WorkFlow extends CommonInc{
 				String back = "";
 		
 				Connection con = null;
-				PreparedStatement pstmt = null;
+				PreparedStatement pstmt = null, pstmt2=null;
 				ResultSet rs = null;
 				String qq = "insert into work_flows values(0,?,?)";
 				con = Helper.getConnection();
@@ -264,11 +265,9 @@ public class WorkFlow extends CommonInc{
 						addError(back);
 						return back;
 				}
+				logger.debug(qq);				
 				try{
 						pstmt = con.prepareStatement(qq);
-						if(debug){
-								logger.debug(qq);
-						}
 						pstmt.setString(1,step_id);
 						pstmt.setString(2,next_step_id);						
 						pstmt.executeUpdate();
@@ -279,8 +278,8 @@ public class WorkFlow extends CommonInc{
 						if(debug){
 								logger.debug(qq);
 						}
-						pstmt = con.prepareStatement(qq);				
-						rs = pstmt.executeQuery();
+						pstmt2 = con.prepareStatement(qq);				
+						rs = pstmt2.executeQuery();
 						if(rs.next()){
 								id = rs.getString(1);
 						}
@@ -291,7 +290,7 @@ public class WorkFlow extends CommonInc{
 						addError(back);
 				}
 				finally{
-						Helper.databaseDisconnect(con, pstmt, rs);
+						Helper.databaseDisconnect(con, rs, pstmt, pstmt2);
 				}
 				return back;
 
@@ -318,12 +317,9 @@ public class WorkFlow extends CommonInc{
 						addError(back);
 						return back;
 				}
-				try{
-						qq = "update work_flows set step_id=?,next_step_id=? "+
-								"where id=?";
-						if(debug){
-								logger.debug(qq);
-						}
+				qq = "update work_flows set step_id=?,next_step_id=? where id=?";
+				logger.debug(qq);
+				try{						
 						pstmt = con.prepareStatement(qq);
 						pstmt.setString(1,step_id);
 						pstmt.setString(2,next_step_id);
@@ -355,11 +351,9 @@ public class WorkFlow extends CommonInc{
 						addError(back);
 						return back;
 				}
+				qq = "delete from work_flows where id=?";
+				logger.debug(qq);
 				try{
-						qq = "delete from work_flows where id=?";
-						if(debug){
-								logger.debug(qq);
-						}
 						pstmt = con.prepareStatement(qq);
 						pstmt.setString(1,id);
 						pstmt.executeUpdate();

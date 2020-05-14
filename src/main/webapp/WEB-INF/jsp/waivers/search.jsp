@@ -67,11 +67,15 @@
 				<dt>Status </dt>
 				<dd><s:radio name="waiverList.status" value="%{waiverList.status}" list="#{'-1':'All','Open':'Open','Closed':'Closed','Completed':'Completed'}" /> </dd>
 			</dl>
+			<dl class="fn1-output-field">
+				<dt>Show All </dt>
+				<dd><s:checkbox name="waiverList.showAll" value="%{waiverList.showAll}" /> Yes</dd>
+			</dl>			
 		</div>
 	</div>
 	<dl class="fn1-output-field">
 		<dt> Date Selection</dt>
-		<dd><s:radio name="waiverList.which_date" value="%{waiverList.which_date}" list="#{'w.date':'Request Date','w.signed_date':'Signed Date','w.recorder_date':'Recorded Date','w.expire_date':'Expire Date','w.mapped_date':'Mapped Date'}" /></dd>
+		<dd><s:radio name="waiverList.whichDate" value="%{waiverList.whichDate}" list="#{'w.date':'Request Date','w.signed_date':'Signed Date','w.recorder_date':'Recorded Date','w.expire_date':'Expire Date','w.mapped_date':'Mapped Date'}" /></dd>
 	<dl class="fn1-output-field">
 		<dt> Date </dt>
 		<dd>from: <s:textfield name="waiverList.dateFrom" value="%{waiverList.dateFrom}" size="10" maxlength="10" cssClass="date" /> to:

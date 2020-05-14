@@ -56,10 +56,12 @@
 								<a href="<s:property value='#application.url'/>user.action">Users</a>
 								<a href="<s:property value='#application.url'/>group.action">Groups</a>
 								<a href="<s:property value='#application.url'/>groupUser.action">Manage Groups</a>
+								<a href="<s:property value='#application.url'/>groupNotification.action">Group Notifications Setting</a>								
 								<a href="<s:property value='#application.url'/>step.action">Workflow Steps</a>
 								<a href="<s:property value='#application.url'/>workflow.action">Workflows</a>
 								<a href="<s:property value='#application.url'/>dataImport.action">CSV Import</a>
-								<a href="<s:property value='#application.url'/>filesImport.action">Import Scanned Files List</a>								
+								<a href="<s:property value='#application.url'/>filesImport.action">Import Scanned Files List</a>
+								
 							</div>
 						</nav>
           </s:if>
@@ -72,6 +74,7 @@
 				<a href="<s:property value='#application.url'/>waiver.action">New Waiver</a>
 				<a href="<s:property value='#application.url'/>entity.action">New Entity/Owner</a>				
 				<a href="<s:property value='#application.url'/>search.action">Search</a>
+				<a href="<s:property value='#application.url'/>emailLog.action">Notification Logs</a>				
       </nav>
     </div>
   </header>

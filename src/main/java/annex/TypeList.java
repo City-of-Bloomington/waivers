@@ -8,12 +8,13 @@ import java.util.*;
 import java.sql.*;
 import java.io.*;
 import javax.sql.*;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 
 public class TypeList extends CommonInc{
 
-		static Logger logger = Logger.getLogger(TypeList.class);
+		static Logger logger = LogManager.getLogger(TypeList.class);
 		static final long serialVersionUID = 260L;
 		String table_name = "groups"; 
 		String name = ""; // for service
@@ -76,22 +77,20 @@ public class TypeList extends CommonInc{
 						qq += ", "+join;
 						qw += condition;
 				}
-				try{
-						if(!name.equals("")){
-								if(!qw.equals("")) qw += " and ";
-								qw += " t.name like ? ";
-						}
-						if(active_only){
-								if(!qw.equals("")) qw += " and ";
-								qw += " t.inactive is null ";
-						}
-						if(!qw.equals("")){
-								qq += " where "+qw;
-						}
-						qq += " order by t.name ";
-						if(debug){
-								logger.debug(qq);
-						}
+				if(!name.equals("")){
+						if(!qw.equals("")) qw += " and ";
+						qw += " t.name like ? ";
+				}
+				if(active_only){
+						if(!qw.equals("")) qw += " and ";
+						qw += " t.inactive is null ";
+				}
+				if(!qw.equals("")){
+						qq += " where "+qw;
+				}
+				qq += " order by t.name ";
+				logger.debug(qq);
+				try{						
 						pstmt = con.prepareStatement(qq);
 						if(!name.equals("")){
 								pstmt.setString(1,"%"+name+"%");

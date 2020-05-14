@@ -1,11 +1,13 @@
+
 <details>
-	<summary>	<s:property value="#logsTitle" /></summary>
+	<summary>Related Notifications</summary>	
 	<table class="fn1-table">
 		<thead>
 			<tr>
 				<th align="center"><b>Date</b></th>			
 				<th align="center"><b>From</b></th>
 				<th align="center"><b>To</b></th>
+				<th align="center"><b>CC</b></th>				
 				<th align="center"><b>Subject</b></th>
 				<th align="center"><b>Message</b></th>
 				<th align="center"><b>Send Action</b></th>
@@ -18,6 +20,7 @@
 					<td><s:property value="date" /></td>
 					<td><s:property value="fromUser" /></td>
 					<td><s:property value="toUser" /></td>
+					<td><s:property value="ccUsers" /></td>					
 					<td><s:property value="subject" /></td>
 					<td><s:property value="msg" /></td>
 					<td><s:if test="isSuccess()">Success</s:if><s:else>Failed</s:else></td>

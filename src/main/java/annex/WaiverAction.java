@@ -9,19 +9,18 @@ import java.io.*;
 import java.text.*;
 import javax.servlet.http.HttpServletResponse;
 import org.apache.struts2.ServletActionContext;  
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 public class WaiverAction extends TopAction{
 
 		static final long serialVersionUID = 315L;	
-		static Logger logger = Logger.getLogger(WaiverAction.class);
+		static Logger logger = LogManager.getLogger(WaiverAction.class);
 		//
 		Waiver waiver = null;
 		List<Waiver> waivers = null;
 		List<EmailLog> emailLogs = null;
 		String entity_id="", address_id="";
-		// List<Type> categories = null;
-		// List<Type> depts = null;
 		String waiversTitle = " Most recent Waivers";
 		public String execute(){
 				String ret = SUCCESS;
@@ -33,14 +32,16 @@ public class WaiverAction extends TopAction{
 								res.sendRedirect(str);
 								return super.execute();
 						}catch(Exception ex){
-								System.err.println(ex);
+								logger.error(back);
 						}	
 				}
 				if(action.equals("Save")){
+						logger.debug("save");		
 						waiver.setAddedBy(user.getId());
 						back = waiver.doSave();
 						if(!back.equals("")){
 								addActionError(back);
+								logger.error(back);
 						}
 						else{
 								id = waiver.getId();
@@ -49,10 +50,12 @@ public class WaiverAction extends TopAction{
 						}
 				}				
 				else if(action.equals("Save Changes")){
+						logger.debug("update");		
 						waiver.setUserId(user.getId());	 // we needed for actions					
 						back = waiver.doUpdate();
 						if(!back.equals("")){
 								addActionError(back);
+								logger.error(back);
 						}
 						else{
 								ret = "view";
@@ -60,10 +63,12 @@ public class WaiverAction extends TopAction{
 						}
 				}
 				else if(action.startsWith("Remove Entity")){
+						logger.debug("remove entity");		
 						getWaiver();
 						back = waiver.doRemoveEntity();
 						if(!back.equals("")){
 								addActionError(back);
+								logger.error(back);																
 						}
 						else{
 								addActionMessage("Deleted Successfully");								
@@ -71,21 +76,25 @@ public class WaiverAction extends TopAction{
 						}
 				}
 				else if(action.equals("Delete")){
+						logger.debug("Delete");		
 						getWaiver();
 						back = waiver.doDelete();
 						if(!back.equals("")){
 								addActionError(back);
+								logger.error(back);		
 						}
 						else{
 								addActionMessage("Deleted Successfully");								
 						}
 				}
 				else if(action.startsWith("Close")){
+						logger.debug("close");		
 						waiver = new Waiver(debug, id);
 						waiver.setClosedBy(user.getId());
 						back = waiver.doClose();
 						if(!back.equals("")){
 								addActionError(back);
+								logger.error(back);		
 						}
 						else{
 								addActionMessage("Closed Successfully");								
@@ -93,10 +102,12 @@ public class WaiverAction extends TopAction{
 						}
 				}
 				else if(action.startsWith("Remove Entity")){ // remove owner
+						logger.debug("remove entity");		
 						getWaiver();
 						back = waiver.doRemoveEntity();
 						if(!back.equals("")){
 								addActionError(back);
+								logger.error(back);		
 						}
 						else{
 								addActionMessage("Entity removed Successfully");
@@ -104,30 +115,36 @@ public class WaiverAction extends TopAction{
 						ret = "edit";
 				}
 				else if(action.startsWith("Remove Addr")){ // remove owner
+						logger.debug("remove addr");		
 						getWaiver();
 						back = waiver.doRemoveAddress();
 						if(!back.equals("")){
 								addActionError(back);
+								logger.error(back);		
 						}
 						else{
 								addActionMessage("Address removed Successfully");
 						}
 						ret = "edit";
 				}						
-				else if(action.equals("Edit")){ 
+				else if(action.equals("Edit")){
+						logger.debug("Edit");		
 						waiver = new Waiver(debug, id);
 						back = waiver.doSelect();
 						if(!back.equals("")){
 								addActionError(back);
+								logger.error(back);		
 						}
 						ret = "edit";
 				}				
 				else if(!id.equals("")){
 						ret = "view";
+						logger.debug("view");		
 						waiver = new Waiver(debug, id);
 						back = waiver.doSelect();
 						if(!back.equals("")){
 								addActionError(back);
+								logger.error(back);		
 						}
 				}
 				else{
@@ -178,7 +195,8 @@ public class WaiverAction extends TopAction{
 						address_id = val;
 		}		
 		// most recent
-		public List<Waiver> getWaivers(){ 
+		public List<Waiver> getWaivers(){
+				logger.debug("get waivers");		
 				if(waivers == null){
 						WaiverList dl = new WaiverList();
 						dl.setStatus("Open");
@@ -198,11 +216,15 @@ public class WaiverAction extends TopAction{
 										emailLogs = logs;
 								}
 						}
+						else{
+								logger.error(back);		
+						}
 						return emailLogs != null && emailLogs.size() > 0;
 				}
 				return false;
 		}
 		public List<EmailLog> getEmailLogs(){
+				logger.debug("email logs");		
 				return emailLogs;
 		}		
 

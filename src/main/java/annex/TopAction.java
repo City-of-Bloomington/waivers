@@ -20,14 +20,14 @@ import org.apache.struts2.dispatcher.SessionMap;
 import org.apache.struts2.interceptor.SessionAware;
 import org.apache.struts2.interceptor.ParameterAware;
 import org.apache.struts2.util.ServletContextAware;  
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
-
-import org.apache.log4j.Logger;
 
 public abstract class TopAction extends ActionSupport implements SessionAware, ServletContextAware{
 
 		static final long serialVersionUID = 240L;
-		static Logger logger = Logger.getLogger(TopAction.class);		
+		static Logger logger = LogManager.getLogger(TopAction.class);		
 		boolean debug = false, activeMail=false;
 		String action="", url="", addrUrl="", id="";
 		String server_path="";
@@ -86,7 +86,10 @@ public abstract class TopAction extends ActionSupport implements SessionAware, S
 										utility_username = val;
 								val = ctx.getInitParameter("gis_username");
 								if(val != null)
-										gis_username = val;								
+										gis_username = val;
+								val = ctx.getInitParameter("activeMail");
+								if(val != null && val.equals("true"))
+										activeMail = true;								
 						}
 				}catch(Exception ex){
 						System.out.println(ex);

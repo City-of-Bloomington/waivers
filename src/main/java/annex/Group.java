@@ -6,14 +6,13 @@ package annex;
  */
 import java.sql.*;
 import java.util.List;
-import javax.naming.*;
-import javax.naming.directory.*;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 public class Group extends Type{
 
 		static final long serialVersionUID = 160L;	
-		static Logger logger = Logger.getLogger(Group.class);
+		static Logger logger = LogManager.getLogger(Group.class);
 		List<User> users = null;
 		//
 		public Group(){
@@ -42,6 +41,7 @@ public class Group extends Type{
 				setTable_name("groups");
     }		
 		public List<User> getUsers(){
+				logger.debug(" get users ");
 				if(!id.equals("") && users == null){
 						UserList ul = new UserList(debug);
 						ul.setGroup_id(id);
@@ -51,6 +51,9 @@ public class Group extends Type{
 								if(ones != null && ones.size() > 0){
 										users = ones;
 								}
+						}
+						else{
+								logger.error(back);
 						}
 				}
 				return users;

@@ -14,7 +14,8 @@ import javax.naming.directory.*;
 import javax.sql.*;
 import java.net.URL;
 import org.jasig.cas.client.authentication.AttributePrincipal;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 
 public class Login extends HttpServlet{
@@ -25,7 +26,7 @@ public class Login extends HttpServlet{
     String dbStr="";
     String dbUser="",dbPass="",url="";
     boolean debug = false;
-		static Logger logger = Logger.getLogger(Login.class);
+		static Logger logger = LogManager.getLogger(Login.class);
 	
     /**
      * Generates the login form for all users.
@@ -53,7 +54,8 @@ public class Login extends HttpServlet{
 						if(str != null && str.equals("true")) debug = true;
 				}
 				HttpSession session = null;
-				AttributePrincipal principal = null;				
+				AttributePrincipal principal = null;
+				logger.debug(" login ");
 				if (req.getUserPrincipal() != null) {
 						principal = (AttributePrincipal) req.getUserPrincipal();
 						username = principal.getName();

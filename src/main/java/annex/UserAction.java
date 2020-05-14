@@ -9,12 +9,13 @@ import java.io.*;
 import java.text.*;
 import javax.servlet.http.HttpServletResponse;
 import org.apache.struts2.ServletActionContext;  
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 public class UserAction extends TopAction{
 
 		static final long serialVersionUID = 290L;	
-		static Logger logger = Logger.getLogger(UserAction.class);
+		static Logger logger = LogManager.getLogger(UserAction.class);
 		//
 		User user = null;
 		List<User> users = null;
@@ -23,16 +24,18 @@ public class UserAction extends TopAction{
 				String ret = SUCCESS;
 				String back = doPrepare();
 				if(!back.equals("")){
+						logger.error(back);
 						try{
 								HttpServletResponse res = ServletActionContext.getResponse();
 								String str = url+"Login";
 								res.sendRedirect(str);
 								return super.execute();
 						}catch(Exception ex){
-								System.err.println(ex);
+								logger.error(back);
 						}	
 				}
 				if(action.equals("Save")){
+						logger.debug("save");
 						back = user.doSave();
 						if(!back.equals("")){
 								addActionError(back);
@@ -42,21 +45,25 @@ public class UserAction extends TopAction{
 								addActionMessage("Saved Successfully");
 						}
 				}				
-				else if(action.equals("Save Changes")){ 
+				else if(action.equals("Save Changes")){
+						logger.debug("update");
 						back = user.doUpdate();
 						if(!back.equals("")){
 								addActionError(back);
+								logger.error(back);
 						}
 						else{
 								addActionMessage("Updated Successfully");
 								id = user.getId();
 						}
 				}
-				else if(action.equals("Delete")){ 
+				else if(action.equals("Delete")){
+						logger.debug("delete");
 						back = user.doDelete();
 						if(!back.equals("")){
 								// back to the same page 
 								addActionError(back);
+								logger.error(back);								
 						}
 						else{
 								user = new User();
@@ -64,11 +71,13 @@ public class UserAction extends TopAction{
 								id="";
 						}
 				}
-				else if(action.equals("Edit")){ 
+				else if(action.equals("Edit")){
+						logger.debug("Edit");
 						user = new User(id);
 						back = user.doSelect();
 						if(!back.equals("")){
 								addActionError(back);
+								logger.error(back);
 						}
 				}
 				else if(action.startsWith("New")){ 
@@ -79,6 +88,7 @@ public class UserAction extends TopAction{
 						back = user.doSelect();
 						if(!back.equals("")){
 								addActionError(back);
+								logger.error(back);
 						}
 				}
 				else{		
@@ -131,11 +141,15 @@ public class UserAction extends TopAction{
 				return id;
 		}		
 		// most recent
-		public List<User> getUsers(){ 
+		public List<User> getUsers(){
+				logger.debug("get users");
 				if(users == null){
 						UserList dl = new UserList();
 						String back = dl.find();
-						users = dl.getUsers();
+						if(back.equals(""))
+								users = dl.getUsers();
+						else
+								logger.error(back);
 				}		
 				return users;
 		}

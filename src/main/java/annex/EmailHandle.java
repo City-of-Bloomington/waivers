@@ -5,7 +5,8 @@ import javax.mail.*;
 import javax.mail.Address;
 import javax.mail.internet.*;
 import javax.activation.*;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 /**
  * msgmail creates a very simple text/plain message and sends it.
@@ -22,7 +23,7 @@ import org.apache.log4j.Logger;
 public class EmailHandle{
 
 		final static long serialVersionUID = 580L;
-		static Logger logger = Logger.getLogger(EmailHandle.class);			
+		static Logger logger = LogManager.getLogger(EmailHandle.class);			
     static String msgText = "This is a message body.\nHere's the second line.";
     static String to = "sibow@bloomington.in.gov";
     static String from = "sibow@bloomington.in.gov";
@@ -157,8 +158,12 @@ public class EmailHandle{
 		}
 		//
 		public String send(){
-		
+
+				if(from != null && !from.isEmpty() && to.indexOf(from) > -1){
+						return "No email sent ";
+				}
 				String message = "";
+				logger.debug(" sending emails ");
 				try {
 						//
 						// create some properties and get the default Session
@@ -180,12 +185,19 @@ public class EmailHandle{
 								msg.setRecipients(Message.RecipientType.TO, address);
 						}
 						if(cc != null && !cc.equals("")){
-								InternetAddress[] address2 = {new InternetAddress(cc)};
-								msg.setRecipients(Message.RecipientType.CC, address2);
+								System.err.println(" cc "+cc);
+								if(cc.indexOf(",") == -1){
+										InternetAddress[] address = {new InternetAddress(cc)};
+										msg.setRecipients(Message.RecipientType.CC, address);
+								}
+								else{
+										InternetAddress[] addresses = javax.mail.internet.InternetAddress.parse(cc);
+										msg.setRecipients(Message.RecipientType.CC, addresses);
+								}
 						}
 						if(bcc != null && !bcc.equals("")){
-								InternetAddress[] address3 = javax.mail.internet.InternetAddress.parse(bcc);
-								msg.setRecipients(Message.RecipientType.BCC, address3);
+								InternetAddress[] address = javax.mail.internet.InternetAddress.parse(bcc);
+								msg.setRecipients(Message.RecipientType.BCC, address);
 						}
 						msg.setSubject(subject);
 						msg.setSentDate(new Date());
@@ -236,13 +248,18 @@ public class EmailHandle{
 										ex = null;
 								}
 						} while (ex != null);
-						logger.error(message);
+						logger.error(" "+ex);
 				}
 				return message;
     }
 		public String sendWAttach(){
 		
 				String message = "";
+				if(from != null && !from.isEmpty() && to.indexOf(from) > -1){
+						return "No email sent ";
+				}				
+				logger.debug("send with attach ");
+				
 				try {
 						//
 						// create some properties and get the default Session

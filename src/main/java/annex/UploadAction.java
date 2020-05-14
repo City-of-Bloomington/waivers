@@ -13,14 +13,15 @@ import javax.servlet.http.HttpServletResponse;
 import javax.activation.*; 
 import org.apache.struts2.ServletActionContext;
 import org.apache.tika.Tika;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 public class UploadAction extends TopAction{
 
-		static final long serialVersionUID = 270L;	
+		static final long serialVersionUID = 270L;
+		static Logger logger = LogManager.getLogger(UploadAction.class);			
 		String waiver_id="", task_id="", notes="", hardcopy_location="",
 				type="";
-		static Logger logger = Logger.getLogger(UploadAction.class);	
 		private File file;
 		private String contentType, saveDir="";
 		private String filename;
@@ -67,6 +68,7 @@ public class UploadAction extends TopAction{
 						}
 				}		
 				if(action.equals("Save")){
+						logger.debug(" action upload save ");
 						if(!hasType()){
 								back = "You need to choose file type ";
 								addActionError(back);
@@ -142,12 +144,13 @@ public class UploadAction extends TopAction{
 												res.sendRedirect(str);
 												return super.execute();
 										}catch(Exception ex){
-												System.err.println(ex);
+												logger.error(ex);
 										}
 								}
 						}
 						if(!back.equals("")){
 								addActionError(back);
+								logger.error(back);
 						}
 				}
 				return ret;
@@ -215,6 +218,7 @@ public class UploadAction extends TopAction{
 				return task_id;
 		}
 		public String getType(){
+				logger.debug(" get type");
 				if(type.equals("") && hasTask()){
 						getTask();
 						type = task.getSuggested_upload_type();
@@ -239,24 +243,33 @@ public class UploadAction extends TopAction{
 				return !task_id.equals("");
 		}
 		public Waiver getWaiver(){
+				logger.debug(" get waiver");
 				if(waiver == null && !waiver_id.equals("")){
 						Waiver one = new Waiver(debug, waiver_id);
 						String back = one.doSelect();
 						if(back.equals(""))
 								waiver = one;
+						else{
+								logger.error(back);
+						}
 				}
 				return waiver;
 		}
 		public Task getTask(){
+				logger.debug(" get task ");
 				if(task == null && !task_id.equals("")){
 						Task one = new Task(debug, task_id);
 						String back = one.doSelect();
 						if(back.equals(""))
 							 task = one;
+						else{
+								logger.error(back);
+						}
 				}
 				return task;
 		}		
 		public List<FileUpload> getUploads(){
+				logger.debug(" get uploads ");
 				if(uploads == null){
 						FileUploadList fl = new FileUploadList();
 						if(!waiver_id.equals(""))
@@ -267,6 +280,9 @@ public class UploadAction extends TopAction{
 								if(list != null && list.size() > 0){
 										uploads = list;
 								}
+						}
+						else{
+								logger.error(back);
 						}
 				}
 				return uploads;

@@ -24,7 +24,8 @@ import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.protocol.HTTP;
 import org.json.*;
 import java.text.SimpleDateFormat;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 public class Address extends CommonInc{
 
@@ -33,7 +34,7 @@ public class Address extends CommonInc{
 		String street_num="", street_name="";
 		String id = "", waiver_id="", invalid="";
 		String address_to_verify = "";
-		static Logger logger = Logger.getLogger(Address.class);
+		static Logger logger = LogManager.getLogger(Address.class);
 		static final long serialVersionUID = 220L;			
 		//
 		public Address(){
@@ -222,6 +223,7 @@ public class Address extends CommonInc{
 				Connection con = null;
 				PreparedStatement pstmt = null;
 				ResultSet rs = null;
+				logger.debug(" in do save ");				
 				String qq = "insert into addresses values(0,?,?,?,?, ?)";
 				if(street_address.equals("")){
 						if(!street_num.equals(""))
@@ -245,9 +247,7 @@ public class Address extends CommonInc{
 								return back;
 						}
 						pstmt = con.prepareStatement(qq);
-						if(debug){
-								logger.debug(qq);
-						}
+						logger.debug(qq);
 						if(street_address.equals(""))
 								pstmt.setNull(1,Types.VARCHAR);
 						else
@@ -300,6 +300,7 @@ public class Address extends CommonInc{
 				PreparedStatement pstmt = null;
 				ResultSet rs = null;
 				String str="", qq="";
+				logger.debug(" in do update ");		
 				qq = "update addresses set street_address=?,street_num=?,street_name=?,invalid=? where id=?";				
 				con = Helper.getConnection();
 				if(con == null){
@@ -351,6 +352,7 @@ public class Address extends CommonInc{
 				PreparedStatement pstmt = null;
 				ResultSet rs = null;
 				String str="", qq="";
+				logger.debug(" in do delete ");		
 				qq = "delete from addresses where id=?";				
 				con = Helper.getConnection();
 				if(con == null){
@@ -389,6 +391,7 @@ public class Address extends CommonInc{
 				PreparedStatement pstmt = null;
 				ResultSet rs = null;
 				String str="", qq="";
+				logger.debug(" in do remove ");		
 				qq = "update addresses set waiver_id=null where id=? and waiver_id=?";
 
 				if(id.equals("")){
@@ -436,6 +439,7 @@ public class Address extends CommonInc{
 				ResultSet rs = null;
 				String qq = "select street_address,waiver_id,street_num,street_name,invalid  "+
 						"from addresses where id=?";
+				logger.debug(" in do select ");		
 				con = Helper.getConnection();
 				if(con == null){
 						back = "Could not connect to DB";
@@ -476,6 +480,7 @@ public class Address extends CommonInc{
 
 				boolean ret = false;
 				String url = "";
+				logger.debug(" master address ");		
 				DefaultHttpClient httpclient = new DefaultHttpClient();		
 				try{
 						url = url2+"/locations/verify.php?format=json&address="+java.net.URLEncoder.encode(street_address, "UTF-8")+"+Bloomington";
@@ -518,314 +523,5 @@ public class Address extends CommonInc{
 				}
 				return ret;
 		}		
-		/**
-			 asm report, audit, unused owner records;
 
-SELECT DISTINCT o.ID, o.OwnerName,o.OwnerAddress, o.OwnerTown, o.OwnerCounty, o.OwnerPostcode, 
-o.HomeTelephone, o.WorkTelephone, o.MobileTelephone, o.EmailAddress, o.OwnerTitle, o.OwnerForenames,
-o.OwnerSurname, o.MembershipExpiryDate, o.AdditionalFlags
-FROM owner o
-WHERE o.ID in 
-NOT EXISTS(SELECT ID FROM adoption WHERE OwnerID = o.ID OR ReturnedByOwnerID = o.ID)
-AND NOT EXISTS(SELECT ID FROM animal WHERE OriginalOwnerID = o.ID OR BroughtInByOwnerID = o.ID OR CurrentVetID = o.ID OR OwnersVetID = o.ID 
-    OR AdoptionCoordinatorID = o.ID OR NeuteredByVetID = o.ID)
-AND NOT EXISTS(SELECT ID FROM animalcontrol WHERE OwnerID = o.ID OR Owner2ID = o.ID OR Owner3ID = o.ID)
-AND NOT EXISTS(SELECT ID FROM animalfound WHERE OwnerID = o.ID)
-AND NOT EXISTS(SELECT ID FROM animallost WHERE OwnerID = o.ID)
-AND NOT EXISTS(SELECT ID FROM animalwaitinglist WHERE OwnerID = o.ID)
-AND NOT EXISTS(SELECT ID FROM animaltransport WHERE DriverOwnerID = o.ID OR PickupOwnerID = o.ID OR DropoffOwnerID = o.ID)
-AND NOT EXISTS(SELECT ID FROM animalmedicaltreatment WHERE AdministeringVetID = o.ID)
-AND NOT EXISTS(SELECT ID FROM animaltest WHERE AdministeringVetID = o.ID)
-AND NOT EXISTS(SELECT ID FROM animalvaccination WHERE AdministeringVetID = o.ID)
-AND NOT EXISTS(SELECT ID FROM clinicappointment WHERE OwnerID = o.ID)
-AND NOT EXISTS(SELECT ID FROM ownercitation WHERE OwnerID = o.ID)
-AND NOT EXISTS(SELECT ID FROM ownerdonation WHERE OwnerID = o.ID)
-AND NOT EXISTS(SELECT ID FROM ownerinvestigation WHERE OwnerID = o.ID)
-AND NOT EXISTS(SELECT ID FROM ownerlicence WHERE OwnerID = o.ID)
-AND NOT EXISTS(SELECT ID FROM ownerrota WHERE OwnerID = o.ID)
-AND NOT EXISTS(SELECT ID FROM ownertraploan WHERE OwnerID = o.ID)
-AND NOT EXISTS(SELECT ID FROM ownervoucher WHERE OwnerID = o.ID)
-AND NOT EXISTS(SELECT ID FROM users WHERE OwnerID = o.ID)
-ORDER BY o.OwnerName
-
-=============HTML====
-
-$$HEADER
-<table border="1">
-<tr>
-<th>Name</th>
-<th>Address</th>
-<th>Home</th>
-<th>Work</th>
-<th>Mobile</th>
-<th>Email</th>
-<th>Flags</th>
-</tr>
-HEADER$$
-
-$$BODY
-<tr>
-<td><a target="_blank" href="person?id=$ID">$OWNERNAME</a></td>
-<td>$OWNERADDRESS<br/>
-$OWNERTOWN, $OWNERCOUNTY $OWNERPOSTCODE</td>
-<td>$HOMETELEPHONE</td>
-<td>$WORKTELEPHONE</td>
-<td>$MOBILETELEPHONE</td>
-<td>$EMAILADDRESS</td>
-<td>$ADDITIONALFLAGS</td>
-</tr>
-BODY$$
-
-$$FOOTER
-</table>
-FOOTER$$
-
-			 
-			 SELECT DISTINCT o.ID FROM owner o WHERE 
-     NOT EXISTS(SELECT ID FROM adoption WHERE OwnerID = o.ID OR ReturnedByOwnerID = o.ID)
-    AND NOT EXISTS(SELECT ID FROM animal WHERE OriginalOwnerID = o.ID OR BroughtInByOwnerID = o.ID OR CurrentVetID = o.ID OR OwnersVetID = o.ID 
-    OR AdoptionCoordinatorID = o.ID OR NeuteredByVetID = o.ID)
-    AND NOT EXISTS(SELECT ID FROM animalcontrol WHERE OwnerID = o.ID OR Owner2ID = o.ID OR Owner3ID = o.ID)
-    AND NOT EXISTS(SELECT ID FROM animalfound WHERE OwnerID = o.ID)
-    AND NOT EXISTS(SELECT ID FROM animallost WHERE OwnerID = o.ID)
-    AND NOT EXISTS(SELECT ID FROM animalwaitinglist WHERE OwnerID = o.ID)
-    AND NOT EXISTS(SELECT ID FROM animaltransport WHERE DriverOwnerID = o.ID OR PickupOwnerID = o.ID OR DropoffOwnerID = o.ID)
-    AND NOT EXISTS(SELECT ID FROM animalmedicaltreatment WHERE AdministeringVetID = o.ID)
-    AND NOT EXISTS(SELECT ID FROM animaltest WHERE AdministeringVetID = o.ID)
-    AND NOT EXISTS(SELECT ID FROM animalvaccination WHERE AdministeringVetID = o.ID)
-    AND NOT EXISTS(SELECT ID FROM clinicappointment WHERE OwnerID = o.ID)
-    AND NOT EXISTS(SELECT ID FROM ownercitation WHERE OwnerID = o.ID)
-    AND NOT EXISTS(SELECT ID FROM ownerdonation WHERE OwnerID = o.ID)
-    AND NOT EXISTS(SELECT ID FROM ownerinvestigation WHERE OwnerID = o.ID)
-    AND NOT EXISTS(SELECT ID FROM ownerlicence WHERE OwnerID = o.ID)
-    AND NOT EXISTS(SELECT ID FROM ownerrota WHERE OwnerID = o.ID)
-    AND NOT EXISTS(SELECT ID FROM ownertraploan WHERE OwnerID = o.ID)
-    AND NOT EXISTS(SELECT ID FROM ownervoucher WHERE OwnerID = o.ID)
-    AND NOT EXISTS(SELECT ID FROM users WHERE OwnerID = o.ID)
-    ORDER BY o.ID
-
-			 SELECT DISTINCT o.ID FROM owner o WHERE  NOT EXISTS(SELECT ID FROM adoption WHERE OwnerID = o.ID OR ReturnedByOwnerID = o.ID) AND NOT EXISTS(SELECT ID FROM animal WHERE OriginalOwnerID = o.ID OR BroughtInByOwnerID = o.ID OR CurrentVetID = o.ID OR OwnersVetID = o.ID  OR AdoptionCoordinatorID = o.ID OR NeuteredByVetID = o.ID)  AND NOT EXISTS(SELECT ID FROM animalcontrol WHERE OwnerID = o.ID OR Owner2ID = o.ID OR Owner3ID = o.ID)  AND NOT EXISTS(SELECT ID FROM animalfound WHERE OwnerID = o.ID)   AND NOT EXISTS(SELECT ID FROM animallost WHERE OwnerID = o.ID)  AND NOT EXISTS(SELECT ID FROM animalwaitinglist WHERE OwnerID = o.ID) AND NOT EXISTS(SELECT ID FROM animaltransport WHERE DriverOwnerID = o.ID OR PickupOwnerID = o.ID OR DropoffOwnerID = o.ID)  AND NOT EXISTS(SELECT ID FROM animalmedicaltreatment WHERE AdministeringVetID = o.ID) AND NOT EXISTS(SELECT ID FROM animaltest WHERE AdministeringVetID = o.ID)  AND NOT EXISTS(SELECT ID FROM animalvaccination WHERE AdministeringVetID = o.ID) AND NOT EXISTS(SELECT ID FROM clinicappointment WHERE OwnerID = o.ID)  AND NOT EXISTS(SELECT ID FROM ownercitation WHERE OwnerID = o.ID)  AND NOT EXISTS(SELECT ID FROM ownerdonation WHERE OwnerID = o.ID)  AND NOT EXISTS(SELECT ID FROM ownerinvestigation WHERE OwnerID = o.ID) AND NOT EXISTS(SELECT ID FROM ownerlicence WHERE OwnerID = o.ID) AND NOT EXISTS(SELECT ID FROM ownerrota WHERE OwnerID = o.ID)  AND NOT EXISTS(SELECT ID FROM ownertraploan WHERE OwnerID = o.ID) AND NOT EXISTS(SELECT ID FROM ownervoucher WHERE OwnerID = o.ID) AND NOT EXISTS(SELECT ID FROM users WHERE OwnerID = o.ID)
-
- SELECT count(o.ID) FROM owner o WHERE  NOT EXISTS(SELECT ID FROM adoption WHERE OwnerID = o.ID OR ReturnedByOwnerID = o.ID) AND NOT EXISTS(SELECT ID FROM animal WHERE OriginalOwnerID = o.ID OR BroughtInByOwnerID = o.ID OR CurrentVetID = o.ID OR OwnersVetID = o.ID  OR AdoptionCoordinatorID = o.ID OR NeuteredByVetID = o.ID)  AND NOT EXISTS(SELECT ID FROM animalcontrol WHERE OwnerID = o.ID OR Owner2ID = o.ID OR Owner3ID = o.ID)  AND NOT EXISTS(SELECT ID FROM animalfound WHERE OwnerID = o.ID)   AND NOT EXISTS(SELECT ID FROM animallost WHERE OwnerID = o.ID)  AND NOT EXISTS(SELECT ID FROM animalwaitinglist WHERE OwnerID = o.ID) AND NOT EXISTS(SELECT ID FROM animaltransport WHERE DriverOwnerID = o.ID OR PickupOwnerID = o.ID OR DropoffOwnerID = o.ID)  AND NOT EXISTS(SELECT ID FROM animalmedicaltreatment WHERE AdministeringVetID = o.ID) AND NOT EXISTS(SELECT ID FROM animaltest WHERE AdministeringVetID = o.ID)  AND NOT EXISTS(SELECT ID FROM animalvaccination WHERE AdministeringVetID = o.ID) AND NOT EXISTS(SELECT ID FROM clinicappointment WHERE OwnerID = o.ID)  AND NOT EXISTS(SELECT ID FROM ownercitation WHERE OwnerID = o.ID)  AND NOT EXISTS(SELECT ID FROM ownerdonation WHERE OwnerID = o.ID)  AND NOT EXISTS(SELECT ID FROM ownerinvestigation WHERE OwnerID = o.ID) AND NOT EXISTS(SELECT ID FROM ownerlicence WHERE OwnerID = o.ID) AND NOT EXISTS(SELECT ID FROM ownerrota WHERE OwnerID = o.ID)  AND NOT EXISTS(SELECT ID FROM ownertraploan WHERE OwnerID = o.ID) AND NOT EXISTS(SELECT ID FROM ownervoucher WHERE OwnerID = o.ID) AND NOT EXISTS(SELECT ID FROM users WHERE OwnerID = o.ID)			 
-
- select count(oo.id) from (
- select o.ID as id FROM owner o left join adoption a  on a.OwnerID = o.ID where a.OwnerId is null
- intersect
- select o.ID as id FROM owner o left join adoption a  on a.ReturnedByOwnerID = o.ID where a.ReturnedByOwnerId is null
- intersect
- select o.ID as id FROM owner o left join animalfound a on a.OwnerID = o.ID where a.OwnerID is null
- intersect 
- select o.ID as id FROM owner o left join animallost a on a.OwnerID = o.ID where a.OwnerID is null
-  intersect 
-	select o.ID as id FROM owner o left join animalwaitinglist a on a.OwnerID = o.ID where a.OwnerID is null
-  intersect 
-	select o.ID as id FROM owner o left join animaltest a on a.AdministeringVetID = o.ID where a.AdministeringVetID is null
-	intersect 
-	select o.ID as id FROM owner o left join animalmedicaltreatment a on a.AdministeringVetID = o.ID where a.AdministeringVetID is null
-  intersect 
-	select o.ID as id FROM owner o left join animalvaccination a on a.AdministeringVetID = o.ID	where a.AdministeringVetID is null
-	intersect 
-	select o.ID as id FROM owner o left join clinicappointment a on a.OwnerID = o.ID where a.OwnerID is null
-	intersect 
-	select o.ID as id FROM owner o left join ownercitation a on a.OwnerID = o.ID where a.OwnerID is null
-	intersect 
-	select o.ID as id FROM owner o left join 	ownerdonation a on a.OwnerID = o.ID and a.OwnerID  is null
-	intersect 
-	select o.ID as id FROM owner o left join ownerinvestigation a on a.OwnerID = o.ID where a.OwnerID is null
-	intersect 
-	select o.ID as id FROM owner o left join ownerlicence a on a.OwnerID = o.ID where a.OwnerID is null
-	intersect 
-	select o.ID as id FROM owner o left join ownerrota a on a.OwnerID = o.ID where a.OwnerID is null
-	intersect
-	select o.ID as id FROM owner o left join ownertraploan a on a.OwnerID = o.ID where a.OwnerID is null
-	intersect
-	select o.ID as id FROM owner o left join 	ownervoucher a on a.OwnerID = o.ID where a.OwnerID is null
-	intersect
-	select o.ID as id FROM owner o left join	users a  on a.OwnerID = o.ID where a.OwnerID is null
-	intersect
-	select o.ID as id FROM owner o left join	animal a on a.OriginalOwnerID = o.ID
-	where a.OriginalOwnerID is null
-	intersect
-	select o.ID as id FROM owner o left join	animal a on a.BroughtInByOwnerID = o.ID where a.BroughtInByOwnerID is null
-	intersect
-	select o.ID as id FROM owner o left join	animal a on a.CurrentVetID = o.ID where a.CurrentVetID is null
-	intersect
-	select o.ID as id FROM owner o left join	animal a on a.OwnersVetID = o.ID where a.OwnersVetID is null
-	intersect
-	select o.ID as id FROM owner o left join	animal a on a.AdoptionCoordinatorID = o.ID where a.AdoptionCoordinatorID is null
-	intersect
-	select o.ID as id FROM owner o left join	animal a on a.NeuteredByVetID = o.ID where a.NeuteredByVetID is null
-	intersect
-	select o.ID as id FROM owner o left join	animalcontrol a on a.OwnerID = o.ID where a.OwnerID is null
-	intersect
-	select o.ID as id FROM owner o left join	animalcontrol a on a.Owner2ID = o.ID
-  where a.Owner2ID is null
-	intersect
-	select o.ID as id FROM owner o left join	animalcontrol a on a.Owner3ID = o.ID
-  where a.Owner3ID is null
-	intersect
-	select o.ID as id FROM owner o left join animaltransport a on a.DriverOwnerID = o.ID where a.DriverOwnerID is null
-		intersect
-	select o.ID as id FROM owner o left join animaltransport a on a.PickupOwnerID = o.ID where a.PickupOwnerID is null
-		 intersect
-		 select o.ID as id FROM owner o left join animaltransport a on a.DropoffOwnerID = o.ID where a.DropoffOwnerID is null) oo
-
-
-		 
-SELECT DISTINCT o.ID, o.OwnerName,o.OwnerAddress, o.OwnerTown, o.OwnerCounty, o.OwnerPostcode, o.HomeTelephone, o.WorkTelephone, o.MobileTelephone, o.EmailAddress, o.OwnerTitle, o.OwnerForenames,o.OwnerSurname, o.MembershipExpiryDate, o.AdditionalFlags
-FROM owner o
-WHERE o.ID in (
-select o.ID as id FROM owner o left join adoption a  on a.OwnerID = o.ID where a.OwnerId is null
-intersect
-select o.ID as id FROM owner o left join adoption a  on a.ReturnedByOwnerID = o.ID where a.ReturnedByOwnerId is null
-intersect
-select o.ID as id FROM owner o left join animalfound a on a.OwnerID = o.ID where a.OwnerID is null
-intersect
-select o.ID as id FROM owner o left join animallost a on a.OwnerID = o.ID where a.OwnerID is null
-intersect
-select o.ID as id FROM owner o left join animalwaitinglist a on a.OwnerID = o.ID where a.OwnerID is null
-intersect
-select o.ID as id FROM owner o left join animaltest a on a.AdministeringVetID = o.ID where a.AdministeringVetID is null
-intersect
-select o.ID as id FROM owner o left join animalmedicaltreatment a on a.AdministeringVetID = o.ID where a.AdministeringVetID is null
-intersect
-select o.ID as id FROM owner o left join animalvaccination a on a.AdministeringVetID = o.ID	where a.AdministeringVetID is null
-intersect
-select o.ID as id FROM owner o left join clinicappointment a on a.OwnerID = o.ID where a.OwnerID is null
-intersect
-select o.ID as id FROM owner o left join ownercitation a on a.OwnerID = o.ID where a.OwnerID is null
-intersect
-select o.ID as id FROM owner o left join 	ownerdonation a on a.OwnerID = o.ID and a.OwnerID  is null
-intersect
-select o.ID as id FROM owner o left join ownerinvestigation a on a.OwnerID = o.ID where a.OwnerID is null
-intersect
-select o.ID as id FROM owner o left join ownerlicence a on a.OwnerID = o.ID where a.OwnerID is null
-intersect
-select o.ID as id FROM owner o left join ownerrota a on a.OwnerID = o.ID where a.OwnerID is null
-intersect
-select o.ID as id FROM owner o left join ownertraploan a on a.OwnerID = o.ID where a.OwnerID is null
-intersect
-select o.ID as id FROM owner o left join 	ownervoucher a on a.OwnerID = o.ID where a.OwnerID is null
-intersect
-select o.ID as id FROM owner o left join	users a  on a.OwnerID = o.ID where a.OwnerID is null
-intersect
-select o.ID as id FROM owner o left join	animal a on a.OriginalOwnerID = o.ID where a.OriginalOwnerID is null
-intersect
-select o.ID as id FROM owner o left join	animal a on a.BroughtInByOwnerID = o.ID where a.BroughtInByOwnerID is null
-intersect
-select o.ID as id FROM owner o left join	animal a on a.CurrentVetID = o.ID where a.CurrentVetID is null
-intersect
-select o.ID as id FROM owner o left join	animal a on a.OwnersVetID = o.ID where a.OwnersVetID is null
-intersect
-select o.ID as id FROM owner o left join	animal a on a.AdoptionCoordinatorID = o.ID where a.AdoptionCoordinatorID is null
-intersect
-select o.ID as id FROM owner o left join	animal a on a.NeuteredByVetID = o.ID where a.NeuteredByVetID is null
-intersect
-select o.ID as id FROM owner o left join	animalcontrol a on a.OwnerID = o.ID where a.OwnerID is null
-intersect
-select o.ID as id FROM owner o left join	animalcontrol a on a.Owner2ID = o.ID  where a.Owner2ID is null
-intersect
-select o.ID as id FROM owner o left join	animalcontrol a on a.Owner3ID = o.ID  where a.Owner3ID is null
-intersect
-select o.ID as id FROM owner o left join animaltransport a on a.DriverOwnerID = o.ID where a.DriverOwnerID is null
-intersect
-select o.ID as id FROM owner o left join animaltransport a on a.PickupOwnerID = o.ID where a.PickupOwnerID is null
-intersect
-select o.ID as id FROM owner o left join animaltransport a on a.DropoffOwnerID = o.ID where a.DropoffOwnerID is null)
-ORDER BY o.OwnerName		 
-
-
-SELECT DISTINCT o.ID, o.OwnerName,o.OwnerAddress, o.OwnerTown, o.OwnerCounty, o.OwnerPostcode, o.HomeTelephone, o.WorkTelephone, o.MobileTelephone, o.EmailAddress, o.OwnerTitle, o.OwnerForenames,o.OwnerSurname, o.MembershipExpiryDate, o.AdditionalFlags,
-a1.OwnerID,
-a2.ReturnedByOwnerID,
-a3.OwnerID,
-a4.OwnerID,
-a5.OwnerID,
-a6.AdministeringVetID,
-a7.AdministeringVetID,
-a8.AdministeringVetID,
-a9.OwnerID,
-a10.OwnerID,
-a11.OwnerID,
-a12.OwnerID,
-a13.OwnerID,
-a14.OwnerID,
-a15.OwnerID,
-a16.OwnerID,
-a17.OwnerID,
-a18.OriginalOwnerID,
-a19.BroughtInByOwnerID,
-a20.CurrentVetID,
-a21.OwnersVetID,
-a22.AdoptionCoordinatorID,
-a23.NeuteredByVetID,
-a24.OwnerID,
-a25.Owner2ID,
-a26.Owner3ID,
-a27.DriverOwnerID,
-a28.PickupOwnerID,
-a29.DropoffOwnerID 
-FROM owner o
-left join adoption a1  on a1.OwnerID = o.ID 
-left join adoption a2  on a2.ReturnedByOwnerID = o.ID 
-left join animalfound a3 on a3.OwnerID = o.ID 
-left join animallost a4 on a4.OwnerID = o.ID 
-left join animalwaitinglist a5 on a5.OwnerID = o.ID 
-left join animaltest a6 on a6.AdministeringVetID = o.ID 
-left join animalmedicaltreatment a7 on a7.AdministeringVetID = o.ID 
-left join animalvaccination a8 on a8.AdministeringVetID = o.ID	
-left join clinicappointment a9 on a9.OwnerID = o.ID 
-left join ownercitation a10 on a10.OwnerID = o.ID 
-left join ownerdonation a11 on a11.OwnerID = o.ID 
-left join ownerinvestigation a12 on a12.OwnerID = o.ID 
-left join ownerlicence a13 on a13.OwnerID = o.ID 
-left join ownerrota a14 on a14.OwnerID = o.ID 
-left join ownertraploan a15 on a15.OwnerID = o.ID 
-left join ownervoucher a16 on a16.OwnerID = o.ID 
-left join	users a17  on a17.OwnerID = o.ID 
-left join	animal a18 on a18.OriginalOwnerID = o.ID 
-left join	animal a19 on a19.BroughtInByOwnerID = o.ID 
-left join	animal a20 on a20.CurrentVetID = o.ID 
-left join	animal a21 on a21.OwnersVetID = o.ID 
-left join	animal a22 on a22.AdoptionCoordinatorID = o.ID 
-left join	animal a23 on a23.NeuteredByVetID = o.ID 
-left join	animalcontrol a24 on a24.OwnerID = o.ID 
-left join	animalcontrol a25 on a25.Owner2ID = o.ID 
-left join	animalcontrol a26 on a26.Owner3ID = o.ID  
-left join animaltransport a27 on a27.DriverOwnerID = o.ID 
-left join animaltransport a28 on a28.PickupOwnerID = o.ID 
-left join animaltransport a29 on a29.DropoffOwnerID = o.ID
-where
-a1.OwnerID is null and
-a2.ReturnedByOwnerID is null and
-a3.OwnerID is null and
-a4.OwnerID is null and
-a5.OwnerID is null and
-a6.AdministeringVetID is null and
-a7.AdministeringVetID is null and
-a8.AdministeringVetID is null and
-a9.OwnerID is null and
-a10.OwnerID is null and
-a11.OwnerID is null and
-a12.OwnerID is null and
-a13.OwnerID is null and
-a14.OwnerID is null and
-a15.OwnerID is null and 
-a16.OwnerID is null and
-a17.OwnerID is null and
-a18.OriginalOwnerID is null and
-a19.BroughtInByOwnerID is null and
-a20.CurrentVetID is null and 
-a21.OwnersVetID is null and
-a22.AdoptionCoordinatorID is null and
-a23.NeuteredByVetID is null and
-a24.OwnerID is null and
-a25.Owner2ID is null and
-a26.Owner3ID is null and
-a27.DriverOwnerID is null and
-a28.PickupOwnerID is null and
-a29.DropoffOwnerID is null 
-ORDER BY o.OwnerName		 
-
-		 */
 }

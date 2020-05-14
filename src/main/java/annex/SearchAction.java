@@ -9,12 +9,13 @@ import java.io.*;
 import java.text.*;
 import javax.servlet.http.HttpServletResponse;
 import org.apache.struts2.ServletActionContext;  
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 public class SearchAction extends TopAction{
 
 		static final long serialVersionUID = 215L;	
-		static Logger logger = Logger.getLogger(SearchAction.class);
+		static Logger logger = LogManager.getLogger(SearchAction.class);
 		//
 		List<Waiver> waivers = null;
 		WaiverList waiverList = null;
@@ -33,11 +34,13 @@ public class SearchAction extends TopAction{
 						}	
 				}
 				if(!action.equals("")){
+						logger.debug(" search action ");
 						getWaiverList();
 						waiverList.setNoLimit();
 						back = waiverList.find();
 						if(!back.equals("")){
 								addActionError(back);
+								logger.error(back);
 						}
 						else{
 								waivers = waiverList.getWaivers();
@@ -51,6 +54,7 @@ public class SearchAction extends TopAction{
 														return super.execute();
 												}catch(Exception ex){
 														System.err.println(ex);
+														logger.error(ex);
 												}						
 										}
 										waiversTitle = "Found "+waivers.size()+" records";
@@ -62,10 +66,16 @@ public class SearchAction extends TopAction{
 						}
 				}				
 				else{
+						logger.debug(" search waiver list ");						
 						getWaiverList();
 						WaiverList ml = new WaiverList(debug);
 						back = ml.find();
-						waivers = ml.getWaivers();
+						if(back.equals(""))
+								waivers = ml.getWaivers();
+						else{
+								logger.error(back);
+						}
+						
 				}
 				return ret;
 		}
