@@ -197,6 +197,7 @@ public class WaiverRtf extends HttpServlet {
 						}
 				}
     }
+
     void writeCorporateAuthority(Document document,
 																 Entity businessEntity,
 																 Entity sgent){
@@ -410,7 +411,8 @@ public class WaiverRtf extends HttpServlet {
 				catch(Exception ex){
 						logger.error(ex);
 				}						
-    }
+		}
+
     void writeWaiver(Document document,
 										 Waiver waiver,
 										 List<Entity> owners,
@@ -748,30 +750,23 @@ public class WaiverRtf extends HttpServlet {
 						document.add(pp);
 						//
 						phrase = new Phrase();
-						ch = new Chunk("The undersigned "+agent.getName()+", as authorized agent for "+businessEntity.getName()+", an Indiana Limited Liability Coorporation and Owner of the real estate hereinafter described, for and in consideration of the City of Bloomington, Indiana, granting to the Owner the right to tap into and connect to the sewer system of the City of Bloomington for the purpose of providing sewer service to the described real estate, now release the right of the Owner of the described real estate, and its successors in title, to remonstrate against any pending or future annexation by the City of Bloomington, Indiana, of such described real estate for a period of fifteen (15) years form the date of filing this instrument.  The person signing below on behalf of Owner represents and certifies that he or she has full authority to execute this Waiver of Protest of Annexation on behalf of Owner.\n",fnt);
-						phrase.add(ch);
-						pp = new Paragraph();
-						pp.setIndentationLeft(0);
-						pp.setFirstLineIndent(pp_indent);
-						pp.setAlignment(Element.ALIGN_LEFT);
-						pp.add(phrase);
-						document.add(pp);
-						//
-						phrase = new Phrase();
-						ch = new Chunk("The real estate to be served by such sewers and the real estate for which the right of remonstrance against pending or future annexation to the City of Bloomington is released, is described as follows:",fnt);
-						phrase.add(ch);
-						pp = new Paragraph();
-						pp.setIndentationLeft(0);
-						pp.setFirstLineIndent(pp_indent);
-						pp.setAlignment(Element.ALIGN_LEFT);
-						pp.add(phrase);
-						document.add(pp);
-						//
 
+						ch = new Chunk("The undersigned "+agent.getName()+", as authorized agent for "+businessEntity.getName()+" LLC, an Indiana limited liability corporation and Owner of the real estate hereinafter described, for and in consideration of the City of Bloomington, Indiana, granting to the Owner the right to tap into and connect to the sewer system of the City of Bloomington for the purpose of providing sewer service to the described real estate, now release the right of the Owner of the described real estate, and its successors in title, to remonstrate against any pending or future annexation by the City of Bloomington, Indiana, of such described real estate for a period of fifteen (15) years from the date of filing this instrument.  The person signing below on behalf of Owner represents and certifies that he or she has full authority to execute this Waiver of Protest of Annexation on behalf of Owner.  The real estate to be served by such sewers and the real estate for which the right of remonstrance against pending or future annexation to the City of Bloomington is released, is described as follows:",fnt);
+						phrase.add(ch);
+						pp = new Paragraph();
+						pp.setIndentationLeft(0);
+						pp.setFirstLineIndent(pp_indent);
+						pp.setAlignment(Element.ALIGN_LEFT);
+						pp.add(phrase);
+						document.add(pp);
+						//
 						Table table = new Table(2);
+						int withs[] = {40,60};
+						table.setWidths(withs);
+						table.setWidth(100);						
 						table.setBorder(0);
 						table.getDefaultCell().setBorder(0);
-						table.setWidth(100);
+
 						phrase = new Phrase();
 						ch = new Chunk("Service Address:",fnt);
 						phrase.add(ch);						
@@ -803,7 +798,7 @@ public class WaiverRtf extends HttpServlet {
 						table.addCell(cell);
 						//
 						phrase = new Phrase();
-						ch = new Chunk("Deed Instrument No.:",fnt);
+						ch = new Chunk("Deed Instrument Nos.:",fnt);
 						phrase.add(ch);
 						cell = new RtfCell(phrase);
 						cell.setBorder(0);
@@ -818,7 +813,7 @@ public class WaiverRtf extends HttpServlet {
 						//
 						String str="", str2 = waiver.getParcelPin();
 						if(str2 != null && !str2.equals("")){
-								str = "Parcel ID #:";
+								str = "Parcel Pin #:";
 								phrase = new Phrase();
 								ch = new Chunk(str,fnt);
 								phrase.add(ch);
@@ -854,61 +849,104 @@ public class WaiverRtf extends HttpServlet {
 						document.add(table);
 						//
 						phrase = new Phrase();
-						ch = new Chunk("\n"+businessEntity.getName()+"\n",fntu);
+						ch = new Chunk("The undersigned as an officer for "+businessEntity.getName()+" further SWEARS and AFFIRMS to be the President (___) of "+businessEntity.getName()+", LLC, and all officers in "+businessEntity.getName()+", LLC have the authority to sign for and on behalf of "+businessEntity.getName()+", LLC.", fnt);
 						phrase.add(ch);
-						ch = new Chunk("By:\n\n",fnt);						
-						document.add(phrase);
-						//
-						phrase = new Phrase();
-						ch = new Chunk("_______________________\n",fnt);
-						phrase.add(ch);						
-						ch = new Chunk("Name Printed:",fnt);
-						phrase.add(ch);
-						ch = new Chunk(agent.getName()+"\n", fntu);
-						phrase.add(ch);
-	    
-						ch = new Chunk("Title:",fnt);
-						phrase.add(ch);
-						str = agent.getTitle();
-						if(str == null || str.trim().equals("")) str = "                       ";
-						ch = new Chunk(str,fntu);
-						phrase.add(ch);
-						ch = new Chunk("\n\n",fnt);
-						phrase.add(ch);	    
-						document.add(phrase);
+						pp = new Paragraph();
+						pp.setAlignment(Element.ALIGN_LEFT);
+						pp.add(phrase);
+						document.add(pp);
 						//
 						table = new Table(2);
-						table.setWidth(100);						
+						table.setBorder(0);
 						table.getDefaultCell().setBorder(0);
-						table.getDefaultCell().setHorizontalAlignment(Element.ALIGN_LEFT);
+						table.setWidth(100);
+						
+
+						//
+						phrase = new Phrase();
+						ch = new Chunk("OWNER: ",fnt);
+						phrase.add(ch);						
+						ch = new Chunk(businessEntity.getName(),fntu);
+						phrase.add(ch);
+						cell = new RtfCell(phrase);
+						cell.setBorder(0);
+						table.addCell(cell);						
+
+						
+						ch = new Chunk("By: ______________",fnt);
+						phrase = new Phrase();
+						phrase.add(ch);
+						cell = new RtfCell(phrase);
+						cell.setBorder(0);
+						table.addCell(cell);
+
+						// empty cell
+						ch = new Chunk(" ",fnt);
+						phrase = new Phrase();
+						phrase.add(ch);
+						cell = new RtfCell(phrase);
+						cell.setBorder(0);
+						table.addCell(cell);						
+						//
+						phrase = new Phrase();
+						ch = new Chunk("  Name Printed:         \nTitle:_______________",fnt);						
+						phrase.add(ch);
+						cell = new RtfCell(phrase);
+						cell.setBorder(0);
+						table.addCell(cell);
+						document.add(table);
+						//
+						
+						//
+						phrase = new Phrase();
+						ch = new Chunk("Witnessed:\n Executed and Delivered in my presence. Witness further attest Witness is not a party to this transaction and will not receive any interest in or proceeds from the property.\n\n",fnt);
+						pp = new Paragraph();
+						pp.setAlignment(Element.ALIGN_LEFT);
+						pp.add(phrase);
+						document.add(pp);
+						//
+						phrase = new Phrase();
+						phrase.add(ch);						
+						ch = new Chunk("_____________________Witness Signature   ",fnt);
+						phrase.add(ch);
+						ch = new Chunk("_____________________Witness Printed Name",fnt);
+						phrase.add(ch);
+						document.add(phrase);
+						//
+						
+						//
+						Table contTable = new Table(2);
+						contTable.setWidth(100);						
+						contTable.getDefaultCell().setBorder(0);
+						contTable.getDefaultCell().setHorizontalAlignment(Element.ALIGN_LEFT);
 
 						phrase = new Phrase();
 						ch = new Chunk("STATE OF INDIANA ",fnt);
 						phrase.add(ch);
 						cell = new RtfCell(phrase);
 						cell.setBorder(0);
-						table.addCell(cell);
+						contTable.addCell(cell);
 						//						
 						phrase = new Phrase();
 						ch = new Chunk(") ",fnt);
 						phrase.add(ch);
 						cell = new RtfCell(phrase);
 						cell.setBorder(Rectangle.NO_BORDER);
-						table.addCell(cell);
+						contTable.addCell(cell);
 
 						phrase = new Phrase();
 						ch = new Chunk(" ",fnt);
 						phrase.add(ch);
 						cell = new RtfCell(phrase);
 						cell.setBorder(Rectangle.NO_BORDER);
-						table.addCell(cell);
+						contTable.addCell(cell);
 
 						phrase = new Phrase();
 						ch = new Chunk(") SS:",fnt);
 						phrase.add(ch);
 						cell = new RtfCell(phrase);
 						cell.setBorder(Rectangle.NO_BORDER);
-						table.addCell(cell);
+						contTable.addCell(cell);
 						//
 						// third row
 						ch = new Chunk("COUNTY OF MONROE",fnt);
@@ -916,93 +954,85 @@ public class WaiverRtf extends HttpServlet {
 						phrase.add(ch);
 						cell = new RtfCell(phrase);
 						cell.setBorder(Rectangle.NO_BORDER);
-						table.addCell(cell);
+						contTable.addCell(cell);
 						// 
 						ch = new Chunk(")",fnt);
 						phrase = new Phrase();
 						phrase.add(ch);
 						cell = new RtfCell(phrase);
 						cell.setBorder(Rectangle.NO_BORDER);
-						table.addCell(cell);
+						contTable.addCell(cell);
 						//
-						document.add(table);
+						document.add(contTable);
 						//
 						phrase = new Phrase();
-						ch = new Chunk("Before me, a Notary Public, personally appeared ", fnt);
+						ch = new Chunk("Before me, a Notary Public in and for said County and State, personally appeared ______________, being known or proved to me to be the person whose name is subscribed as a witness above to the foregoing document execution and delivery by __________, and swore that they are not a party to and will not receive any interest in the transaction this ____ day of __________, 20__.\n",fnt);
 						phrase.add(ch);
-						ch = new Chunk(agent.getName(), fntu);
-						phrase.add(ch);
-						ch = new Chunk(" and acknowledged the execution of the above release of the right to remonstrate against pending or future annexation to the City of Bloomington, Indiana, to be his voluntary act and deed, this ____ day of ____________, 20____.",fnt);
-						phrase.add(ch);
-						pp = new Paragraph();
-						pp.setIndentationLeft(0);
-						pp.setFirstLineIndent(pp_indent);
-						pp.setAlignment(Element.ALIGN_LEFT);
-						pp.add(phrase);
-						document.add(pp);
+						document.add(phrase);
 						//
-						table = new Table(2);
-						table.setWidth(100);
-						table.getDefaultCell().setBorder(0);
-						table.getDefaultCell().setHorizontalAlignment(Element.ALIGN_LEFT);
+						Table notTable = new Table(2);
+						// int withs[] = {40,60};
+						notTable.setWidth(100);
+						notTable.setWidths(withs);
+						notTable.getDefaultCell().setBorder(0);
+						notTable.getDefaultCell().setHorizontalAlignment(Element.ALIGN_LEFT);
 
 						phrase = new Phrase();
-						ch = new Chunk("My Commission Expires: ",fnt);
+						ch = new Chunk("My Commission Expires:________",fnt);
 						phrase.add(ch);
 						cell = new RtfCell(phrase);
 						cell.setBorder(Rectangle.NO_BORDER);
-						table.addCell(cell);						
+						notTable.addCell(cell);						
 
 						phrase = new Phrase();
 						ch = new Chunk("Signed:__________________",fnt);
 						phrase.add(ch);
 						cell = new RtfCell(phrase);
 						cell.setBorder(Rectangle.NO_BORDER);
-						table.addCell(cell);
+						notTable.addCell(cell);
 
-						phrase = new Phrase();
-						ch = new Chunk("_________________________",fnt);
-						phrase.add(ch);
-						cell = new RtfCell(phrase);
-						cell.setBorder(Rectangle.NO_BORDER);
-						table.addCell(cell);
-						
-						phrase = new Phrase();
-						ch = new Chunk("Name Printed:__________________",fnt);
-						phrase.add(ch);
-						cell = new RtfCell(phrase);
-						cell.setBorder(Rectangle.NO_BORDER);
-						table.addCell(cell);
-	    
 						phrase = new Phrase();
 						ch = new Chunk("NP#:__________________",fnt);
 						phrase.add(ch);
 						cell = new RtfCell(phrase);
 						cell.setBorder(Rectangle.NO_BORDER);
-						table.addCell(cell);	    
-						phrase = new Phrase();	    
-						ch = new Chunk("                 Notary Public",fnt);
+						notTable.addCell(cell);
+
+						phrase = new Phrase();
+						ch = new Chunk("Printed Name:__________________",fnt);
 						phrase.add(ch);
 						cell = new RtfCell(phrase);
 						cell.setBorder(Rectangle.NO_BORDER);
-						table.addCell(cell);
+						notTable.addCell(cell);
+
 						phrase = new Phrase();
 						ch = new Chunk(" ",fnt);
 						phrase.add(ch);
 						cell = new RtfCell(phrase);
 						cell.setBorder(Rectangle.NO_BORDER);
-						table.addCell(cell);
-						//
-						ch = new Chunk("Residing in             , Indiana\n\n",fnt);
-						phrase.add(ch);						
+						notTable.addCell(cell);
+
+						phrase = new Phrase();
+						ch = new Chunk("              Notary Public\n Residing in Monroe County, IN\n",fnt);
+						phrase.add(ch);
 						cell = new RtfCell(phrase);
 						cell.setBorder(Rectangle.NO_BORDER);
-						table.addCell(cell);
+						notTable.addCell(cell);
 						//
-						document.add(table);
+						document.add(notTable);						
+						//
+						// again county table
+						document.add(contTable);
 						//
 						phrase = new Phrase();
-						ch = new Chunk("I affirm under penalties of perjury that I have taken reasonable care to redact each Social Security Number in this document, unless required by law. ",fnt);
+						ch = new Chunk("Before me, a Notary Public in and for said County and State, personally appeared ______________, being known or proved to me to be the person whose name is subscribed as a witness above to the foregoing document execution and delivery by __________, and swore that they are not a party to and will not receive any interest in the transaction this ____ day of __________, 20__.\n\n",fnt);
+						phrase.add(ch);
+						document.add(phrase);						
+						//
+						document.add(notTable);
+						
+						phrase = new Phrase();
+						ch = new Chunk("I affirm under penalties of perjury that I have taken reasonable care to redact each Social Security Number in this document, unless required by law.         ",fnt);
 						phrase.add(ch);
 						ch = new Chunk("Signed:_____________\n\n",fnt);
 						phrase.add(ch);	    
@@ -1013,6 +1043,7 @@ public class WaiverRtf extends HttpServlet {
 						pp.add(phrase);
 						document.add(pp);
 
+						
 						phrase = new Phrase();
 
 						pp = new Paragraph();
