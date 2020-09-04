@@ -148,10 +148,12 @@ public class WaiverRtf extends HttpServlet {
 												Entity businessEntity = owners.get(0);
 												for(int jj=1;jj<owners.size();jj++){
 														Entity agent = owners.get(jj);
+														/**
 														writeCorporateAuthority(document,
 																										businessEntity,
 																										agent);
-														document.newPage();	
+														document.newPage();
+														*/
 														writeBusinessWaiver(document,
 																								waiver,
 																								businessEntity,
@@ -197,7 +199,8 @@ public class WaiverRtf extends HttpServlet {
 						}
 				}
     }
-
+		/**
+			 // not needed anymore
     void writeCorporateAuthority(Document document,
 																 Entity businessEntity,
 																 Entity sgent){
@@ -412,7 +415,7 @@ public class WaiverRtf extends HttpServlet {
 						logger.error(ex);
 				}						
 		}
-
+		*/
     void writeWaiver(Document document,
 										 Waiver waiver,
 										 List<Entity> owners,
