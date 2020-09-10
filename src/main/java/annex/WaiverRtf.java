@@ -436,7 +436,7 @@ public class WaiverRtf extends HttpServlet {
 				Font fnt,fnts,fntb,fntu,fntbu;
 				try{
 						fnt = FontFactory.getFont("Times-New-Roman",12, Font.NORMAL);
-						fnts = FontFactory.getFont("Times-New-Roman", 10, Font.NORMAL);
+						fnts = FontFactory.getFont("Times-New-Roman", 8, Font.NORMAL);
 						fntb = FontFactory.getFont("Times-New-Roman", 12, Font.BOLD);
 						fntu = FontFactory.getFont("Times-New-Roman", 12, Font.UNDERLINE);
 						fntbu = FontFactory.getFont("Times-New-Roman", 14, Font.BOLD | Font.UNDERLINE);						
@@ -458,7 +458,8 @@ public class WaiverRtf extends HttpServlet {
 						document.add(pp);
 						//
 						phrase = new Phrase();
-						ch = new Chunk("The undersigned "+ownerNames+", as owner(s) of the real estate hereinafter described, for and in consideration of the City of Bloomington, Indiana, granting to the undersigned the right to tap into and connect to the sewer system of the City of Bloomington for the purpose of providing sewer service to the described real estate, now release the right of the undersigned as owner of the described real estate and their successors in title to remonstrate against any pending or future annexation by the City of Bloomington, Indiana, of such described real estate for a period of fifteen (15) years from the date of filing this instrument.",fnt);
+						ch = new Chunk("The undersigned"+ownerNames+", as owner(s) of the real estate hereinafter described, for and in consideration of the City of Bloomington, Indiana, granting to the undersigned the right to tap into and connect to the sewer system of the City of Bloomington for the purpose of providing sewer service to the described real estate, now release the right of the undersigned as owner(s) of the described real estate and their successors in title to remonstrate against any pending or future annexation by the City of Bloomington, Indiana, of such described real estate for a period of fifteen (15) years from the date of filing this instrument.  The real estate to be served by such sewers and the real estate for which the right of remonstrance against pending or future annexation to the City of Bloomington is released, is described as follows:",fnt);
+						
 						phrase.add(ch);
 						pp = new Paragraph();
 						pp.setIndentationLeft(0);
@@ -467,21 +468,13 @@ public class WaiverRtf extends HttpServlet {
 						pp.add(phrase);
 						document.add(pp);
 						//
-						phrase = new Phrase();
-						ch = new Chunk("The real estate to be served by such sewers and the real estate for which the right of remonstrance against pending or future annexation to the City of Bloomington is released, is described as follows:",fnt);
-						phrase.add(ch);
-						pp = new Paragraph();
-						pp.setIndentationLeft(0);
-						pp.setFirstLineIndent(pp_indent);
-						pp.setAlignment(Element.ALIGN_LEFT);
-						pp.add(phrase);
-						document.add(pp);
-						//
-
+						int withs[] = {30,70};
 						Table table = new Table(2);
 						table.setBorder(0);
 						table.getDefaultCell().setBorder(0);
 						table.setWidth(100);
+						table.setWidths(withs);
+						
 						phrase = new Phrase();
 						ch = new Chunk("Service Address:",fntu);
 						phrase.add(ch);						
@@ -561,33 +554,35 @@ public class WaiverRtf extends HttpServlet {
 						document.add(table);
 						//
 						phrase = new Phrase();
-						ch = new Chunk("Signed:\n",fnt);
+						if(owners != null && owners.size() == 1){
+								ch = new Chunk("\nSigned:(Owner)\n",fnt);
+						}
+						else{
+								ch = new Chunk("\nSigned:(Owner(s))\n",fnt);
+						}
 						phrase.add(ch);
 						document.add(phrase);
 						//
-						table = new Table(owners.size());
-						table.setWidth(100);
-						table.getDefaultCell().setBorder(0);
-						table.getDefaultCell().setHorizontalAlignment(Element.ALIGN_LEFT);
-						//
+						phrase = new Phrase();						
 						for(Entity owner:owners){
-								phrase = new Phrase();
-								ch = new Chunk("____________________________\n",fnt);
-								phrase.add(ch);
-								ch = new Chunk(owner.getName()+"\n",fnt);
+								ch = new Chunk("__________________"+owner.getName()+", Owner ",fnt);
 								phrase.add(ch);								
-								cell = new RtfCell(phrase);
-								cell.setBorder(Rectangle.NO_BORDER);
-								table.addCell(cell);								
 						}
-						document.add(table);
+						ch = new Chunk("\n\n", fnt);
+						phrase.add(ch);
+						document.add(phrase);
+
+						phrase = new Phrase();
+						ch = new Chunk("Witnessed:\n"+
+													 "Executed and Delivered in my presence. Witness further attest Witness is not a party to this transaction and will not receive any interest in or proceeds from the property.\n"+
+													 "_______________________ Witness Signature      _______________________ Witness Printed Name\n\n",fnt);
+
 						//
 						for(Entity owner:owners){
 								table = new Table(2);
 								table.setWidth(100);						
 								table.getDefaultCell().setBorder(0);
 								table.getDefaultCell().setHorizontalAlignment(Element.ALIGN_LEFT);
-
 								phrase = new Phrase();
 								ch = new Chunk("STATE OF INDIANA ",fnt);
 								phrase.add(ch);
@@ -601,7 +596,7 @@ public class WaiverRtf extends HttpServlet {
 								cell = new RtfCell(phrase);
 								cell.setBorder(Rectangle.NO_BORDER);
 								table.addCell(cell);
-								
+										
 								phrase = new Phrase();
 								ch = new Chunk(" ",fnt);
 								phrase.add(ch);
@@ -634,7 +629,8 @@ public class WaiverRtf extends HttpServlet {
 								document.add(table);
 								//
 								phrase = new Phrase();
-								ch = new Chunk("Before me, a Notary Public, personally appeared "+owner.getName()+" and acknowledged the execution of the above release of the right to remonstrate against pending or future annexation to the City of Bloomington, Indiana, to be his voluntary act and deed, this ____ day of ____________, 20____. \n",fnt);
+								ch = new Chunk("Before me, a Notary Public, personally appeared "+owner.getName()+" and acknowledged the execution of the foregoing document as his voluntary act this ____ day of ____________, 20__.",fnt);
+																
 								phrase.add(ch);
 								pp = new Paragraph();
 								pp.setIndentationLeft(0);
@@ -647,28 +643,28 @@ public class WaiverRtf extends HttpServlet {
 								table.setWidth(100);
 								table.getDefaultCell().setBorder(0);
 								table.getDefaultCell().setHorizontalAlignment(Element.ALIGN_LEFT);
-								
+										
 								phrase = new Phrase();
 								ch = new Chunk("My Commission Expires:__________",fnt);
 								phrase.add(ch);
 								cell = new RtfCell(phrase);
 								cell.setBorder(Rectangle.NO_BORDER);
 								table.addCell(cell);						
-								
+										
 								phrase = new Phrase();
 								ch = new Chunk("Signed:__________________",fnt);
 								phrase.add(ch);
 								cell = new RtfCell(phrase);
 								cell.setBorder(Rectangle.NO_BORDER);
 								table.addCell(cell);
-								
+										
 								phrase = new Phrase();
-								ch = new Chunk(" ",fnt);
+								ch = new Chunk("NP #:______________ ",fnt);
 								phrase.add(ch);
 								cell = new RtfCell(phrase);
 								cell.setBorder(Rectangle.NO_BORDER);
 								table.addCell(cell);
-								
+										
 								phrase = new Phrase();
 								ch = new Chunk("Name Printed:__________________ Notary Public",fnt);
 								phrase.add(ch);
@@ -690,29 +686,18 @@ public class WaiverRtf extends HttpServlet {
 								cell.setBorder(Rectangle.NO_BORDER);
 								table.addCell(cell);
 								document.add(table);
-								//
-								phrase = new Phrase();
-								ch = new Chunk("I affirm under penalties of perjury that I have taken reasonable care to redact each Social Security Number in this document, unless required by law.\n",fnt);
-								phrase.add(ch);
-								pp = new Paragraph();
-								pp.setIndentationLeft(0);
-								pp.setFirstLineIndent(pp_indent);
-								pp.setAlignment(Element.ALIGN_LEFT);
-								pp.add(phrase);
-								document.add(pp);
-								
-								phrase = new Phrase();
-								ch = new Chunk("Signed:__________________________________\n\n",fnt);
-								phrase.add(ch);
-								pp = new Paragraph();
-								pp.setAlignment(Element.ALIGN_RIGHT);
-								pp.add(phrase);
-								document.add(pp);
 						}
+						//
 						phrase = new Phrase();
-						ch = new Chunk(" This instrument prepared by "+attorneyFullName+", Attorney at Law \n City of Bloomington Legal Department, P. O. Box 100, Bloomington, Indiana  47402-0100",fnts);
+						ch = new Chunk("I affirm under penalties of perjury that I have taken reasonable care to redact each Social Security Number in this document, unless required by law.\n",fnts);
+						phrase.add(ch);
+						ch = new Chunk("                         ______________\n",fnts);
+						phrase.add(ch);
+						ch = new Chunk("This instrument prepared by "+attorneyFullName+", Attorney at Law, City of Bloomington Legal Department, P. O. Box 100, Bloomington, IN  47402",fnts);
 						phrase.add(ch);
 						pp = new Paragraph();
+						pp.setIndentationLeft(0);
+						// pp.setFirstLineIndent(pp_indent);
 						pp.setAlignment(Element.ALIGN_CENTER);
 						pp.add(phrase);
 						document.add(pp);
