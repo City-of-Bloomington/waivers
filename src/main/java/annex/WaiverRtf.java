@@ -562,21 +562,14 @@ public class WaiverRtf extends HttpServlet {
 						}
 						phrase.add(ch);
 						document.add(phrase);
-						//
 						phrase = new Phrase();						
 						for(Entity owner:owners){
 								ch = new Chunk("__________________"+owner.getName()+", Owner ",fnt);
-								phrase.add(ch);								
+										phrase.add(ch);								
 						}
-						ch = new Chunk("\n\n", fnt);
+						ch = new Chunk("\n", fnt);
 						phrase.add(ch);
-						document.add(phrase);
-
-						phrase = new Phrase();
-						ch = new Chunk("Witnessed:\n"+
-													 "Executed and Delivered in my presence. Witness further attest Witness is not a party to this transaction and will not receive any interest in or proceeds from the property.\n"+
-													 "_______________________ Witness Signature      _______________________ Witness Printed Name\n\n",fnt);
-
+						document.add(phrase);						
 						//
 						for(Entity owner:owners){
 								table = new Table(2);
@@ -687,7 +680,74 @@ public class WaiverRtf extends HttpServlet {
 								table.addCell(cell);
 								document.add(table);
 						}
+						ch = new Chunk("\n", fnt);
+						phrase.add(ch);
+						document.add(phrase);
+						// 
+						phrase = new Phrase();
+						ch = new Chunk("Witnessed:\n"+
+													 "Executed and Delivered in my presence. Witness further attest Witness is not a party to this transaction and will not receive any interest in or proceeds from the property.\n"+
+													 "_______________________ Witness Signature      _______________________ Witness Printed Name\n",fnt);
+						phrase.add(ch);
+						pp = new Paragraph();
+						pp.setIndentationLeft(0);
+						pp.setFirstLineIndent(pp_indent);
+						pp.setAlignment(Element.ALIGN_LEFT);
+						pp.add(phrase);
+						document.add(pp);
 						//
+						table = new Table(2);
+						table.setWidth(100);
+						table.getDefaultCell().setBorder(0);
+						table.getDefaultCell().setHorizontalAlignment(Element.ALIGN_LEFT);
+						
+						phrase = new Phrase();
+						ch = new Chunk("My Commission Expires:__________",fnt);
+						phrase.add(ch);
+						cell = new RtfCell(phrase);
+						cell.setBorder(Rectangle.NO_BORDER);
+						table.addCell(cell);						
+						
+						phrase = new Phrase();
+						ch = new Chunk("Signed:__________________",fnt);
+						phrase.add(ch);
+						cell = new RtfCell(phrase);
+						cell.setBorder(Rectangle.NO_BORDER);
+						table.addCell(cell);
+										
+						phrase = new Phrase();
+						ch = new Chunk("NP #:______________ ",fnt);
+						phrase.add(ch);
+						cell = new RtfCell(phrase);
+						cell.setBorder(Rectangle.NO_BORDER);
+						table.addCell(cell);
+						
+						phrase = new Phrase();
+						ch = new Chunk("Name Printed:__________________ Notary Public",fnt);
+						phrase.add(ch);
+						cell = new RtfCell(phrase);
+						cell.setBorder(Rectangle.NO_BORDER);
+						table.addCell(cell);
+						
+						phrase = new Phrase();
+						ch = new Chunk(" ",fnt);
+						phrase.add(ch);
+						cell = new RtfCell(phrase);
+						cell.setBorder(Rectangle.NO_BORDER);
+						table.addCell(cell);
+						
+						phrase = new Phrase();
+						ch = new Chunk("Residing in Monroe County, Indiana\n",fnt);
+						phrase.add(ch);
+						cell = new RtfCell(phrase);
+						cell.setBorder(Rectangle.NO_BORDER);
+						table.addCell(cell);
+						document.add(table);
+						//
+						phrase = new Phrase();
+						ch = new Chunk("Before me, a Notary Public in and for said County and State, personally appeared ______________, being known or proved to me to be the person whose name is subscribed as a witness above to the foregoing document execution and delivery by _____________, and swore that they are not a party to and will not receive any interest in the transaction this ____ day of __________, 20__.",fnt);
+						document.add(phrase);
+						// 
 						phrase = new Phrase();
 						ch = new Chunk("I affirm under penalties of perjury that I have taken reasonable care to redact each Social Security Number in this document, unless required by law.\n",fnts);
 						phrase.add(ch);
