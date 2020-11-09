@@ -421,17 +421,21 @@ public class WaiverRtf extends HttpServlet {
 										 List<Entity> owners,
 										 String attorneyFullName){
 				//
-				String ownerNames = "";
-				for(int jj=0;jj<owners.size();jj++){
-						Entity one = owners.get(jj);
-						if(jj+1 < owners.size()){
-								ownerNames += ", ";
+				String ownerNames = owners.get(0).getName();
+				if(owners.size() > 1){
+						for(int jj=1;jj<owners.size();jj++){
+								Entity one = owners.get(jj);
+								// for more than 2
+								if(jj >= 1 && jj < owners.size() - 1){
+										ownerNames += ", ";
+								}
+								else {
+										ownerNames += " and ";
+								}
+								ownerNames += one.getName();								
 						}
-						else if(jj+1 == owners.size() && owners.size() > 1){
-								ownerNames += " and ";
-						}
-						ownerNames += one.getName();
 				}
+				System.err.println(" owners "+ownerNames);
 				int pp_indent = 20;
 				Font fnt,fnts,fntb,fntu,fntbu;
 				try{
@@ -458,7 +462,7 @@ public class WaiverRtf extends HttpServlet {
 						document.add(pp);
 						//
 						phrase = new Phrase();
-						ch = new Chunk("The undersigned"+ownerNames+", as owner(s) of the real estate hereinafter described, for and in consideration of the City of Bloomington, Indiana, granting to the undersigned the right to tap into and connect to the sewer system of the City of Bloomington for the purpose of providing sewer service to the described real estate, now release the right of the undersigned as owner(s) of the described real estate and their successors in title to remonstrate against any pending or future annexation by the City of Bloomington, Indiana, of such described real estate for a period of fifteen (15) years from the date of filing this instrument.  The real estate to be served by such sewers and the real estate for which the right of remonstrance against pending or future annexation to the City of Bloomington is released, is described as follows:",fnt);
+						ch = new Chunk("The undersigned "+ownerNames+", as owner(s) of the real estate hereinafter described, for and in consideration of the City of Bloomington, Indiana, granting to the undersigned the right to tap into and connect to the sewer system of the City of Bloomington for the purpose of providing sewer service to the described real estate, now release the right of the undersigned as owner(s) of the described real estate and their successors in title to remonstrate against any pending or future annexation by the City of Bloomington, Indiana, of such described real estate for a period of fifteen (15) years from the date of filing this instrument.  The real estate to be served by such sewers and the real estate for which the right of remonstrance against pending or future annexation to the City of Bloomington is released, is described as follows:",fnt);
 						
 						phrase.add(ch);
 						pp = new Paragraph();
@@ -571,119 +575,6 @@ public class WaiverRtf extends HttpServlet {
 						phrase.add(ch);
 						document.add(phrase);						
 						//
-						for(Entity owner:owners){
-								table = new Table(2);
-								table.setWidth(100);						
-								table.getDefaultCell().setBorder(0);
-								table.getDefaultCell().setHorizontalAlignment(Element.ALIGN_LEFT);
-								phrase = new Phrase();
-								ch = new Chunk("STATE OF INDIANA ",fnt);
-								phrase.add(ch);
-								cell = new RtfCell(phrase);
-								cell.setBorder(0);
-								table.addCell(cell);
-								//						
-								phrase = new Phrase();
-								ch = new Chunk(") ",fnt);
-								phrase.add(ch);
-								cell = new RtfCell(phrase);
-								cell.setBorder(Rectangle.NO_BORDER);
-								table.addCell(cell);
-										
-								phrase = new Phrase();
-								ch = new Chunk(" ",fnt);
-								phrase.add(ch);
-								cell = new RtfCell(phrase);
-								cell.setBorder(Rectangle.NO_BORDER);
-								table.addCell(cell);
-								
-								phrase = new Phrase();
-								ch = new Chunk(") SS:",fnt);
-								phrase.add(ch);
-								cell = new RtfCell(phrase);
-								cell.setBorder(Rectangle.NO_BORDER);
-								table.addCell(cell);
-								//
-								// third row
-								ch = new Chunk("COUNTY OF MONROE",fnt);
-								phrase = new Phrase();
-								phrase.add(ch);
-								cell = new RtfCell(phrase);
-								cell.setBorder(Rectangle.NO_BORDER);
-								table.addCell(cell);
-								// 
-								ch = new Chunk(")",fnt);
-								phrase = new Phrase();
-								phrase.add(ch);
-								cell = new RtfCell(phrase);
-								cell.setBorder(Rectangle.NO_BORDER);
-								table.addCell(cell);
-								//
-								document.add(table);
-								//
-								phrase = new Phrase();
-								ch = new Chunk("Before me, a Notary Public, personally appeared "+owner.getName()+" and acknowledged the execution of the foregoing document as his voluntary act this ____ day of ____________, 20__.",fnt);
-																
-								phrase.add(ch);
-								pp = new Paragraph();
-								pp.setIndentationLeft(0);
-								pp.setFirstLineIndent(pp_indent);
-								pp.setAlignment(Element.ALIGN_LEFT);
-								pp.add(phrase);
-								document.add(pp);
-								//
-								table = new Table(2);
-								table.setWidth(100);
-								table.getDefaultCell().setBorder(0);
-								table.getDefaultCell().setHorizontalAlignment(Element.ALIGN_LEFT);
-										
-								phrase = new Phrase();
-								ch = new Chunk("My Commission Expires:__________",fnt);
-								phrase.add(ch);
-								cell = new RtfCell(phrase);
-								cell.setBorder(Rectangle.NO_BORDER);
-								table.addCell(cell);						
-										
-								phrase = new Phrase();
-								ch = new Chunk("Signed:__________________",fnt);
-								phrase.add(ch);
-								cell = new RtfCell(phrase);
-								cell.setBorder(Rectangle.NO_BORDER);
-								table.addCell(cell);
-										
-								phrase = new Phrase();
-								ch = new Chunk("NP #:______________ ",fnt);
-								phrase.add(ch);
-								cell = new RtfCell(phrase);
-								cell.setBorder(Rectangle.NO_BORDER);
-								table.addCell(cell);
-										
-								phrase = new Phrase();
-								ch = new Chunk("Name Printed:__________________ Notary Public",fnt);
-								phrase.add(ch);
-								cell = new RtfCell(phrase);
-								cell.setBorder(Rectangle.NO_BORDER);
-								table.addCell(cell);
-
-								phrase = new Phrase();
-								ch = new Chunk(" ",fnt);
-								phrase.add(ch);
-								cell = new RtfCell(phrase);
-								cell.setBorder(Rectangle.NO_BORDER);
-								table.addCell(cell);
-								
-								phrase = new Phrase();
-								ch = new Chunk("Residing in Monroe County, Indiana\n",fnt);
-								phrase.add(ch);
-								cell = new RtfCell(phrase);
-								cell.setBorder(Rectangle.NO_BORDER);
-								table.addCell(cell);
-								document.add(table);
-						}
-						ch = new Chunk("\n", fnt);
-						phrase.add(ch);
-						document.add(phrase);
-						// 
 						phrase = new Phrase();
 						ch = new Chunk("Witnessed:\n"+
 													 "Executed and Delivered in my presence. Witness further attest Witness is not a party to this transaction and will not receive any interest in or proceeds from the property.\n"+
@@ -695,58 +586,125 @@ public class WaiverRtf extends HttpServlet {
 						pp.setAlignment(Element.ALIGN_LEFT);
 						pp.add(phrase);
 						document.add(pp);
-						//
-						table = new Table(2);
-						table.setWidth(100);
-						table.getDefaultCell().setBorder(0);
-						table.getDefaultCell().setHorizontalAlignment(Element.ALIGN_LEFT);
-						
+						// 
+						Table ssTable = new Table(2);
+						ssTable.setWidth(100);						
+						ssTable.getDefaultCell().setBorder(0);
+						ssTable.getDefaultCell().setHorizontalAlignment(Element.ALIGN_LEFT);
 						phrase = new Phrase();
-						ch = new Chunk("My Commission Expires:__________",fnt);
+						ch = new Chunk("STATE OF INDIANA ",fnt);
+						phrase.add(ch);
+						cell = new RtfCell(phrase);
+						cell.setBorder(0);
+						ssTable.addCell(cell);
+						//						
+						phrase = new Phrase();
+						ch = new Chunk(") ",fnt);
 						phrase.add(ch);
 						cell = new RtfCell(phrase);
 						cell.setBorder(Rectangle.NO_BORDER);
-						table.addCell(cell);						
-						
-						phrase = new Phrase();
-						ch = new Chunk("Signed:__________________",fnt);
-						phrase.add(ch);
-						cell = new RtfCell(phrase);
-						cell.setBorder(Rectangle.NO_BORDER);
-						table.addCell(cell);
-										
-						phrase = new Phrase();
-						ch = new Chunk("NP #:______________ ",fnt);
-						phrase.add(ch);
-						cell = new RtfCell(phrase);
-						cell.setBorder(Rectangle.NO_BORDER);
-						table.addCell(cell);
-						
-						phrase = new Phrase();
-						ch = new Chunk("Name Printed:__________________ Notary Public",fnt);
-						phrase.add(ch);
-						cell = new RtfCell(phrase);
-						cell.setBorder(Rectangle.NO_BORDER);
-						table.addCell(cell);
+						ssTable.addCell(cell);
 						
 						phrase = new Phrase();
 						ch = new Chunk(" ",fnt);
 						phrase.add(ch);
 						cell = new RtfCell(phrase);
 						cell.setBorder(Rectangle.NO_BORDER);
-						table.addCell(cell);
+						ssTable.addCell(cell);
+						
+						phrase = new Phrase();
+						ch = new Chunk(") SS:",fnt);
+						phrase.add(ch);
+						cell = new RtfCell(phrase);
+						cell.setBorder(Rectangle.NO_BORDER);
+						ssTable.addCell(cell);
+						//
+						// third row
+						ch = new Chunk("COUNTY OF MONROE",fnt);
+						phrase = new Phrase();
+						phrase.add(ch);
+						cell = new RtfCell(phrase);
+						cell.setBorder(Rectangle.NO_BORDER);
+						ssTable.addCell(cell);
+						// 
+						ch = new Chunk(")",fnt);
+						phrase = new Phrase();
+						phrase.add(ch);
+						cell = new RtfCell(phrase);
+						cell.setBorder(Rectangle.NO_BORDER);
+						ssTable.addCell(cell);
+						//
+						document.add(ssTable);
+						//
+						phrase = new Phrase();
+						ch = new Chunk("Before me, a Notary Public, personally appeared "+ownerNames+" and acknowledged the execution of the foregoing document as his voluntary act this ____ day of ____________, 20__.",fnt);
+						//
+						phrase.add(ch);
+						pp = new Paragraph();
+						pp.setIndentationLeft(0);
+						pp.setFirstLineIndent(pp_indent);
+						pp.setAlignment(Element.ALIGN_LEFT);
+						pp.add(phrase);
+						document.add(pp);
+						//
+						//
+						Table noteTable = new Table(2);
+						noteTable.setWidth(100);
+						noteTable.getDefaultCell().setBorder(0);
+						noteTable.getDefaultCell().setHorizontalAlignment(Element.ALIGN_LEFT);
+						
+						phrase = new Phrase();
+						ch = new Chunk("My Commission Expires:__________",fnt);
+						phrase.add(ch);
+						cell = new RtfCell(phrase);
+						cell.setBorder(Rectangle.NO_BORDER);
+						noteTable.addCell(cell);						
+						
+						phrase = new Phrase();
+						ch = new Chunk("Signed:__________________",fnt);
+						phrase.add(ch);
+						cell = new RtfCell(phrase);
+						cell.setBorder(Rectangle.NO_BORDER);
+						noteTable.addCell(cell);
+										
+						phrase = new Phrase();
+						ch = new Chunk("NP #:______________ ",fnt);
+						phrase.add(ch);
+						cell = new RtfCell(phrase);
+						cell.setBorder(Rectangle.NO_BORDER);
+						noteTable.addCell(cell);
+						
+						phrase = new Phrase();
+						ch = new Chunk("Name Printed:__________________ Notary Public",fnt);
+						phrase.add(ch);
+						cell = new RtfCell(phrase);
+						cell.setBorder(Rectangle.NO_BORDER);
+						noteTable.addCell(cell);
+						
+						phrase = new Phrase();
+						ch = new Chunk(" ",fnt);
+						phrase.add(ch);
+						cell = new RtfCell(phrase);
+						cell.setBorder(Rectangle.NO_BORDER);
+						noteTable.addCell(cell);
 						
 						phrase = new Phrase();
 						ch = new Chunk("Residing in Monroe County, Indiana\n",fnt);
 						phrase.add(ch);
 						cell = new RtfCell(phrase);
 						cell.setBorder(Rectangle.NO_BORDER);
-						table.addCell(cell);
-						document.add(table);
+						noteTable.addCell(cell);
+						document.add(noteTable);
 						//
+						document.add(ssTable);
+						
 						phrase = new Phrase();
-						ch = new Chunk("Before me, a Notary Public in and for said County and State, personally appeared ______________, being known or proved to me to be the person whose name is subscribed as a witness above to the foregoing document execution and delivery by _____________, and swore that they are not a party to and will not receive any interest in the transaction this ____ day of __________, 20__.",fnt);
+						ch = new Chunk("Before me, a Notary Public in and for said County and State, personally appeared ______________(witness), being known or proved to me to be the person whose name is subscribed as a witness above to the foregoing document execution and delivery by "+ownerNames+", and swore that they are not a party to and will not receive any interest in the transaction this ____ day of __________, 20__.\n",fnt);
+						phrase.add(ch);
 						document.add(phrase);
+						//
+						document.add(noteTable);
+						// 
 						// 
 						phrase = new Phrase();
 						ch = new Chunk("I affirm under penalties of perjury that I have taken reasonable care to redact each Social Security Number in this document, unless required by law.\n",fnts);
@@ -1014,7 +972,7 @@ public class WaiverRtf extends HttpServlet {
 						document.add(contTable);
 						//
 						phrase = new Phrase();
-						ch = new Chunk("Before me, a Notary Public in and for said County and State, personally appeared ______________, being known or proved to me to be the person whose name is subscribed as a witness above to the foregoing document execution and delivery by __________, and swore that they are not a party to and will not receive any interest in the transaction this ____ day of __________, 20__.\n",fnt);
+						ch = new Chunk("Before me, a Notary Public in and for said County and State, personally appeared _______________(witness), being known or proved to me to be the person whose name is subscribed as a witness above to the foregoing document execution and delivery by "+agent.getName()+", and swore that they are not a party to and will not receive any interest in the transaction this ____ day of __________, 20__.\n",fnt);
 						phrase.add(ch);
 						document.add(phrase);
 						//
