@@ -169,7 +169,11 @@
 			<dl class="fn1-output-field">
 				<dt>GIS Notes </dt>
 				<dd><s:textarea name="waiver.gisNotes" value="%{waiver.gisNotes}" rows="5" cols="50"  /> </dd>
-			</dl>						
+			</dl>
+			<dl class="fn1-output-field">
+				<dt>Mapped Date </dt>
+				<dd><s:textfield name="waiver.mappedDate" value="%{waiver.mappedDate}" size="10"  class="date" maxlength="10" /> </dd>
+			</dl>			
 			<details>
 				<summary>Other Info</summary>
 				<dl class="fn1-output-field">

@@ -22,7 +22,7 @@ public class WaiverList extends CommonInc{
 				imported="",type="", development_subdivision="",
 				legal_description="", waiver_num="",
 				which_date="w.date", limit = " limit 30";
-		boolean showAll = false;
+		boolean showAll = false, hasNoMappedDate=false;
 		List<Waiver> waivers = null;
 	
 		public WaiverList(){
@@ -99,7 +99,12 @@ public class WaiverList extends CommonInc{
 						setNoLimit();
 				}
 		}
-
+		public void setNoMappedDate(boolean val){
+				if(val){
+						setNoLimit();
+						hasNoMappedDate = true;
+				}
+		}
 		public void setNoLimit(){
 				limit = "";
 		}
@@ -126,6 +131,9 @@ public class WaiverList extends CommonInc{
 		}
 		public boolean getShowAll(){
 				return showAll;
+		}
+		public boolean getNoMappedDate(){
+				return hasNoMappedDate;
 		}
 		public String getStatus(){
 				if(status.equals(""))
@@ -224,6 +232,10 @@ public class WaiverList extends CommonInc{
 				if(!status.equals("")){
 						if(!qw.equals("")) qw += " and ";
 						qw += " w.status = ? ";
+				}
+				if(hasNoMappedDate){
+						if(!qw.equals("")) qw += " and ";
+						qw += " w.mapped_date is null ";
 				}
 				if(!imported.equals("")){
 						if(!qw.equals("")) qw += " and ";
