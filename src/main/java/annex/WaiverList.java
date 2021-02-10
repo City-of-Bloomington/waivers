@@ -22,6 +22,7 @@ public class WaiverList extends CommonInc{
 				imported="",type="", development_subdivision="",
 				legal_description="", waiver_num="",
 				which_date="w.date", limit = " limit 30";
+		String in_out_option = ""; // All, In, Out, noInOut
 		boolean showAll = false, hasNoMappedDate=false;
 		List<Waiver> waivers = null;
 	
@@ -105,6 +106,12 @@ public class WaiverList extends CommonInc{
 						hasNoMappedDate = true;
 				}
 		}
+		public void setInOutOption(String val){
+				if(val != null && !val.equals("-1")){
+						in_out_option = val;
+				}
+		}
+				
 		public void setNoLimit(){
 				limit = "";
 		}
@@ -136,22 +143,22 @@ public class WaiverList extends CommonInc{
 				return hasNoMappedDate;
 		}
 		public String getStatus(){
-				if(status.equals(""))
+				if(status.isEmpty())
 						return "-1";
 				return status;
 		}
 		public String getInGis(){
-				if(in_gis.equals(""))
+				if(in_gis.isEmpty())
 						return "-1";
 				return in_gis;
 		}
 		public String getImported(){
-				if(imported.equals(""))
+				if(imported.isEmpty())
 						return "-1";
 				return imported;
 		}
 		public String getType(){
-				if(type.equals(""))
+				if(type.isEmpty())
 						return "-1";
 				return type;
 		}		
@@ -166,6 +173,11 @@ public class WaiverList extends CommonInc{
 		}
 		public String getLegalDescription(){
 				return legal_description;
+		}
+		public String getInOutOption(){
+				if(in_out_option.isEmpty())
+						return "-1";
+				return in_out_option;
 		}
 		
 		public String find(){
@@ -221,32 +233,32 @@ public class WaiverList extends CommonInc{
 				String qw = "";
 				boolean entityTbl = false;
 
-				if(!id.equals("")){
-						if(!qw.equals("")) qw += " and ";
+				if(!id.isEmpty()){
+						if(!qw.isEmpty()) qw += " and ";
 						qw += " w.id = ? ";
 				}
-				if(!waiver_num.equals("")){
-						if(!qw.equals("")) qw += " and ";
+				if(!waiver_num.isEmpty()){
+						if(!qw.isEmpty()) qw += " and ";
 						qw += " w.waiver_num = ? ";
 				}						
-				if(!status.equals("")){
-						if(!qw.equals("")) qw += " and ";
+				if(!status.isEmpty()){
+						if(!qw.isEmpty()) qw += " and ";
 						qw += " w.status = ? ";
 				}
 				if(hasNoMappedDate){
-						if(!qw.equals("")) qw += " and ";
+						if(!qw.isEmpty()) qw += " and ";
 						qw += " w.mapped_date is null ";
 				}
-				if(!imported.equals("")){
-						if(!qw.equals("")) qw += " and ";
+				if(!imported.isEmpty()){
+						if(!qw.isEmpty()) qw += " and ";
 						if(imported.equals("n"))
 								qw += " w.imported is null ";
 						else
 								qw += " w.imported is not null ";										
 				}
-				if(!type.equals("")){
+				if(!type.isEmpty()){
 						entityTbl = true;
-						if(!qw.equals("")) qw += " and ";
+						if(!qw.isEmpty()) qw += " and ";
 						if(type.equals("business"))
 								qw += " e.is_business is not null ";
 						else if(type.equals("trust"))
@@ -254,88 +266,104 @@ public class WaiverList extends CommonInc{
 						else
 								qw += " e.is_business is null and e.is_trust is null";
 				}						
-				if(!name.equals("")){
+				if(!name.isEmpty()){
 						entityTbl = true;
-						if(!qw.equals("")) qw += " and ";
+						if(!qw.isEmpty()) qw += " and ";
 						qw += " e.name like ?";
 				}
-				if(!hookup_address.equals("")){
+				if(!hookup_address.isEmpty()){
 						qq += ", addresses a ";
-						if(!qw.equals("")) qw += " and ";
+						if(!qw.isEmpty()) qw += " and ";
 						qw += " a.waiver_id=w.id ";
 						qw += " and a.street_address like ? ";
 				}
-				if(!development_subdivision.equals("")){
-						if(!qw.equals("")) qw += " and ";
+				if(!development_subdivision.isEmpty()){
+						if(!qw.isEmpty()) qw += " and ";
 						qw += " w.development_subdivision like ? ";
 				}
-				if(!legal_description.equals("")){
-						if(!qw.equals("")) qw += " and ";
+				if(!legal_description.isEmpty()){
+						if(!qw.isEmpty()) qw += " and ";
 						qw += " w.legal_description like ? ";
-				}						
-				if(!parcel_tax_id.equals("")){
-						if(!qw.equals("")) qw += " and ";
+				}
+				if(!in_out_option.isEmpty()){
+						if(!qw.isEmpty()) qw += " and ";
+						if(in_out_option.equals("noInOut")){
+								qw +=" w.in_out_city is null ";
+						}
+						else{
+								qw +=" w.in_out_city = ? ";
+						}
+				}
+				if(!parcel_tax_id.isEmpty()){
+						if(!qw.isEmpty()) qw += " and ";
 						qw += " (w.parcel_tax_id like ?  or w.parcel_pin like ? )";
 				}
-				if(!instrumnet_num.equals("")){
-						if(!qw.equals("")) qw += " and ";
+				if(!instrumnet_num.isEmpty()){
+						if(!qw.isEmpty()) qw += " and ";
 						qw += " (w.deed_instrument_num = ? or w.waiver_instrument_num=?)";
 				}						
-				if(!date_from.equals("")){
-						if(!qw.equals("")) qw += " and ";
+				if(!date_from.isEmpty()){
+						if(!qw.isEmpty()) qw += " and ";
 						qw += which_date +" >= ? ";
 				}
-				if(!date_to.equals("")){
-						if(!qw.equals("")) qw += " and ";
+				if(!date_to.isEmpty()){
+						if(!qw.isEmpty()) qw += " and ";
 						qw += which_date +" <= ? ";
 				}
 				if(entityTbl){
 						qq += ", entities e, entity_waivers ew ";
-						if(!qw.equals("")) qw += " and ";
+						if(!qw.isEmpty()) qw += " and ";
 						qw += " e.id = ew.entity_id and w.id=ew.waiver_id ";
 				}
-				if(!qw.equals("")){
+				if(!qw.isEmpty()){
 						qq += " where "+qw;
 				}
+				// System.err.println(qq);
+						
 				qq += " order by w.id desc "+limit;
 				logger.debug(qq);
 				try{						
 						pstmt = con.prepareStatement(qq);
 						int jj=1;
-						if(!id.equals("")){
+						if(!id.isEmpty()){
 								pstmt.setString(jj++,id);
 						}
-						if(!waiver_num.equals("")){
+						if(!waiver_num.isEmpty()){
 								pstmt.setString(jj++,waiver_num);
 						}						
-						if(!status.equals("")){
+						if(!status.isEmpty()){
 								pstmt.setString(jj++,status);
 						}
-						if(!name.equals("")){
+						if(!name.isEmpty()){
 								pstmt.setString(jj++,"%"+name+"%");
 						}
-						if(!hookup_address.equals("")){
+						if(!hookup_address.isEmpty()){
 								pstmt.setString(jj++, "%"+hookup_address+"%");
 						}
-						if(!development_subdivision.equals("")){
+						if(!development_subdivision.isEmpty()){
 								pstmt.setString(jj++, "%"+development_subdivision+"%");
 						}
-						if(!legal_description.equals("")){
+						if(!legal_description.isEmpty()){
 								pstmt.setString(jj++, "%"+legal_description+"%");
-						}						
-						if(!parcel_tax_id.equals("")){
+						}
+						if(!in_out_option.isEmpty()){
+								if(!in_out_option.equals("noInOut")){
+										pstmt.setString(jj++, in_out_option);
+								}
+						}
+						if(!parcel_tax_id.isEmpty()){
 								pstmt.setString(jj++, "%"+parcel_tax_id+"%");
 								pstmt.setString(jj++, "%"+parcel_tax_id+"%");								
 						}
-						if(!instrumnet_num.equals("")){
+						if(!instrumnet_num.isEmpty()){
 								pstmt.setString(jj++, instrumnet_num);
 								pstmt.setString(jj++, instrumnet_num);								
 						}
-						if(!date_from.equals("")){
+						if(!date_from.isEmpty()){
 								java.util.Date dateTmp = df.parse(date_from);
 								pstmt.setDate(jj++, new java.sql.Date(dateTmp.getTime()));	
 						}
-						if(!date_to.equals("")){
+						if(!date_to.isEmpty()){
 								java.util.Date dateTmp = df.parse(date_to);
 								pstmt.setDate(jj++, new java.sql.Date(dateTmp.getTime()));	
 						}						

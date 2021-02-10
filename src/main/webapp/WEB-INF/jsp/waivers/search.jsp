@@ -70,11 +70,15 @@
 			<dl class="fn1-output-field">
 				<dt>Records </dt>
 				<dd><s:checkbox name="waiverList.noMappedDate" value="%{waiverList.noMappedDate}" /> have no mapped date</dd>
-			</dl>					
+			</dl>
+			<dl class="fn1-output-field">
+				<dt> In/Out City </dt>
+				<dd><s:radio name="waiverList.inOutOption" value="%{waiverList.inOutOption}" list="#{'-1':'All','In':'In','Out':'Out','noInOut':'Not In Nor Out'}" /></dd>
 			<dl class="fn1-output-field">
 				<dt>Show All </dt>
 				<dd><s:checkbox name="waiverList.showAll" value="%{waiverList.showAll}" /> Yes</dd>
-			</dl>			
+			</dl>
+				
 		</div>
 	</div>
 	<dl class="fn1-output-field">

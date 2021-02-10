@@ -12,6 +12,11 @@
 	<s:hidden name="waiver.date" value="%{waiver.date}" />
 	<s:hidden name="waiver.status" value="%{waiver.status}" />
 	<s:hidden name="waiver.expireDate" value="%{waiver.expireDate}" />
+	<s:hidden name="waiver.signedDate" value="%{waiver.signedDate}" />
+	<s:hidden name="waiver.recorderDate" value="%{waiver.recorderDate}" />	
+	<s:hidden name="waiver.addedBy" value="%{waiver.addedBy}" />
+	<s:hidden name="waiver.waiverPage" value="%{waiver.waiverPage}" />
+	<s:hidden name="waiver.waiverBook" value="%{waiver.waiverBook}" />	
 	<s:hidden name="waiver.addAddrIds" id="add_addr_ids" value="" />
 	<s:hidden name="waiver.addEntityIds" id="entity_ids" value="" />	
 	<s:if test="hasActionErrors()">
