@@ -637,7 +637,8 @@ public class WaiverRtf extends HttpServlet {
 						document.add(ssTable);
 						//
 						phrase = new Phrase();
-						ch = new Chunk("Before me, a Notary Public, personally appeared "+ownerNames+" and acknowledged the execution of the foregoing document as his voluntary act this ____ day of ____________, 20__.",fnt);
+
+						ch = new Chunk("Before me, a Notary Public, personally appeared "+ownerNames+" and acknowledged the execution of the above release of the right to remonstrate against pending or future annexation to the City of Bloomington, Indiana, to be his voluntary act and deed, this day of ____________, 20__.",fnt);						
 						//
 						phrase.add(ch);
 						pp = new Paragraph();
@@ -668,7 +669,7 @@ public class WaiverRtf extends HttpServlet {
 						noteTable.addCell(cell);
 										
 						phrase = new Phrase();
-						ch = new Chunk("NP #:______________ ",fnt);
+						ch = new Chunk("NP#:______________ ",fnt);
 						phrase.add(ch);
 						cell = new RtfCell(phrase);
 						cell.setBorder(Rectangle.NO_BORDER);
@@ -689,7 +690,7 @@ public class WaiverRtf extends HttpServlet {
 						noteTable.addCell(cell);
 						
 						phrase = new Phrase();
-						ch = new Chunk("Residing in Monroe County, Indiana\n",fnt);
+						ch = new Chunk("Residing in Monroe, Indiana\n",fnt);
 						phrase.add(ch);
 						cell = new RtfCell(phrase);
 						cell.setBorder(Rectangle.NO_BORDER);
@@ -1019,7 +1020,7 @@ public class WaiverRtf extends HttpServlet {
 						notTable.addCell(cell);
 
 						phrase = new Phrase();
-						ch = new Chunk("              Notary Public\n Residing in Monroe County, IN\n",fnt);
+						ch = new Chunk("              Notary Public\n Residing in Monroe, Indiana\n",fnt);
 						phrase.add(ch);
 						cell = new RtfCell(phrase);
 						cell.setBorder(Rectangle.NO_BORDER);
