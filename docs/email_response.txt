@@ -1,0 +1,40 @@
+
+
+>> A new waiver of annexation came in today and Heather and I used the app to try to enter it, but we ran into a problem.  A button to print the waiver never appeared in the Prepare a waiver step so we could not proceed beyond that point. The waiver is 2493.0
+
+The print button did not appear because no entity was entered, this is required
+
+
+>>There were a couple of other things we noticed
+
+>> The app doesn't appear to recognize that a Deed has already been uploaded in a previous step and we had to upload the deed again in order to complete it. Heather gets the application and deed at the same time and it is easier for her to upload it them at the same time than to go to the attachments again in another step. This could also be the same for Utilities but not always. If the applicant is experienced or have read the rules, they may bring in the deed when they fill out the application, but not always.  I would think if the doc type rule is satisfied no matter when it happens, that step can be completed.
+
+This is because upload is not a workflow task, it is part of a task, so we need the 'Upload Deed Task' to be run separate from 'Upload Application' task, uploading the deed in previous task does not mean the task is completed. 
+
+
+>> If you make a typo in the PIN or TaxID entry box, you can't back space
+This is fixed
+
+>> The Lots and Acreage labels are still not aligned right on the new waiver entry screen and it is confusing to know which goes where. They are on the same line in the entered Waiver screen and if both are populated, it is hard to tell what is what. I  suggest you move the Acreage value to the bottom of the first column under Sec-Twp_Range
+
+This is because Adam is too busy on other apps and I do not know when he will be working on this, I implemented your suggestion and separated them.
+
+>> The waiver number is getting a decimal place added to it, 2493.0. Why is this, I thought that this is a text field due to the older waivers having characters.
+
+This is fixed now
+
+>> Can you switch the order of Entities to be New Entry button first on  the new waiver entry screen , then have a button to Search that brings up a search. It is very tempting to just start typing the owner name in the search box and if nothing comes up just go on your way which is what we did. Most often it will be a new person entered.
+
+This done.
+
+>> On the new owner screen that pops up with the  New Entity button, can a label clue above the Name box that says something like Last Name , First name or Business name
+
+Now you see this info in the text fields when empty.
+
+Thanks for your suggestions.
+
+
+
+
+
+

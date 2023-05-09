@@ -1,0 +1,183 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE struts PUBLIC
+"-//Apache Software Foundation//DTD Struts Configuration 2.0//EN"
+"http://struts.apache.org/dtds/struts-2.0.dtd">
+
+<struts>
+  <constant name="struts.devMode" value="true" />
+  <constant name="struts.ui.theme" value="simple" />
+  <constant name="struts.action.excludePattern" value="/Login*,/doDownload*,/Logout*,/EntityService*,/WaiverRtf*" />
+	<constant name="struts.multipart.maxSize" value="20000000" />	 
+
+  <package name="default" extends="struts-default">
+
+    <!-- this is a global action that makes sure user is logged in -->
+    
+    <global-results>
+      <result name="login" type="redirect">welcome.action</result>
+    </global-results>
+		
+    <action name="home">
+      <interceptor-ref name="defaultStack"></interceptor-ref>
+      <result>/Login</result>
+    </action>
+    
+    <action name="logout" class="annex.action.LogoutAction">
+      <result>/WEB-INF/jsp/gui/welcome.jsp</result>
+    </action>	 
+    
+    <action name="welcome" class="annex.action.WelcomeAction">
+      <result name="success">/WEB-INF/jsp/gui/welcome.jsp</result>
+      <result name="error">/Login</result>			
+      <result name="login">/Login</result>	   
+    </action>
+    
+    <action name="doUpload" 
+	    class="annex.action.UploadAction" 
+	    method="execute">
+      <result name="input">/WEB-INF/jsp/attachments/fileUpload.jsp</result>		
+      <result name="error">/WEB-INF/jsp/attachments/fileUpload.jsp</result>
+      <result name="success">/WEB-INF/jsp/attachments/fileUpload.jsp</result>
+    </action>
+    <action name="dataImport" 
+	    class="annex.action.DataImportAction" 
+	    method="execute">
+      <result name="input">/WEB-INF/jsp/types/dataImport.jsp</result>		
+      <result name="error">/WEB-INF/jsp/types/dataImport.jsp</result>
+      <result name="success">/WEB-INF/jsp/types/dataImport.jsp</result>
+    </action>
+    <action name="filesImport" 
+	    class="annex.action.FilesImportAction" 
+	    method="execute">
+      <result name="input">/WEB-INF/jsp/types/filesImport.jsp</result>		
+      <result name="error">/WEB-INF/jsp/types/filesImport.jsp</result>
+      <result name="success">/WEB-INF/jsp/types/filesImport.jsp</result>
+    </action>		
+    <action name="waiver" 
+	    class="annex.action.WaiverAction" 
+	    method="execute">
+      <result name="input">/WEB-INF/jsp/waivers/waiver.jsp</result>		
+      <result name="error">/WEB-INF/jsp/waivers/waiver.jsp</result>
+      <result name="edit">/WEB-INF/jsp/waivers/waiverEdit.jsp</result>			
+      <result name="success">/WEB-INF/jsp/waivers/waiver.jsp</result>
+      <result name="view">/WEB-INF/jsp/waivers/view.jsp</result>			
+    </action>
+    
+    <action name="task" 
+	    class="annex.action.TaskAction" 
+	    method="execute">
+      <result name="input">/WEB-INF/jsp/tasks/task.jsp</result>		
+      <result name="error">/WEB-INF/jsp/tasks/task.jsp</result>
+      <result name="success">/WEB-INF/jsp/tasks/task.jsp</result>
+      <result name="view">/WEB-INF/jsp/tasks/view.jsp</result>			
+    </action>
+    <action name="report" 
+	    class="annex.action.ReportAction" 
+	    method="execute">
+      <result name="input">/WEB-INF/jsp/waivers/report.jsp</result>		
+      <result name="error">/WEB-INF/jsp/waivers/report.jsp</result>
+      <result name="success">/WEB-INF/jsp/waivers/report.jsp</result>
+      <result name="csv">/WEB-INF/jsp/waivers/report_csv.jsp</result>			
+    </action>
+    <action name="statsReport" 
+	    class="annex.action.ReportStatsAction" 
+	    method="execute">
+      <result name="input">/WEB-INF/jsp/waivers/reportStatsInput.jsp</result>		
+      <result name="error">/WEB-INF/jsp/waivers/reportStatsInput.jsp</result>
+      <result name="success">/WEB-INF/jsp/waivers/reportStatsResult.jsp</result>
+    </action>		
+    <action name="activeTasks" 
+	    class="annex.action.ActiveTaskAction" 
+	    method="execute">
+      <result name="input">/WEB-INF/jsp/tasks/activeTasks.jsp</result>		
+      <result name="error">/WEB-INF/jsp/tasks/activeTasks.jsp</result>
+      <result name="success">/WEB-INF/jsp/tasks/activeTasks.jsp</result>
+    </action>
+    
+    <action name="search" 
+	    class="annex.action.SearchAction" 
+	    method="execute">
+      <result name="input">/WEB-INF/jsp/waivers/search.jsp</result>		
+      <result name="error">/WEB-INF/jsp/waivers/search.jsp</result>
+      <result name="success">/WEB-INF/jsp/waivers/search.jsp</result>
+      <result name="csv">/WEB-INF/jsp/waivers/waivers_csv.jsp</result>			
+    </action>
+    <action name="user" 
+	    class="annex.action.UserAction" 
+	    method="execute">
+      <result name="input">/WEB-INF/jsp/users/user.jsp</result>		
+      <result name="error">/WEB-INF/jsp/users/user.jsp</result>
+      <result name="success">/WEB-INF/jsp/users/user.jsp</result>
+    </action>
+    <action name="groupUser" 
+	    class="annex.action.GroupUserAction" 
+	    method="execute">
+      <result name="input">/WEB-INF/jsp/users/groupUser.jsp</result>		
+      <result name="error">/WEB-INF/jsp/users/groupUser.jsp</result>
+      <result name="success">/WEB-INF/jsp/users/groupUser.jsp</result>
+    </action>
+    <action name="groupNotification" 
+	    class="annex.action.GroupNotificationAction" 
+	    method="execute">
+      <result name="input">/WEB-INF/jsp/users/groupNotification.jsp</result>		
+      <result name="error">/WEB-INF/jsp/users/groupNotification.jsp</result>
+      <result name="success">/WEB-INF/jsp/users/groupNotification.jsp</result>
+    </action>		
+    
+    <action name="group" 
+	    class="annex.action.GroupAction" 
+	    method="execute">
+      <result name="input">/WEB-INF/jsp/types/group.jsp</result>		
+      <result name="error">/WEB-INF/jsp/types/group.jsp</result>
+      <result name="success">/WEB-INF/jsp/types/group.jsp</result>
+    </action>
+    
+    <action name="step" 
+	    class="annex.action.StepAction" 
+	    method="execute">
+      <result name="input">/WEB-INF/jsp/types/step.jsp</result>		
+      <result name="error">/WEB-INF/jsp/types/step.jsp</result>
+      <result name="success">/WEB-INF/jsp/types/step.jsp</result>
+    </action>
+    <action name="workflow" 
+	    class="annex.action.WorkFlowAction" 
+	    method="execute">
+      <result name="input">/WEB-INF/jsp/types/workflow.jsp</result>		
+      <result name="error">/WEB-INF/jsp/types/workflow.jsp</result>
+      <result name="success">/WEB-INF/jsp/types/workflow.jsp</result>
+    </action>
+    <action name="emailLog" 
+	    class="annex.action.NotificationLogsAction" 
+	    method="execute">
+      <result name="input">/WEB-INF/jsp/logs/emailLog.jsp</result>		
+      <result name="error">/WEB-INF/jsp/logs/emailLog.jsp</result>
+      <result name="success">/WEB-INF/jsp/logs/emailLog.jsp</result>
+    </action>		
+    <action name="entity" 
+	    class="annex.action.EntityAction" 
+	    method="execute">
+      <result name="input">/WEB-INF/jsp/entities/entity.jsp</result>		
+      <result name="error">/WEB-INF/jsp/entities/entity.jsp</result>
+      <result name="success">/WEB-INF/jsp/entities/entity.jsp</result>
+      <result name="view">/WEB-INF/jsp/entities/entity.jsp</result>
+      <result name="popup">/WEB-INF/jsp/entities/popEntity.jsp</result>						
+    </action>
+    <action name="address" 
+	    class="annex.action.AddressAction" 
+	    method="execute">
+      <result name="input">/WEB-INF/jsp/addresses/address.jsp</result>		
+      <result name="error">/WEB-INF/jsp/addresses/address.jsp</result>
+      <result name="success">/WEB-INF/jsp/addresses/address.jsp</result>
+      <result name="popup">/WEB-INF/jsp/addresses/popAddress.jsp</result>	
+    </action>
+    <action name="verify" 
+	    class="annex.action.AddressVerifyAction" 
+	    method="execute">
+      <result name="input">/WEB-INF/jsp/addresses/newAddress.jsp</result>		
+      <result name="error">/WEB-INF/jsp/addresses/newAddress.jsp</result>
+      <result name="success">/WEB-INF/jsp/addresses/newAddress.jsp</result>
+      <result name="pick">/WEB-INF/jsp/addresses/pickAddress.jsp</result>			
+    </action>
+   </package>
+
+</struts>
