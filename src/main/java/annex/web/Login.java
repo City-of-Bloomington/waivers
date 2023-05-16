@@ -22,7 +22,8 @@ import annex.utils.*;
 @WebServlet(urlPatterns = {"/Login"})
 public class Login extends TopServlet{
 
-    static final long serialVersionUID = 190L;	
+    static final long serialVersionUID = 190L;
+    static int count = 0;
     String cookieName = ""; // "cas_session";
     String cookieValue = ""; // ".bloomington.in.gov";
     static Logger logger = LogManager.getLogger(Login.class);
@@ -84,6 +85,11 @@ public class Login extends TopServlet{
 	    }
 	}
 	else{
+	    count++;
+	    if(count < 3){
+		String str = url+"Login";
+		res.sendRedirect(str);
+	    }
 	    message += " You can not access this system, check with IT or try again later";
 	}
 	out.println("<head><title></title><body>");
