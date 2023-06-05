@@ -2,6 +2,16 @@
 
 ;; Data desing for AnaxWaiver Project
 ;; ====================================
+
+-- ;;			06/05/2023 
+-- ;;			tax table added to merge old waivers data from socrata
+			create table tax(
+				waiver_num varchar(20),
+				gross_tax_change	varchar(255),
+				net_tax_change		varchar(255),
+				parcel_pin			varchar(1024)	
+				)ENGINE=InnoDB
+
 			create table users(
 				id       tinyint unsigned not null auto_increment,
 				username     varchar(20),
