@@ -6,11 +6,17 @@
 -- ;;			06/05/2023 
 -- ;;			tax table added to merge old waivers data from socrata
 			create table tax(
-				waiver_num varchar(20),
+				annex_area 			varchar(50),
+				waiver_num 			varchar(20),
+				parcel_pin			varchar(1024),	
+				owner 				varchar(255),
+				owner_address 		varchar(255),
+				owner_city 			varchar(255),
+				property_address 	varchar(1024),
+				property_city 		varchar(255),
 				gross_tax_change	varchar(255),
 				net_tax_change		varchar(255),
-				parcel_pin			varchar(1024)	
-				)ENGINE=InnoDB
+				)engine=InnoDB;
 
 			create table users(
 				id       tinyint unsigned not null auto_increment,
