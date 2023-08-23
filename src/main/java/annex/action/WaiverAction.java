@@ -54,7 +54,7 @@ public class WaiverAction extends TopAction{
 	}				
 	else if(action.equals("Save Changes")){
 	    logger.debug("update");		
-	    waiver.setUserId(user.getId());	 // we needed for actions					
+	    waiver.setUserId(user.getId()); // we needed for actions					
 	    back = waiver.doUpdate();
 	    if(!back.equals("")){
 		addActionError(back);

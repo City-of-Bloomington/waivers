@@ -93,7 +93,7 @@ public class GroupUserAction extends TopAction{
     public List<Type> getGroups(){
 	logger.debug(" get groups ");
 	if(groups == null){
-	    TypeList tl = new TypeList(debug, null, "waivers.groups");
+	    TypeList tl = new TypeList(debug, null, "`groups`");
 	    String back = tl.find();
 	    if(back.equals("")){
 		List<Type> ones = tl.getTypes();

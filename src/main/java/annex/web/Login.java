@@ -68,7 +68,7 @@ public class Login extends TopServlet{
 	if(username != null){
 	    session = req.getSession(true);			
 	    User user = getUser(username);
-	    if(user != null && user.userExists() && session != null){
+	    if(user != null && session != null){
 		session.setAttribute("user",user);
 		out.println("<head><title></title><META HTTP-EQUIV=\""+
 			    "refresh\" CONTENT=\"0; URL=" + url +
@@ -133,12 +133,14 @@ public class Login extends TopServlet{
 	boolean success = true;
 	User user = null;
 	String fullName="",role="",dept="", message="";
-	user = new User(debug, null, username);
-	String back = user.doSelect();
+	User one = new User(debug, null, username);
+	String back = one.doSelect();
 	if(!back.equals("")){
 	    message += back;
 	    logger.error(back);
-	    return null;
+	}
+	else{
+	    user = one;
 	}
 	return user;
     }

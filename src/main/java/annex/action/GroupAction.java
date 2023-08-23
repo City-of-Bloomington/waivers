@@ -77,7 +77,7 @@ public class GroupAction extends TopAction{
 	if(group == null){
 	    group = new Type();
 	    group.setId(id);
-	    group.setTable_name("groups");
+	    group.setTable_name("`groups`");
 	}		
 	return group;
     }
@@ -85,7 +85,7 @@ public class GroupAction extends TopAction{
     public void setGroup(Group val){
 	if(val != null){
 	    group = val;
-	    group.setTable_name("groups");
+	    group.setTable_name("`groups`");
 	}
     }
 
@@ -99,7 +99,7 @@ public class GroupAction extends TopAction{
     public List<Type> getGroups(){
 	logger.debug(" get groups ");
 	if(groups == null){
-	    TypeList tl = new TypeList(debug, null, "groups");
+	    TypeList tl = new TypeList(debug, null, "`groups`");
 	    String back = tl.find();
 	    if(back.equals("")){
 		List<Type> ones = tl.getTypes();

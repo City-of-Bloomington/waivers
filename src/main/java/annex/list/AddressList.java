@@ -146,7 +146,7 @@ public class AddressList extends CommonInc{
     public String findSimilarAddr(String url, String addr){
 	//
 	String back = "";
-	String urlStr = url+"/?";
+	String urlStr = url+"?";
 	String query="format=json;queryType=address;query=";
 	logger.debug(" find similar addresses ");
 	if(addr == null || addr.equals("")){

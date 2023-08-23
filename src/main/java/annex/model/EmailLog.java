@@ -60,9 +60,9 @@ public class EmailLog extends CommonInc implements java.io.Serializable{
 	setWaiver_id(val2);
 	setTask_id(val3);
 	setDate(val4);
-	setToUser(val5);
-	setFromUser(val6);
-	setCcUsers(val7);
+	setToUser(val5); // to
+	setFromUser(val6); // from 
+	setCcUsers(val7); // cc
 	setSubject(val8);
 	setMsg(val9);
 	setEmailErrors(val10);

@@ -113,7 +113,7 @@ public class StepAction extends TopAction{
     public List<Type> getGroups(){
 	if(groups == null){
 	    logger.debug(" get groups ");
-	    TypeList tl = new TypeList(debug, null, "waivers.groups");
+	    TypeList tl = new TypeList(debug, null, "`groups`");
 	    String back = tl.find();
 	    if(back.equals("")){
 		List<Type> ones = tl.getTypes();

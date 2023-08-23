@@ -117,6 +117,9 @@ public class Task extends Step{
     public boolean isCompleted(){
 	return !completed_date.isEmpty();
     }
+    public boolean isNotCompleted(){
+	return completed_date.isEmpty();
+    }
     public boolean isClaimed(){
 	return !claimed_by.isEmpty();
     }
@@ -128,7 +131,7 @@ public class Task extends Step{
 	return nextTasks;
     }    
     public List<GroupNotification> getGroupNotifications(){
-	if(groupNotifications == null && isCompleted()){
+	if(groupNotifications == null && isNotCompleted()){
 	    GroupNotificationList gnl = new GroupNotificationList(debug, id);
 	    String back = gnl.find();
 	    if(back.isEmpty()){
@@ -221,7 +224,7 @@ public class Task extends Step{
     }
     public boolean canBeCompleted(){
 	if(!task_id.isEmpty()){
-	    if(!isCompleted()){
+	    if(isNotCompleted()){
 		if(getRequire_upload()){
 		    //
 		    // check if we have the required attahment uploaded

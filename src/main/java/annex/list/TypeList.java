@@ -17,7 +17,7 @@ public class TypeList extends CommonInc{
 
     static Logger logger = LogManager.getLogger(TypeList.class);
     static final long serialVersionUID = 260L;
-    String table_name = "waivers.groups"; 
+    String table_name = "`groups`"; 
     String name = ""; // for service
     String join = "";
     String condition = "";

@@ -27,8 +27,8 @@ public class UploadAction extends TopAction{
 	type="";
     private File file;
     private String contentType, saveDir="";
-    private String filename;
-    private String url = "", upload="";
+    private String filename="";
+    private String upload="";
     private List<FileUpload> uploads = null;
     private String[] types = {"Application","Warranty Deed","Recorded Waiver","Map","Other"};
     static private Map<String, String> mimeTypes = null;
@@ -107,7 +107,7 @@ public class UploadAction extends TopAction{
 			addActionMessage("Save successfully");
 			String str = "waiver.action?id="+waiver_id;
 			if(!task_id.equals("")){
-			    str ="task.action?task_id="+task_id;
+			    str ="task.action?task_id="+task_id+"&action=";
 			}
 			try{
 			    HttpServletResponse res = ServletActionContext.getResponse();

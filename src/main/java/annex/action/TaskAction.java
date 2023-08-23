@@ -41,6 +41,9 @@ public class TaskAction extends TopAction{
 	}
 	if(action.equals("Save")){
 	    logger.debug(" action save ");
+	    getUser();
+	    System.err.println(" user "+user);
+	    System.err.println(" task "+task);
 	    task.setClaimedByIfNotSet(user.getId());
 	    back = task.doSave();
 	    if(!back.equals("")){
@@ -59,6 +62,7 @@ public class TaskAction extends TopAction{
 	}				
 	else if(action.equals("Save Changes")){
 	    logger.debug(" action update ");
+	    getUser();
 	    task.setClaimedByIfNotSet(user.getId());	 // we needed for actions					
 	    back = task.doUpdate();
 	    if(!back.equals("")){
@@ -89,6 +93,7 @@ public class TaskAction extends TopAction{
 	else if(action.endsWith("Completed")){
 	    logger.debug(" action completed ");
 	    getTask();
+	    getUser();
 	    if(!task.isCompleted()){
 		task.setClaimedByIfNotSet(user.getId());
 		task.setCompleted(true);
@@ -116,7 +121,9 @@ public class TaskAction extends TopAction{
 		    //
 		    if(nextTasks != null && nextTasks.size() > 0){
 			for(Task nextTask: nextTasks){
+			    // System.err.println(" next task "+nextTask);
 			    if(nextTask.isNotificationRequired()){
+				System.err.println(" notify required ");
 				List<GroupNotification> groupNotifications =
 				    nextTask.getGroupNotifications();
 				if(groupNotifications != null && groupNotifications.size() > 0){
@@ -130,7 +137,11 @@ public class TaskAction extends TopAction{
 					}
 				    }
 				}
-				back = processEmails();				
+				// System.err.println(" process email ");
+				back = processEmails();
+			    }
+			    else{
+				System.err.println(" notify not required ");
 			    }
 			}
 		    }
@@ -263,6 +274,7 @@ public class TaskAction extends TopAction{
     private String processEmails(){
 	String back = "";
 	String subject = "", msg = "";
+	getUser();
 	String from = user.getUsername()+city_email;
 	String to = "", cc = null;
 	logger.debug(" process emails ");

@@ -30,11 +30,12 @@ public abstract class TopAction extends ActionSupport implements SessionAware, S
 
     static final long serialVersionUID = 240L;
     static Logger logger = LogManager.getLogger(TopAction.class);		
-    boolean debug = false, activeMail=false;
-    String action="", url="", addrUrl="", id="";
-    String server_path="";
-    String city_email="", legal_username = "", utility_username="",
+    static boolean debug = false, activeMail=false;
+    static String url="", addrUrl="";
+    static String server_path="";
+    static String city_email="", legal_username = "", utility_username="",
 	gis_username="";
+    String action="",id="";
     User user = null;
     ServletContext ctx;
     Map<String, Object> sessionMap;
@@ -58,8 +59,12 @@ public abstract class TopAction extends ActionSupport implements SessionAware, S
 	return id;
     }
     public User getUser(){
+	if(user == null && sessionMap != null){
+	    user = (User)sessionMap.get("user");
+	}
 	return user;
-    }		
+    }
+    
     String doPrepare(){
 	String back = "";
 	try{
