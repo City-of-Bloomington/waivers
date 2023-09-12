@@ -21,7 +21,7 @@ import annex.utils.*;
 public class TopServlet extends HttpServlet {
     static String url = "";
     static String cookieName="", cookieValue="";
-    static String server_path="", attorneyFullName="";
+    static String server_path="", attorneyFullName="", paraLegalName="";
     static boolean debug = false, production=false;
     static Configuration config = null;
     static Logger logger = LogManager.getLogger(TopServlet.class);
@@ -42,7 +42,10 @@ public class TopServlet extends HttpServlet {
 		cookieValue = str;
 	    str = context.getInitParameter("attorneyFullName");
 	    if(str != null)
-		attorneyFullName = str;	    
+		attorneyFullName = str;
+	    str = context.getInitParameter("paraLegalName");
+	    if(str != null)
+		paraLegalName = str;	    
 	    String username = context.getInitParameter("adfs_username");
 	    String auth_end_point = context.getInitParameter("auth_end_point");
 	    String token_end_point = context.getInitParameter("token_end_point");

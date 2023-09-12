@@ -335,7 +335,7 @@ public class TaskAction extends TopAction{
 		    }
 		}
 		else if(gg.getName().equals("GIS")){
-		    subject = " Waiver ready to be added to GIS map ";
+		    subject = " Waiver ready to be added to GIS map "+waiver.getWaiverNum();
 		    msg = " Hi \n\n";
 		    msg += " We would like to inform you that the following waiver is\n "+
 			" ready to be added to GIS map. \n"+

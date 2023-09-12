@@ -44,7 +44,6 @@ public class WaiverRtf extends TopServlet {
 	throws ServletException, IOException{
 	res.setContentType("text/html");
 
-	String attorneyFullName="";
 	String name, value, message="", id="", str="";
 
 	boolean success=true;
@@ -142,7 +141,8 @@ public class WaiverRtf extends TopServlet {
 						waiver,
 						businessEntity,
 						agent,
-						attorneyFullName);
+						attorneyFullName,
+						paraLegalName);
 			    // we print more than one because
 			    // we do not know who is signing
 			    if(owners.size() > 2){
@@ -154,7 +154,8 @@ public class WaiverRtf extends TopServlet {
 			writeWaiver(document,
 				    waiver,
 				    owners,
-				    attorneyFullName);
+				    attorneyFullName,
+				    paraLegalName);
 		    }
 		    document.close();
 		    writer.close();
@@ -186,7 +187,8 @@ public class WaiverRtf extends TopServlet {
     void writeWaiver(Document document,
 		     Waiver waiver,
 		     List<Entity> owners,
-		     String attorneyFullName){
+		     String attorneyFullName,
+		     String paraLegalName){
 	//
 	String ownerNames = owners.get(0).getName();
 	if(owners.size() > 1){
@@ -505,6 +507,8 @@ public class WaiverRtf extends TopServlet {
 	    phrase.add(ch);
 	    ch = new Chunk("                        signed:/s/ ______________\n",fnts);
 	    phrase.add(ch);
+	    ch = new Chunk("                                  "+paraLegalName+"\n", fnts);
+	    phrase.add(ch);
 	    pp = new Paragraph();
 	    pp.setAlignment(Element.ALIGN_LEFT);
 	    pp.add(phrase);
@@ -529,7 +533,8 @@ public class WaiverRtf extends TopServlet {
 			     Waiver waiver,
 			     Entity businessEntity,
 			     Entity agent,
-			     String attorneyFullName){
+			     String attorneyFullName,
+			     String paraLegalName){
 	//
 	int pp_indent = 20;
 	Font fnt,fnts,fntb,fntu,fntbu;
@@ -868,6 +873,8 @@ public class WaiverRtf extends TopServlet {
 	    phrase.add(ch);
 	    ch = new Chunk("                                Signed:/s/______________\n",fnts);
 	    phrase.add(ch);
+	    ch = new Chunk("                                  "+paraLegalName+"\n", fnts);
+	    phrase.add(ch);	    
 	    pp = new Paragraph();
 	    pp.setAlignment(Element.ALIGN_LEFT);
 	    pp.add(phrase);
