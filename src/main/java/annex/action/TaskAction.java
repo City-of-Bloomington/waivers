@@ -345,6 +345,12 @@ public class TaskAction extends TopAction{
 			" Owner(s):"+waiver.getBasicInfo2()+"\n"+
 			"Other waiver info: "+waiver.getBasicInfo3()+"\n\n"+
 			" Thanks\n\n";
+		    //
+		    // user does not want to receive emails from helpdesk
+		    // so we are hardwiring it
+		    to = "helpdesk@bloomington.in.gov";
+		    from = to;
+		    cc = null;
 		    if(!to.isEmpty()){
 			back = sendEmails(to, from, cc, subject, msg);
 		    }
