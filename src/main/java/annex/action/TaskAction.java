@@ -42,8 +42,6 @@ public class TaskAction extends TopAction{
 	if(action.equals("Save")){
 	    logger.debug(" action save ");
 	    getUser();
-	    System.err.println(" user "+user);
-	    System.err.println(" task "+task);
 	    task.setClaimedByIfNotSet(user.getId());
 	    back = task.doSave();
 	    if(!back.equals("")){
@@ -349,7 +347,7 @@ public class TaskAction extends TopAction{
 		    // user does not want to receive emails from helpdesk
 		    // so we are hardwiring it
 		    to = "helpdesk@bloomington.in.gov";
-		    from = to;
+		    from = "donotreply@bloomington.in.gov";
 		    cc = null;
 		    if(!to.isEmpty()){
 			back = sendEmails(to, from, cc, subject, msg);
