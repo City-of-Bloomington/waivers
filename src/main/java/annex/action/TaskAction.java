@@ -347,7 +347,7 @@ public class TaskAction extends TopAction{
 		    // user does not want to receive emails from helpdesk
 		    // so we are hardwiring it
 		    to = "helpdesk@bloomington.in.gov";
-		    from = "itstest@bloomington.in.gov";
+		    from = "donotreply@bloomington.in.gov";
 		    cc = null;
 		    if(!to.isEmpty()){
 			back = sendEmails(to, from, cc, subject, msg);
