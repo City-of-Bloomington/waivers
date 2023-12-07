@@ -18,6 +18,7 @@ public class User extends CommonInc implements java.io.Serializable{
 		
     String id="", username="", role="user", // user, admin
 	dept="", inactive="", activeMail="";
+    String sid = ""; //session id needed for logout
     String full_name="";
     static Map<String, String> rolesMap = null;
     //
@@ -73,6 +74,9 @@ public class User extends CommonInc implements java.io.Serializable{
     public String getId(){
 	return id;
     }
+    public String getSid(){
+	return sid;
+    }    
     public String getUsername(){
 	return username;
     }		
@@ -104,6 +108,10 @@ public class User extends CommonInc implements java.io.Serializable{
 	if(val != null)
 	    id = val;
     }
+    public void setSid(String val){
+	if(val != null)
+	    sid = val;
+    }    
     public void setUsername(String val){
 	if(val != null)
 	    username = val;

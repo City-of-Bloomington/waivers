@@ -19,7 +19,7 @@ import annex.model.*;
 import annex.list.*;
 import annex.utils.*;
 
-@WebServlet(urlPatterns = {"/Login"})
+@WebServlet(urlPatterns = {"/CasLogin"})
 public class Login extends TopServlet{
 
     static final long serialVersionUID = 190L;

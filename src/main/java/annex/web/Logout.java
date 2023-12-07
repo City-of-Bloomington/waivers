@@ -39,7 +39,10 @@ public class Logout extends TopServlet{
 	if(session != null){
 	    session.invalidate();
 	}
-	res.sendRedirect(url);	 
+	// String logout_uri = endpoint_logout_uri+"?post_logout_redirect_uri=https%3A%2F%2Foutlaw.bloomington.in.gov%2Fwaivers"; //sid=
+	if(!endpoint_logout_uri.isEmpty()){
+	    res.sendRedirect(endpoint_logout_uri);
+	}
 	return;
     }
 }

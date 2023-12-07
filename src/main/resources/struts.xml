@@ -6,7 +6,7 @@
 <struts>
   <constant name="struts.devMode" value="true" />
   <constant name="struts.ui.theme" value="simple" />
-  <constant name="struts.action.excludePattern" value="/Login*,/doDownload*,/Logout*,/EntityService*,/WaiverRtf*" />
+  <constant name="struts.action.excludePattern" value="/Login*,/doDownload*,/Logout*,/EntityService*,/WaiverRtf*,/callback*" />
 	<constant name="struts.multipart.maxSize" value="20000000" />	 
 
   <package name="default" extends="struts-default">

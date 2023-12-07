@@ -43,7 +43,7 @@
             <div class="menuLauncher"><s:property value='#session.user.fullName' /></div>
             <div class="menuLinks closed" style="background-color:wheat">
 							<br />
-              <a href="<s:property value='#application.url'/>logout.action">Logout</a>
+              <a href="<s:property value='#application.url'/>Logout">Logout</a>
             </div>
           </nav>
           <s:if test="#session.user.isAdmin()">					
