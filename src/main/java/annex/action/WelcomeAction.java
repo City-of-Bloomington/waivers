@@ -9,8 +9,8 @@ import javax.servlet.ServletContext;
 import com.opensymphony.xwork2.ActionSupport;
 import com.opensymphony.xwork2.ModelDriven;
 import org.apache.struts2.ServletActionContext;
-import org.apache.struts2.util.ServletContextAware;
-import org.apache.struts2.interceptor.SessionAware;  
+import org.apache.struts2.action.ServletContextAware;
+import org.apache.struts2.action.SessionAware;  
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import annex.model.*;
@@ -59,11 +59,11 @@ public class WelcomeAction extends ActionSupport implements SessionAware, Servle
 	return id;
     }
     @Override  
-    public void setSession(Map<String, Object> map) {  
+    public void withSession(Map<String, Object> map) {  
 	sessionMap=map;  
     }
     @Override  	
-    public void setServletContext(ServletContext ctx) {  
+    public void withServletContext(ServletContext ctx) {  
         this.ctx = ctx;  
     }  	 
 }

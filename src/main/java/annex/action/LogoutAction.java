@@ -9,7 +9,7 @@ import javax.servlet.http.HttpSession;
 import javax.servlet.http.HttpServletRequest;  
 import com.opensymphony.xwork2.ActionSupport;
 import org.apache.struts2.ServletActionContext;  
-import org.apache.struts2.util.ServletContextAware;  
+import org.apache.struts2.action.ServletContextAware;  
 import javax.servlet.http.HttpServletResponse;
 import annex.model.*;
 import annex.list.*;
@@ -37,7 +37,7 @@ public class LogoutAction extends ActionSupport implements ServletContextAware{
 	return SUCCESS;
     }     
     @Override  	
-    public void setServletContext(ServletContext ctx) {  
+    public void withServletContext(ServletContext ctx) {  
         this.ctx = ctx;  
     }      
 }
