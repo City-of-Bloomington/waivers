@@ -243,7 +243,7 @@ public class WaiverRtf extends TopServlet {
 	    //
 	    int withs[] = {30,70};
 	    Table table = new Table(2);
-	    table.setBorder(5);
+	    // table.setBorder(5);
 	    // table.setPadding(3);
 	    // table.getDefaultCell().setBorder(1);
 	    table.setWidth(100);

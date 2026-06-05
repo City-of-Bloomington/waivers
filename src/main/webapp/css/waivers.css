@@ -1,0 +1,19 @@
+
+
+table {
+  border: 1px solid;
+}
+caption{
+    text-align: center;
+    font-weight: normal;
+}
+tr{
+    border:0;
+  }
+th{
+    text-align: right;
+}
+td{
+    text-align: left;
+}
+
